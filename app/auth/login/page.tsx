@@ -16,6 +16,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
+import { toast } from "sonner";
 
 export default function Login() { 
     const [username, setUsername] = useState<string>("");
@@ -23,8 +24,14 @@ export default function Login() { 
     const router = useRouter();
 
     function handleLogin() {
-        if(!username || !password ) alert("fill the credentials properly")
-        else alert("successfull");
+        if(!username || !password ) {
+            toast.error("Invalid credentials", {
+                description: "Please fill in all required fields"
+            })
+        }
+        else {
+            toast.success("Login Successfull")
+        }
     }
     return (
         <div className="flex p-2 h-screen w-screen justify-center items-center">

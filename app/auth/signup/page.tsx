@@ -33,7 +33,7 @@ export default function Signup() { 
       })
     }
     else {
-      toast.success("Successfull")
+      toast.success("Signup Successfull")
     }
   }
 

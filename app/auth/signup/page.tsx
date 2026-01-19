@@ -49,70 +49,68 @@ export default function Signup() { 
   }
 
   return (
-      <div className="flex p-2 h-screen w-screen justify-center items-center">
-          <span onClick={() => router.back()} className="cursor-pointer fixed top-0 left-0 p-5 text-muted-foreground flex justify-center items-center gap-0.5"><ArrowLeft size={15} />back</span>
-          <Card className="w-full max-w-sm">
-              <CardHeader>
-                  <CardTitle className="text-2xl">
-                      Join to onStream
-                  </CardTitle>
-                  <CardDescription>
-                      Enter your credentials below and join the streaming community
-                  </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form>
-                  <div className="flex flex-col gap-5">
-                      <div className="grid gap-2">
-                          <Label htmlFor="email">Email</Label>
-                          <Input
-                              id="email"
-                              type="text"
-                              placeholder="your@gmail.com"
-                              required
-                              value={email}
-                              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                          />
-                      </div>
+    <div className="flex p-2 h-screen w-screen justify-center items-center">
+      <span onClick={() => router.back()} className="cursor-pointer fixed top-0 left-0 p-5 text-muted-foreground flex justify-center items-center gap-0.5"><ArrowLeft size={15} />back</span>
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+            <CardTitle className="text-2xl">
+                Join to onStream
+            </CardTitle>
+            <CardDescription>
+                Enter your credentials below and join the streaming community
+            </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <div className="flex flex-col gap-5">
+                <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                        id="email"
+                        type="text"
+                        placeholder="your@gmail.com"
+                        required
+                        value={email}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    />
+                </div>
 
-                      {continued && (<div className="grid gap-2">
-                          <Label htmlFor="username">Username</Label>
-                          <Input
-                              id="username"
-                              type="text"
-                              placeholder="uniquename"
-                              required
-                              value={username}
-                              onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                          />
-                      </div>)}
-                      {continued && <InputPassword value={password} onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />}
-                  </div>
-                </form>
-              </CardContent>
-              {continued && <CardFooter className="flex-col gap-3">
-                  <Button type="submit" onClick={handleSignup} className="w-full">
-                      Sign up
-                  </Button>
-                  <CardDescription className="pt-2">
-                      have an account? <Link href={"login"} className="text-white">Login</Link> here
-                  </CardDescription>
-              </CardFooter>}
-
-              {!continued && <CardFooter className="flex-col gap-3">
-                  <Button onClick={handleContinue} type="submit" className="w-full">
-                      Continue
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                      <span className="flex justify-center items-center gap-1">
-                          Sign up with Google <GoogleIcon />
-                      </span>
-                  </Button>
-                  <CardDescription className="pt-1">
-                      have an account? <Link href={"login"} className="text-white">Login</Link> here
-                  </CardDescription>
-              </CardFooter>} 
-          </Card> 
-      </div>
+                {continued && (<div className="grid gap-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                        id="username"
+                        type="text"
+                        placeholder="uniquename"
+                        required
+                        value={username}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                    />
+                </div>)}
+                {continued && <InputPassword value={password} onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />}
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex-col gap-3">
+          {continued ? (
+            <>
+              <Button type="submit" onClick={handleSignup} className="w-full">
+                Sign up
+              </Button>
+            </> ) : (
+            <>
+              <Button onClick={handleContinue} type="submit" className="w-full">
+                Continue
+              </Button><Button variant="outline" className="w-full">
+                  <span className="flex justify-center items-center gap-1">
+                    Sign up with Google <GoogleIcon />
+                  </span>
+                </Button>
+            </>)}
+            <CardDescription className="pt-1">
+                have an account? <Link href={"login"} className="text-white">Login</Link> here
+            </CardDescription>
+        </CardFooter>
+      </Card> 
+    </div>
   )
 }

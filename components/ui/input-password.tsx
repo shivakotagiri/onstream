@@ -25,6 +25,7 @@ const InputPassword = ({value, onChange}: PasswordProps) => {
           type={showPassword ? "text" : "password"}
           value={value}
           onChange={onChange}
+          minLength={8}
         />
         <Button
           className="absolute top-0 right-0 h-full px-3 hover:bg-transparent"

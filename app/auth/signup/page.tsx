@@ -1,5 +1,5 @@
 "use client";
-import InputPassword from "@/components/examples/input/types/input-password";
+import InputPassword from "@/components/ui/input-password";
 import { GoogleIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { 
@@ -15,9 +15,9 @@ import { Label } from "@radix-ui/react-label";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
-
+import z from "zod";
 
 export default function Signup() { 
   const router = useRouter();
@@ -26,22 +26,38 @@ export default function Signup() { 
   const [password, setPassword] = useState<string>("");
   const [continued, setContinued] = useState<boolean>(false);
 
-  function handleSignup() {
+  const signupZod = z.object({
+    username: z.string().min(3),
+    email: z.email(),
+    password: z.string(),
+  })
+
+  function handleSignup(e: FormEvent) {
+    e.preventDefault();
+    const { success } = signupZod.safeParse({ username, email, password });
     if(!email || !password || !username) {
       toast.error("Invalid credentials", {
         description: "Please fill in all required fields",
       })
-    }
+    } else if(!success) toast.error("Invalid input format", {
+      description: "Given credentials doesn't met the required criteria"
+    })
     else {
-      toast.success("Signup Successfull")
+      
+      toast.success("Signup Successfull");
     }
   }
 
-  function handleContinue() {
+  function handleContinue(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    const emailZod = z.string().email();
+    const { success } = emailZod.safeParse(email);
     if(!email) {
       toast.error("Invalid credentials", {
         description: "Please fill in all required fields",
       })
+    } else if(!success) {
+      toast.error("Please enter the valid email");
     }
     else {
       setContinued(true);
@@ -50,7 +66,7 @@ export default function Signup() { 
 
   return (
     <div className="flex p-2 h-screen w-screen justify-center items-center">
-      <span onClick={() => router.back()} className="cursor-pointer fixed top-0 left-0 p-5 text-muted-foreground flex justify-center items-center gap-0.5"><ArrowLeft size={15} />back</span>
+      <span onClick={() => router.push("/")} className="cursor-pointer fixed top-0 left-0 p-5 text-muted-foreground flex justify-center items-center gap-0.5"><ArrowLeft size={15} />back</span>
       <Card className="w-full max-w-sm">
         <CardHeader>
             <CardTitle className="text-2xl">
@@ -61,8 +77,8 @@ export default function Signup() { 
             </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-5">
+          <form onSubmit={handleSignup} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
                 <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -84,28 +100,31 @@ export default function Signup() { 
                         required
                         value={username}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                        minLength={3}
                     />
                 </div>)}
                 {continued && <InputPassword value={password} onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />}
             </div>
+            {continued ? (
+              <>
+                <Button type="submit" className="w-full">
+                  Sign up
+                </Button>
+              </> ) : (
+              <>
+                <Button onClick={handleContinue} className="w-full">
+                  Continue
+                </Button>
+                <Button type="button" variant="outline" className="w-full">
+                    <span className="flex justify-center items-center gap-1">
+                      Sign up with Google <GoogleIcon />
+                    </span>
+                  </Button>
+              </>)
+            }
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-3">
-          {continued ? (
-            <>
-              <Button type="submit" onClick={handleSignup} className="w-full">
-                Sign up
-              </Button>
-            </> ) : (
-            <>
-              <Button onClick={handleContinue} type="submit" className="w-full">
-                Continue
-              </Button><Button variant="outline" className="w-full">
-                  <span className="flex justify-center items-center gap-1">
-                    Sign up with Google <GoogleIcon />
-                  </span>
-                </Button>
-            </>)}
+        <CardFooter className="flex-col">
             <CardDescription className="pt-1">
                 have an account? <Link href={"login"} className="text-white">Login</Link> here
             </CardDescription>

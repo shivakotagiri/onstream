@@ -13,6 +13,9 @@ export const auth = betterAuth({
             maxAge: 60 * 5,
         }
     },
+    rateLimit: {
+        storage: "database"
+    },
     socialProviders: {
         google: {
             prompt: "select_account", 

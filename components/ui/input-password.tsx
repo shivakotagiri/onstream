@@ -8,20 +8,22 @@ import { Label } from "@/components/ui/label"
 
 interface PasswordProps {
   value: string,
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void,
+  label: string,
+  placeholder: string,
 }
 
-const InputPassword = ({value, onChange}: PasswordProps) => {
+const InputPassword = ({value, onChange, label, placeholder}: PasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className="w-full max-w-sm space-y-2">
-      <Label htmlFor="password-toggle">Password</Label>
+      <Label htmlFor="password-toggle">{ label }</Label>
       <div className="relative">
         <Input
           className="bg-background"
           id="password-toggle"
-          placeholder="Enter your password"
+          placeholder={placeholder}
           type={showPassword ? "text" : "password"}
           value={value}
           onChange={onChange}

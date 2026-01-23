@@ -41,7 +41,6 @@ export default function Login() { 
     }
     return (
         <div className="flex p-2 h-screen w-screen justify-center items-center">
-            <span onClick={() => router.push("/")} className="cursor-pointer fixed top-0 left-0 p-5 text-muted-foreground flex justify-center items-center gap-0.5"><ArrowLeft size={15} />back</span>
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle className="text-2xl">
@@ -66,7 +65,7 @@ export default function Login() { 
                                     minLength={3}
                                 />
                             </div>
-                            <InputPassword value={password} onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />
+                            <InputPassword label="Password" placeholder="Enter your password" value={password} onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />
                         </div>
                         <Button type="submit" className="w-full">
                             Login
@@ -80,7 +79,7 @@ export default function Login() { 
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
                     <CardDescription className="pt-1">
-                        Don&apos;t have an account? <Link href={"signup"} className="text-white">Signup</Link> here
+                        Don&apos;t have an account? <Link href={"signup"} className="text-accent-foreground font-semibold">Signup</Link> here
                     </CardDescription>
                 </CardFooter>
             </Card> 

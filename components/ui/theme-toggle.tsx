@@ -11,6 +11,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
     const [mounted, setMounted] = useState<boolean>(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, [])
 

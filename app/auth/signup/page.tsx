@@ -1,108 +1,165 @@
 "use client";
-import InputPassword from "@/components/ui/input-password";
-import { GoogleIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import z from "zod";
 import { 
-    Card, 
-    CardHeader, 
-    CardTitle, 
-    CardContent, 
-    CardFooter, 
-    CardDescription,
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage 
+} from "@/components/ui/form";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle, 
+  CardFooter 
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
+import InputPassword from "@/components/ui/input-password";
+import { Button } from "@/components/ui/button";
+import TextSeparator from "@/components/ui/text-separator";
+import { GoogleIcon } from "@/components/icons";
 import Link from "next/link";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import z from "zod";
+import { useRouter } from "next/navigation";
 
-export default function Signup() { 
-  const [email, setEmail] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
-  const signupZod = z.object({
+const signupSchema = z.object({
     username: z.string().min(3),
-    email: z.email(),
-    password: z.string(),
-  })
+    password: z.string().min(6),
+    email: z.email().min(1)
+});
 
-  function handleSignup(e: FormEvent) {
-    e.preventDefault();
-    const { success } = signupZod.safeParse({ username, email, password });
-    if(!email || !password || !username) {
-      toast.error("Invalid credentials", {
-        description: "Please fill in all required fields",
-      })
-    } else if(!success) toast.error("Invalid input format", {
-      description: "Given credentials doesn't met the required criteria"
-    })
-    else {
-      toast.success("Signup Successfull");
+type SignupForm = z.infer<typeof signupSchema>
+
+export default function SignupPage() {
+    const router = useRouter();
+    const form = useForm<SignupForm>({
+        resolver: zodResolver(signupSchema),
+        defaultValues:{
+            email: "",
+            username: "",
+            password: ""
+        }
+    });
+
+    async function handleSignup(data: SignupForm) {
+        await authClient.signUp.email(
+          { 
+            email: data.email,
+            password: data.password,
+            name: data.username,
+            username: data.username,
+            callbackURL: "/" 
+          }, {
+          onSuccess: () => {
+            toast.success("Account created successfully!");
+            router.push("/");
+          },
+          onError: error => {
+            console.error("Signup error:", error);
+            console.error("Error details:", JSON.stringify(error, null, 2));
+            // Handle ErrorContext correctly: prefer error.error?.message, then fallback to stringifying if unavailable
+            const message =
+              (typeof error?.error === "object" && error?.error?.message)
+                || (typeof error?.error === "string" && error.error)
+                || error?.error?.error
+                || "Failed to Sign up";
+            toast.error(message);
+          }
+        });
     }
-  }
 
-  return (
-    <div className="flex p-2 h-screen w-screen justify-center items-center">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-            <CardTitle className="text-2xl">
-                Join to onStream
-            </CardTitle>
-            <CardDescription>
-                Enter your credentials below and join the streaming community
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignup} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3">
-                <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                        id="email"
-                        type="text"
-                        placeholder="your@gmail.com"
-                        required
-                        value={email}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                    />
-                </div>
-
-                <div className="grid gap-2">
-                    <Label htmlFor="username">Username</Label>
-                    <Input
-                        id="username"
-                        type="text"
-                        placeholder="uniquename"
-                        required
-                        value={username}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                        minLength={3}
-                    />
-                </div>
-                <InputPassword placeholder={"Enter your password"} value={password} label="Password" onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />
-                {/* <InputPassword placeholder={"Confirm password"} value={confirmPassword} label="Confirm Password" onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)} /> */}
-            </div>
-            <Button type="submit" className="w-full">
-              Sign up
-            </Button>
-            {/* <TextSeparator text="or" /> */}
-            <Button type="button" variant={"outline"} className="w-full">
-              Continue with google <GoogleIcon />
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col">
-            <CardDescription className="flex gap-1">
-                have an account? 
-                <Link href={"login"} className="text-accent-foreground font-semibold">
-                  Login
-                </Link> 
-                here
-            </CardDescription>
-        </CardFooter>
-      </Card> 
-    </div>
-  )
+    return (
+        <div className="w-screen h-screen flex justify-center items-center">
+            <Card className="max-w-sm w-full">
+                <CardHeader>
+                    <CardTitle className="text-lg">Join onStream</CardTitle>
+                    <CardDescription>
+                        Enter your credentials below and join our streaming community.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(handleSignup)} className="space-y-5">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="email"
+                                                {...field}
+                                                placeholder="your@gmail.com"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                {...field}
+                                                placeholder="Enter your username"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex justify-between items-center">
+                                            <FormLabel>Password</FormLabel>
+                                        </div>
+                                        <FormControl>
+                                            <InputPassword 
+                                                {...field} 
+                                                placeholder="Enter your password"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} 
+                            />
+                            <Button type="submit" className="w-full">
+                                Sign up
+                            </Button>
+                        </form>
+                    </Form>
+                    <TextSeparator className="my-2" text="or" />
+                    <Button 
+                        className="w-full" 
+                        type="button"
+                        onClick={() => authClient.signIn.social({ provider: "google" })}
+                    >
+                        Continue with Google <GoogleIcon />
+                    </Button>
+                    <CardFooter className="flex justify-center mt-3">
+                        <CardDescription>
+                            Already have an account? 
+                            <Link className="text-accent-foreground px-1" href="login">Log in</Link>here
+                        </CardDescription>
+                    </CardFooter>
+                </CardContent>
+            </Card>
+        </div>
+    );
 }

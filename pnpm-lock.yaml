@@ -63,7 +63,7 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0
       zod:
-        specifier: ^4.3.5
+        specifier: link:@hookform/resolver/zod
         version: 4.3.5
     devDependencies:
       '@tailwindcss/postcss':

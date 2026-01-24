@@ -4,21 +4,18 @@ import { Eye, EyeOff } from "lucide-react"
 import { ChangeEvent, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 interface PasswordProps {
   value: string,
   onChange: (e: ChangeEvent<HTMLInputElement>) => void,
-  label: string,
   placeholder: string,
 }
 
-const InputPassword = ({value, onChange, label, placeholder}: PasswordProps) => {
+const InputPassword = ({value, onChange, placeholder}: PasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className="w-full max-w-sm space-y-2">
-      <Label htmlFor="password-toggle">{ label }</Label>
       <div className="relative">
         <Input
           className="bg-background"

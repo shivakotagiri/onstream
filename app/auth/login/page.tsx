@@ -14,6 +14,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
 
 const loginSchema = z.object({
     username: z.string().min(3),

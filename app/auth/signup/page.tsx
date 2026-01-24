@@ -55,16 +55,14 @@ export default function SignupPage() {
             password: data.password,
             name: data.username,
             username: data.username,
-            callbackURL: "/" 
+            callbackURL: "/", 
+            displayUsername: data.username
           }, {
           onSuccess: () => {
             toast.success("Account created successfully!");
             router.push("/");
           },
           onError: error => {
-            console.error("Signup error:", error);
-            console.error("Error details:", JSON.stringify(error, null, 2));
-            // Handle ErrorContext correctly: prefer error.error?.message, then fallback to stringifying if unavailable
             const message =
               (typeof error?.error === "object" && error?.error?.message)
                 || (typeof error?.error === "string" && error.error)

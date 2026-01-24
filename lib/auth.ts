@@ -43,3 +43,5 @@ export const auth = betterAuth({
     })
 });
 
+export const session = auth.api.getSession();
+

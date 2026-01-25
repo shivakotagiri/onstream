@@ -28,6 +28,8 @@ import Link from "next/link";
 import { signIn, signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { SignInWithGoogle } from "@/components/signin-with-google";
 
 const signupSchema = z.object({
     username: z.string().min(3),
@@ -46,6 +48,7 @@ export default function SignupForm() {
             password: ""
         }
     });
+    const { isSubmitting } = form.formState
     const router = useRouter();
     async function handleSignup(data: SignupForm) {
         await signUp.email(
@@ -134,19 +137,13 @@ export default function SignupForm() {
                                 </FormItem>
                             )} 
                         />
-                        <Button type="submit" className="w-full">
-                            Sign up
+                        <Button disabled={isSubmitting} type="submit" className="w-full">
+                            <LoadingSwap isLoading={isSubmitting}>Sign up</LoadingSwap>
                         </Button>
                     </form>
                 </Form>
                 <TextSeparator className="my-2" text="or" />
-                <Button 
-                    className="w-full" 
-                    type="button"
-                    onClick={() => signIn.social({ provider: "google" })}
-                >
-                    Continue with Google <GoogleIcon />
-                </Button>
+                <SignInWithGoogle />
                 <CardFooter className="flex justify-center mt-3">
                     <CardDescription>
                         Already have an account? 

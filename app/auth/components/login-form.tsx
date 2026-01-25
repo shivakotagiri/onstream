@@ -23,11 +23,12 @@ import { Input } from "@/components/ui/input";
 import InputPassword from "@/components/ui/input-password";
 import { Button } from "@/components/ui/button";
 import TextSeparator from "@/components/ui/text-separator";
-import { GoogleIcon } from "@/components/icons";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { SignInWithGoogle } from "@/components/signin-with-google"; 
 
 const loginSchema = z.object({
     username: z.string().min(3),
@@ -45,7 +46,7 @@ export default function LoginForm() {
             password: ""
         }
     });
-
+    const { isSubmitting } = form.formState;
     async function handleLogin(data: LoginForm) {
         await signIn.username(
             {
@@ -118,19 +119,13 @@ export default function LoginForm() {
                                 </FormItem>
                             )} 
                         />
-                        <Button type="submit" className="w-full">
-                            Login
+                        <Button type="submit" disabled={isSubmitting} className="w-full">
+                            <LoadingSwap isLoading={isSubmitting}>Login</LoadingSwap>
                         </Button>
                     </form>
                 </Form>
                 <TextSeparator className="my-2" text="or" />
-                <Button 
-                    className="w-full" 
-                    type="button"
-                    onClick={() => signIn.social({ provider: "google" })}
-                >
-                    Continue with Google <GoogleIcon />
-                </Button>
+                <SignInWithGoogle />
                 <CardFooter className="flex justify-center mt-3">
                     <CardDescription>
                         Don&apos;t have an account? 

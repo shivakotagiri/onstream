@@ -24,89 +24,64 @@ import InputPassword from "@/components/ui/input-password";
 import { Button } from "@/components/ui/button";
 import TextSeparator from "@/components/ui/text-separator";
 import Link from "next/link";
-import { signUp } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
-import { SignInWithGoogle } from "@/components/signin-with-google";
+import { SignInWithGoogle } from "@/components/signin-with-google"; 
 
-const signupSchema = z.object({
+const loginSchema = z.object({
     username: z.string().min(3),
-    password: z.string().min(6),
-    email: z.email().min(1)
+    password: z.string().min(6)
 });
 
-type SignupForm = z.infer<typeof signupSchema>
+type LoginForm = z.infer<typeof loginSchema>;
 
-export default function SignupForm() {
-    const form = useForm<SignupForm>({
-        resolver: zodResolver(signupSchema),
+export function LoginForm() {
+    const router = useRouter();
+    const form = useForm<LoginForm>({
+        resolver: zodResolver(loginSchema),
         defaultValues:{
-            email: "",
             username: "",
             password: ""
         }
     });
-    const { isSubmitting } = form.formState
-    const router = useRouter();
-    async function handleSignup(data: SignupForm) {
-        await signUp.email(
-          { 
-            email: data.email,
-            password: data.password,
-            name: data.username,
-            username: data.username,
-            callbackURL: "/", 
-            displayUsername: data.username
-          }, {
-          onSuccess: () => {
-            toast.success("Account created successfully!");
-            router.push("/");
-          },
-          onError: error => {
-            const message =
-              (typeof error?.error === "object" && error?.error?.message)
-                || (typeof error?.error === "string" && error.error)
-                || error?.error?.error
-                || "Failed to Sign up";
-            toast.error(message);
-          }
-        });
+    const { isSubmitting } = form.formState;
+    async function handleLogin(data: LoginForm) {
+        await signIn.username(
+            {
+                username: data.username,
+                password: data.password,
+                callbackURL: "/"
+            },
+            {
+                onSuccess: () => {
+                    toast.success("Login successful!");
+                    router.push("/");
+                },
+                onError: (error) => {
+                    toast.error(error.error.message || "Failed to login");
+                }
+            }
+        );
     }
     return (
         <Card className="max-w-sm w-full">
             <CardHeader>
-                <CardTitle className="text-lg">Join onStream</CardTitle>
+                <CardTitle className="text-lg">Login to onStream</CardTitle>
                 <CardDescription>
-                    Enter your credentials below and join our streaming community.
+                    Enter your credentials below and login to our streaming community.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleSignup)} className="space-y-5">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="email"
-                                            {...field}
-                                            placeholder="your@gmail.com"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                    <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-5">
                         <FormField
                             control={form.control}
                             name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel className="pb-2">Username</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="text"
@@ -125,6 +100,14 @@ export default function SignupForm() {
                                 <FormItem>
                                     <div className="flex justify-between items-center">
                                         <FormLabel>Password</FormLabel>
+                                        <Button
+                                            variant={"link"}
+                                            className="text-sm cursor-pointer"
+                                            type="button"
+                                            size={"sm"}
+                                        >
+                                            Forgot password?
+                                        </Button>
                                     </div>
                                     <FormControl>
                                         <InputPassword 
@@ -136,8 +119,8 @@ export default function SignupForm() {
                                 </FormItem>
                             )} 
                         />
-                        <Button disabled={isSubmitting} type="submit" className="w-full">
-                            <LoadingSwap isLoading={isSubmitting}>Sign up</LoadingSwap>
+                        <Button type="submit" disabled={isSubmitting} className="w-full">
+                            <LoadingSwap isLoading={isSubmitting}>Login</LoadingSwap>
                         </Button>
                     </form>
                 </Form>
@@ -145,8 +128,8 @@ export default function SignupForm() {
                 <SignInWithGoogle />
                 <CardFooter className="flex justify-center mt-3">
                     <CardDescription>
-                        Already have an account? 
-                        <Link className="text-accent-foreground px-1" href="login">Log in</Link>here
+                        Don&apos;t have an account? 
+                        <Link className="text-accent-foreground px-1" href="signup">Sign up</Link>here
                     </CardDescription>
                 </CardFooter>
             </CardContent>

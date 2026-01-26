@@ -4,12 +4,25 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { username } from "better-auth/plugins";
 import * as schema from "@/db/schema";
+import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
+import { sendEmailVerification } from "./emails/send-email-verification";
 
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
     secret: process.env.BETTER_AUTH_SECRET,
     emailAndPassword: {
         enabled: true,
+        requireEmailVerification: true,
+        sendResetPassword: async ({ user, url }) => {
+            await sendPasswordResetEmail({ user, url });
+        }
+    },
+    emailVerification: {
+        autoSignInAfterVerification: true,
+        sendOnSignUp: true,
+        sendVerificationEmail: async ({ user, url }) => {
+            await sendEmailVerification({ user, url })
+        }
     },
     session: {
         cookieCache: {
@@ -44,6 +57,4 @@ export const auth = betterAuth({
         },
     })
 });
-
-export const session = auth.api.getSession();
 

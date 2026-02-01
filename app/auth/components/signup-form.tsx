@@ -50,6 +50,7 @@ export default function SignupForm() {
     const { isSubmitting } = form.formState
     const router = useRouter();
     async function handleSignup(data: SignupForm) {
+
         await signUp.email(
           { 
             email: data.email,
@@ -61,7 +62,7 @@ export default function SignupForm() {
           }, {
           onSuccess: () => {
             toast.success("Account created successfully!");
-            router.push("/");
+            router.push(`/auth/email-verification`);
           },
           onError: error => {
             const message =

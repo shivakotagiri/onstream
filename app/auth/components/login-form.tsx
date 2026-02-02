@@ -29,6 +29,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google"; 
+import { db } from "@/db";
+
 
 const loginSchema = z.object({
     username: z.string().min(3),
@@ -59,12 +61,16 @@ export default function LoginForm() {
                     toast.success("Login successful!");
                     router.push("/");
                 },
-                onError: (error) => {
+                onError: async (error) => {
+                    if(error.error.message == "Email not verified") {
+                        router.push("/auth/email-verification");
+                    }
                     toast.error(error.error.message || "Failed to login");
                 }
             }
         );
     }
+
     return (
         <Card className="max-w-sm w-full">
             <CardHeader>
@@ -105,6 +111,7 @@ export default function LoginForm() {
                                             className="text-sm cursor-pointer"
                                             type="button"
                                             size={"sm"}
+                                            onClick={() => router.push("/auth/reset-password")}
                                         >
                                             Forgot password?
                                         </Button>

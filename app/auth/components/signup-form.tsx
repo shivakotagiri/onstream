@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google";
-
+import { useSignupStore } from "@/lib/form-state";
 const signupSchema = z.object({
     username: z.string().min(3),
     password: z.string().min(6),
@@ -39,6 +39,7 @@ const signupSchema = z.object({
 type SignupForm = z.infer<typeof signupSchema>
 
 export default function SignupForm() {
+    const { setPassword, setEmail, setUsername, reset } = useSignupStore();
     const form = useForm<SignupForm>({
         resolver: zodResolver(signupSchema),
         defaultValues:{
@@ -47,6 +48,7 @@ export default function SignupForm() {
             password: ""
         }
     });
+    
     const { isSubmitting } = form.formState
     const router = useRouter();
     async function handleSignup(data: SignupForm) {
@@ -61,10 +63,16 @@ export default function SignupForm() {
             displayUsername: data.username
           }, {
           onSuccess: () => {
-            toast.success("Account created successfully!");
+            setEmail(data.email);
+            setPassword(data.password);
+            setUsername(data.username);
+            toast.success("Account created successfully!", {
+                description: "please check your email for verification link"
+            });
             router.push(`/auth/email-verification`);
           },
           onError: error => {
+            reset();
             const message =
               (typeof error?.error === "object" && error?.error?.message)
                 || (typeof error?.error === "string" && error.error)

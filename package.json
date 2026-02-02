@@ -32,7 +32,8 @@
     "resend": "^6.9.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
-    "zod": "link:@hookform/resolver/zod"
+    "zod": "link:@hookform/resolver/zod",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

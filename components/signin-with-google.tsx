@@ -7,7 +7,6 @@ export function SignInWithGoogle() {
         <BetterAuthActionButton 
             className="w-full" 
             type="button"
-            onClick={() => signIn.social({ provider: "google" })}
             action={() => {
                 return signIn.social({
                     provider: "google" 

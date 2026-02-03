@@ -10,7 +10,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         <Button 
             type="button"
             variant={"ghost"}
-            onClick={() => router.push("/")} 
+            onClick={() => router.back()} 
             className="cursor-pointer fixed top-2 left-2 text-muted-foreground flex justify-center items-center gap-0.5"
         >
             <ArrowLeft size={15} />

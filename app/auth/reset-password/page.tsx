@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RequestResetPasswordEmail } from "../components/request-password-reset-email";
 import { PasswordReset } from "../components/password-reset";
@@ -8,7 +8,6 @@ import { useSession } from "@/lib/auth-client";
 
 
 export default function ResetPassword() {
-    const [email, setEmail] = useState<string>("");
     const token = useSearchParams().get("token")
 
     const router = useRouter();
@@ -25,7 +24,7 @@ export default function ResetPassword() {
 
     return (
         <div className="h-screen w-screen flex justify-center items-center">
-            {!token && <RequestResetPasswordEmail email={email} setEmail={setEmail}/>}
+            {!token && <RequestResetPasswordEmail/>}
             {token && <PasswordReset token={token} />}
         </div>
     )

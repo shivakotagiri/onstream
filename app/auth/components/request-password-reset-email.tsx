@@ -1,18 +1,22 @@
 "use client";
 
+import { checkUserForPasswordRequest } from "@/actions/check-user-for-password-reset";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { Label } from "@radix-ui/react-label";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef, useState } from "react";
+import z from "zod";
 
-export function RequestResetPasswordEmail({ email, setEmail }: {
-    email: string,
-    setEmail: (email: string) => void,
-}) {
+const emailZod = z.email();
+
+export function RequestResetPasswordEmail() {
     const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
     const [resetTimeToResend, setResetTimeResend] = useState<number>(0);
+    const router = useRouter();
+    const [email, setEmail] = useState<string>("");
 
     function startResendCooldown(time = 30) {
         clearInterval(interval.current);
@@ -26,6 +30,45 @@ export function RequestResetPasswordEmail({ email, setEmail }: {
                 return prev - 1;
             })
         }, 1000);
+    }
+
+    async function handleRequest() {
+        const { success } = await emailZod.safeParseAsync(email)
+        if(!success) {
+            return { error: { message: "Invalid Email Format" } }
+        }
+        const res = await checkUserForPasswordRequest(email);
+        if(!res || !res.email) {
+            return {
+                error: {
+                    message: "User not found, Please signup first"
+                }
+            };
+        }
+        
+        if(!res.emailVerified) {
+            router.push("/auth/email-verification");
+            return {
+                error: {
+                    message: "Email not verified, Please verify your email"
+                }
+            };
+        }
+
+        const result = await authClient.requestPasswordReset({
+            email: email.trim().toLowerCase(),
+            redirectTo: "/auth/reset-password",
+        });
+
+        if(!result.error) {
+            startResendCooldown();
+        }
+
+        if(result.error) {
+            return { error: { message: result.error.message } }
+        }
+
+        return result;
     }
 
     return (
@@ -46,17 +89,7 @@ export function RequestResetPasswordEmail({ email, setEmail }: {
                 </div>
                 <BetterAuthActionButton 
                     disabled={resetTimeToResend > 0}
-                    action={async () => {
-                        const res = await authClient.requestPasswordReset({
-                            email: email.trim().toLowerCase(),
-                            redirectTo: "/auth/reset-password",
-                        });
-
-                        if(!res.error) {
-                            startResendCooldown();
-                        }
-                        return res;
-                    }} 
+                    action={handleRequest} 
                     successMessage="Password Reset link sent successfully"
                 >
                     {resetTimeToResend > 0 ? `Reset Password (${resetTimeToResend})`: "Reset Password"}

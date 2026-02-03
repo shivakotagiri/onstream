@@ -1,5 +1,6 @@
 "use client";
 
+import { checkUserForPasswordRequest } from "@/actions/check-user-for-password-reset";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { SignInWithGoogle } from "@/components/signin-with-google";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,15 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import TextSeparator from "@/components/ui/text-separator";
 import { authClient, useSession } from "@/lib/auth-client";
-import { useSignupStore } from "@/lib/form-state";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import z from "zod";
 
-
+const emailZod = z.email();
 export function EmailVerificationForm() {
-    const { email } = useSignupStore();
     const session = useSession()
     const router = useRouter();
+    const [email, setEmail] = useState<string>("");
     const [timeToNextResend, setTimeToNextResend] = useState<number>(0);
     const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
@@ -34,13 +35,36 @@ export function EmailVerificationForm() {
         }, 1000);
     }
 
+    async function handleEmailVerification() {
+        const { success } =  await emailZod.safeParseAsync(email);
+        if(!success) {
+            return { error: { message: "Invalid Email Format" } }
+        }
+        const userData = await checkUserForPasswordRequest(email.trim().toLowerCase());
+        if(!userData || !userData.email) {
+            return { error: { message: "User not found" } }
+        }
+
+        if(userData.email && userData.emailVerified) {
+            return { error: { message: "Email is already verified, please try to login with your credentials."} }
+        }
+
+        const res = await authClient.sendVerificationEmail({
+            callbackURL: "/",
+            email: userData.email,
+        });
+
+        if(!res.error) {
+            startResendCooldown();
+        }
+
+        return res;
+    }
+
 
     useEffect(() => {
         if(session.data?.user.email) router.push("/");
-        else if(!email) router.push("/auth/signup");
-    }, [router, email, session.data?.user.email]);
-
-    if(!email) return null;
+    }, [router, session.data?.user.email]);
 
     return (
         <Card className="max-w-md w-full">
@@ -53,25 +77,14 @@ export function EmailVerificationForm() {
             <CardContent className="flex flex-col gap-3">
                 <div className="flex flex-col gap-3">
                     <Label>Email</Label>
-                    <Input value={email} readOnly />
+                    <Input value={email} onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
                 </div>
                 <BetterAuthActionButton 
                     disabled={timeToNextResend > 0} 
-                    action={async () => {
-                        const res = await authClient.sendVerificationEmail({
-                            callbackURL: "/",
-                            email,
-                        });
-
-                        if(!res.error) {
-                            startResendCooldown();
-                        }
-
-                        return res;
-                    }}
+                    action={handleEmailVerification}
                     successMessage="Verification email sent"
                 >
-                    {timeToNextResend > 0  ? `Resend Email (${timeToNextResend})`: "Resend Email"}
+                    {timeToNextResend > 0  ? `Resend Email (${timeToNextResend})`: "Send Email"}
                 </BetterAuthActionButton>
                 <TextSeparator text="or" />
                 <SignInWithGoogle />

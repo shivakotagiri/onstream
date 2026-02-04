@@ -108,7 +108,7 @@ export default function LoginForm() {
                                         <FormLabel>Password</FormLabel>
                                         <Button
                                             variant={"link"}
-                                            className="text-sm cursor-pointer"
+                                            className="text-sm cursor-pointer text-accent-foreground"
                                             type="button"
                                             size={"sm"}
                                             onClick={() => router.push("/auth/reset-password")}

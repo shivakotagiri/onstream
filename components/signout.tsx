@@ -1,22 +1,27 @@
 "use client";
-import { signOut } from "@/lib/auth-client";
-import { Button } from "./ui/button";
+import { signOut, useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { BetterAuthActionButton } from "./better-auth-action-button";
 
 export default function Signout() {
     const router = useRouter();
+    const session = useSession();
     async function handleSignout() {
-        await signOut();
+        if(!session || !session.data || !session.data.user) {
+            return { error: { message: "User is already logged out" } }
+        } 
+        const res = await signOut();
         router.push("/auth/login");
+        return res;
     }
     return (
-        <Button
+        <BetterAuthActionButton
             variant={"destructive"} 
             className="cursor-pointer" 
             type="button"
-            onClick={handleSignout}
+            action={handleSignout}
         >
             Sign out
-        </Button>
+        </BetterAuthActionButton>
     )
 }

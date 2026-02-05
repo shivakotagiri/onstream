@@ -9,11 +9,8 @@ export function Logo() {
     }
     return (
         <div onClick={handleClick} className="cursor-pointer">
-            <div className="hidden lg:flex uppercase font-semibold">
+            <div className="sm:text-base text-sm uppercase font-semibold">
             onstream
-            </div>
-            <div className="w-10 lg:hidden h-10 bg-secondary p-5 text-md rounded-full flex justify-center items-center">
-                S
             </div>
         </div>
     )

@@ -8,28 +8,14 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
+import { usersData } from "@/actions/user-data"
+import { getSession } from "@/lib/get-session";
 
-export function AppSidebar() {
-    const users = [
-    {
-        id: 1,
-        name: "Aarav",
-        avatar: "/avatars/aarav.png",
-        isLive: true,
-    },
-    {
-        id: 2,
-        name: "Neha",
-        avatar: "/avatars/neha.png",
-        isLive: false,
-    },
-    {
-        id: 3,
-        name: "Rahul",
-        avatar: "/avatars/rahul.png",
-        isLive: true,
-    },
-    ]
+export async function AppSidebar() {
+    const usersInfo = await usersData(); 
+    const session = await getSession();
+
+    const users = (session && session.user) ? usersInfo.filter(({ id }) => id !== session.user.id): usersInfo;
 
     return (
     <Sidebar className="bg-[#1A1B1E] mt-21 border-none shadow-2xl" collapsible="icon">
@@ -53,8 +39,8 @@ export function AppSidebar() {
               <SidebarUserItem
                 key={user.id}
                 name={user.name}
-                avatar={user.avatar}
-                isLive={user.isLive}
+                avatar={user.image || ""}
+                isLive={false}
               />
             ))}
           </SidebarGroupContent>

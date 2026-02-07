@@ -35,12 +35,12 @@ export async function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="flex flex-col gap-1">
-            {users.map((user) => (
+            {users.map((user, id) => (
               <SidebarUserItem
                 key={user.id}
                 name={user.name}
                 avatar={user.image || ""}
-                isLive={false}
+                isLive={id % 2 == 0}
               />
             ))}
           </SidebarGroupContent>

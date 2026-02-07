@@ -15,6 +15,7 @@ import {
   BadgeCheckIcon,
   BellIcon,
   LayoutDashboard,
+  LogIn,
   LogOutIcon,
   SunMoon,
   User2Icon,
@@ -50,7 +51,7 @@ export function UserMenu() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuGroup>
+                {(session.data && session.data.user) ? <DropdownMenuGroup>
                     <DropdownMenuItem>
                         <BadgeCheckIcon />
                         Account
@@ -63,16 +64,20 @@ export function UserMenu() {
                         <BellIcon />
                         Notifications
                     </DropdownMenuItem>
+                </DropdownMenuGroup> : <DropdownMenuGroup>
                     <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark": "light")}>
                         <SunMoon />
                         Theme
                     </DropdownMenuItem>
-                </DropdownMenuGroup>
+                </DropdownMenuGroup>}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignout}>
+                {(session.data && session.data.user) ? <DropdownMenuItem onClick={handleSignout}>
                     <LogOutIcon />
                     Sign Out
-                </DropdownMenuItem>
+                </DropdownMenuItem>: <DropdownMenuItem onClick={() => router.push("/auth/login")}>
+                    <LogIn />
+                    Log In
+                </DropdownMenuItem>}
             </DropdownMenuContent>
         </DropdownMenu>
     )

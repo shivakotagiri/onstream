@@ -12,7 +12,7 @@ import { usersData } from "@/actions/user-data"
 import { getSession } from "@/lib/get-session";
 
 export async function AppSidebar() {
-    const usersInfo = await usersData(); 
+    const usersInfo = (await usersData()).filter(({ emailVerified }) => emailVerified === true); 
     const session = await getSession();
 
     const users = (session && session.user) ? usersInfo.filter(({ id }) => id !== session.user.id): usersInfo;

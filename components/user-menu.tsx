@@ -51,25 +51,26 @@ export function UserMenu() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                {(session.data && session.data.user) ? <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <BadgeCheckIcon />
-                        Account
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <LayoutDashboard />
-                        Dashboard
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <BellIcon />
-                        Notifications
-                    </DropdownMenuItem>
-                </DropdownMenuGroup> : <DropdownMenuGroup>
+                <DropdownMenuGroup>
+                    {(session.data && session.data.user) && <div className="w-full h-full">
+                        <DropdownMenuItem>
+                            <BadgeCheckIcon />
+                            Account
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <LayoutDashboard />
+                            Dashboard
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <BellIcon />
+                            Notifications
+                        </DropdownMenuItem>
+                    </div>}
                     <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark": "light")}>
                         <SunMoon />
                         Theme
                     </DropdownMenuItem>
-                </DropdownMenuGroup>}
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 {(session.data && session.data.user) ? <DropdownMenuItem onClick={handleSignout}>
                     <LogOutIcon />

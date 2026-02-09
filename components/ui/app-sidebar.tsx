@@ -21,7 +21,7 @@ export async function AppSidebar() {
     <Sidebar className="bg-[#1A1B1E] mt-21 border-none shadow-2xl" collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2">
-          <SidebarTrigger />
+          <SidebarTrigger className="md:block hidden" />
 
           <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
             <h2 className="text-sm font-semibold">For you</h2>

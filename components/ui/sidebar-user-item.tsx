@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation"
 import { LiveAvatar } from "./live-avatar"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
+import { useSidebar } from "./sidebar";
 
 export function SidebarUserItem({
   name,
@@ -13,10 +15,25 @@ export function SidebarUserItem({
   isLive: boolean
 }) {
   const router = useRouter();
+  const { state, isMobile } = useSidebar()
+
   return (
-    <div onClick={() => router.push("/" + name.replace(/ /g, "").toLowerCase())} className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer">
-      <LiveAvatar src={avatar} name={name} isLive={isLive} />
-      <span className="text-sm font-medium truncate">{name}</span>
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div
+          onClick={() =>
+            router.push("/" + name.replace(/ /g, "").toLowerCase())
+          }
+          className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
+        >
+          <LiveAvatar src={avatar} name={name} isLive={isLive} />
+          <span className="text-sm font-medium truncate">{name}</span>
+        </div>
+      </TooltipTrigger>
+
+      <TooltipContent hidden={state !== "collapsed" || isMobile} side="right" align="center" sideOffset={8}>
+        {name}
+      </TooltipContent>
+    </Tooltip>
   )
 }

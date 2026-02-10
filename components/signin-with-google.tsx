@@ -14,7 +14,7 @@ export function SignInWithGoogle() {
             }}
             successMessage="Login Successfull"
         >
-            Continue with Google <GoogleIcon />
+        Continue with Google <GoogleIcon />
         </BetterAuthActionButton>
     )
 }

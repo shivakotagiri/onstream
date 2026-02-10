@@ -29,7 +29,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google"; 
-import { db } from "@/db";
 
 
 const loginSchema = z.object({
@@ -72,9 +71,9 @@ export default function LoginForm() {
     }
 
     return (
-        <Card className="max-w-sm w-full">
+        <Card className="max-w-md w-full">
             <CardHeader>
-                <CardTitle className="text-lg">Login to onStream</CardTitle>
+                <CardTitle className="text-2xl">Login to onStream</CardTitle>
                 <CardDescription>
                     Enter your credentials below and login to our streaming community.
                 </CardDescription>

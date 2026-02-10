@@ -33,7 +33,8 @@ import { useSignupStore } from "@/lib/form-state";
 const signupSchema = z.object({
     username: z.string().min(3),
     password: z.string().min(6),
-    email: z.email().min(1)
+    email: z.email().min(1),
+    name: z.string().min(3),
 });
 
 type SignupForm = z.infer<typeof signupSchema>
@@ -45,7 +46,8 @@ export default function SignupForm() {
         defaultValues:{
             email: "",
             username: "",
-            password: ""
+            password: "",
+            name: "",
         }
     });
     
@@ -57,10 +59,10 @@ export default function SignupForm() {
           { 
             email: data.email,
             password: data.password,
-            name: data.username,
+            name: data.name,
             username: data.username,
             callbackURL: "/", 
-            displayUsername: data.username
+            displayUsername: data.name
           }, {
           onSuccess: () => {
             setEmail(data.email);
@@ -83,9 +85,9 @@ export default function SignupForm() {
         });
     }
     return (
-        <Card className="max-w-sm w-full">
+        <Card className="max-w-md w-full">
             <CardHeader>
-                <CardTitle className="text-lg">Join onStream</CardTitle>
+                <CardTitle className="text-2xl">Join onStream</CardTitle>
                 <CardDescription>
                     Enter your credentials below and join our streaming community.
                 </CardDescription>
@@ -93,6 +95,22 @@ export default function SignupForm() {
             <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(handleSignup)} className="space-y-5">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            placeholder="Enter your name"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )} 
+                        />
                         <FormField
                             control={form.control}
                             name="email"

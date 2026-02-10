@@ -30,6 +30,8 @@ import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google";
 import { useSignupStore } from "@/lib/form-state";
+import { useEffect } from "react";
+import { checkUsernameAvailability } from "@/actions/check-username-availability";
 const signupSchema = z.object({
     username: z.string().min(3),
     password: z.string().min(6),
@@ -84,6 +86,31 @@ export default function SignupForm() {
           }
         });
     }
+    const {setError, clearErrors, watch} = form;
+    // eslint-disable-next-line react-hooks/incompatible-library
+    const username = watch("username");
+
+    useEffect(() => {
+        if(username.length < 3) {
+            clearErrors("username");
+            return;
+        }
+
+        const timeout = setTimeout(async () => {
+            const res = await checkUsernameAvailability(username);
+
+            if(!res.available) {
+                setError("username", {
+                    type: "manual",
+                    message: "Username already taken"
+                });
+            } else {
+                clearErrors("username");
+            }
+        }, 400);
+
+        return () => clearTimeout(timeout);
+    }, [clearErrors, setError, username])
     return (
         <Card className="max-w-md w-full">
             <CardHeader>

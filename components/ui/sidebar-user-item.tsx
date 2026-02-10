@@ -9,10 +9,12 @@ export function SidebarUserItem({
   name,
   avatar,
   isLive,
+  username
 }: {
   name: string
   avatar: string
-  isLive: boolean
+  isLive: boolean,
+  username: string
 }) {
   const router = useRouter();
   const { state, isMobile } = useSidebar()
@@ -22,7 +24,7 @@ export function SidebarUserItem({
       <TooltipTrigger asChild>
         <div
           onClick={() =>
-            router.push("/" + name.replace(/ /g, "").toLowerCase())
+            router.push("/" + username.replace(/ /g, "").toLowerCase())
           }
           className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
         >

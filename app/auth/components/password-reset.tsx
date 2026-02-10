@@ -32,8 +32,10 @@ export function PasswordReset({ token }: {
                 </div>
                 <BetterAuthActionButton
                     action={async () => {
+                        const newPassword = password.trim();
+                        if(!newPassword) return { error: { message: "Password is required" } }
                         const res = await authClient.resetPassword({
-                            newPassword: password.trim(),
+                            newPassword: newPassword,
                             token,
                         });
                         router.push("/auth/login");

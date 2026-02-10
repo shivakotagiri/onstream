@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
 
 const emailZod = z.email();
@@ -70,6 +70,10 @@ export function RequestResetPasswordEmail() {
 
         return result;
     }
+
+    useEffect(() => {
+        return () => clearInterval(interval.current);
+    }, [])
 
     return (
         <Card className="max-w-md w-full">

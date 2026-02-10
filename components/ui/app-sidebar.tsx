@@ -41,6 +41,7 @@ export async function AppSidebar() {
                   name={user.name}
                   avatar={user.image || ""}
                   isLive={id % 2 == 0}
+                  username={user.username || user.name}
                 />
               ))}
             </SidebarGroupContent>

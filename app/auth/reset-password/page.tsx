@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RequestResetPasswordEmail } from "../components/request-password-reset-email";
@@ -8,15 +10,16 @@ import { useSession } from "@/lib/auth-client";
 
 
 export default function ResetPassword() {
-    const token = useSearchParams().get("token")
+    const searchParams = useSearchParams();
+    const token = searchParams.get("token");
 
     const router = useRouter();
 
     const session = useSession();
     
     useEffect(() => {
-        if(session && session.data) {
-            router.push("/")
+        if(session.data) {
+            router.replace("/")
         }
     },[session, router]);
     

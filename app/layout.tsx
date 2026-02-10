@@ -34,9 +34,7 @@ export default function RootLayout({
           defaultTheme="system" 
           disableTransitionOnChange
         >
-          <SidebarProvider>
-              { children }
-          </SidebarProvider>
+            { children }
           <Toaster richColors position="bottom-right" />
         </ThemeProvider>
       </body>

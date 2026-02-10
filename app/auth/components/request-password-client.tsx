@@ -2,31 +2,31 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { RequestResetPasswordEmail } from "../components/request-password-reset-email";
-import { PasswordReset } from "../components/password-reset";
 import { useSession } from "@/lib/auth-client";
+import { RequestResetEmail } from "./request-reset-email"; 
+import { PasswordResetForm } from "./password-reset-form"; 
 
+export default function ResetPasswordClient() {
+  const session = useSession();
+  const router = useRouter();
+  const params = useSearchParams();
+  const token = params.get("token");
 
-export function ResetPasswordClient() {
-    const searchParams = useSearchParams();
-    const token = searchParams.get("token");
+  useEffect(() => {
+    if (session?.data) {
+      router.replace("/");
+    }
+  }, [router, session]);
 
-    const router = useRouter();
+  if (session?.data) return null;
 
-    const session = useSession();
-    
-    useEffect(() => {
-        if(session.data) {
-            router.replace("/")
-        }
-    },[session, router]);
-    
-    if(session?.data) return null;
-
-    return (
-        <div className="h-screen w-screen flex justify-center items-center">
-            {!token && <RequestResetPasswordEmail/>}
-            {token && <PasswordReset token={token} />}
-        </div>
-    )
+  return (
+    <div className="h-screen w-screen flex items-center justify-center">
+      {token ? (
+        <PasswordResetForm token={token} />
+      ) : (
+        <RequestResetEmail />
+      )}
+    </div>
+  );
 }

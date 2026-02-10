@@ -1,10 +1,10 @@
 "use client";
 
 import { checkUserForPasswordRequest } from "@/actions/check-user-for-password-reset";
+import { requestPasswordReset } from "@/actions/reset-password";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import z from "zod";
 
 const emailZod = z.email();
 
-export function RequestResetPasswordEmail() {
+export function RequestResetEmail() {
     const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
     const [resetTimeToResend, setResetTimeResend] = useState<number>(0);
     const router = useRouter();
@@ -55,10 +55,7 @@ export function RequestResetPasswordEmail() {
             };
         }
 
-        const result = await authClient.requestPasswordReset({
-            email: email.trim().toLowerCase(),
-            redirectTo: "/auth/reset-password",
-        });
+        const result = await requestPasswordReset(email);
 
         if(!result.error) {
             startResendCooldown();

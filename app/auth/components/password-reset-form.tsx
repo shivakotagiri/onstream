@@ -8,7 +8,7 @@ import { Label } from "@radix-ui/react-label"
 import { useRouter } from "next/navigation"
 import { ChangeEvent, useState } from "react"
 
-export function PasswordReset({ token }: {
+export function PasswordResetForm({ token }: {
     token: string
 }) {
     const [password, setPassword] = useState<string>("");

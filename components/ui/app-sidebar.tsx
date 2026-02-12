@@ -18,7 +18,7 @@ export async function AppSidebar() {
     const users = (session && session.user) ? usersInfo.filter(({ id }) => id !== session.user.id): usersInfo;
 
     return (
-      <Sidebar className="bg-[#1A1B1E] mt-21 border-none shadow-2xl" collapsible="icon">
+      <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2">
             <SidebarTrigger className="md:block hidden" />

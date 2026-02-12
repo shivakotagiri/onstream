@@ -26,7 +26,7 @@ export function LiveAvatar({
       </Avatar>
 
       {isLive && (
-        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded px-1.5 py-px text-[10px] font-semibold text-white bg-red-500">
+        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded px-1.5 py-px text-[5px] font-semibold text-white bg-red-500">
           LIVE
         </span>
       )}

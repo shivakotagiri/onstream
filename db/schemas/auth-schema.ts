@@ -7,6 +7,7 @@ import {
   boolean,
   integer,
   index,
+  primaryKey
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -108,3 +109,14 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+
+export const followers = pgTable("followers", {
+  followerId: text("follower_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  followingId: text("following_id").notNull().references(() => users.id, {onDelete: "cascade"}),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+}, (table) => ({
+  pk: primaryKey({ columns: [table.followerId, table.followingId] }),
+  followerIdx: index("followers_follower_idx").on(table.followerId),
+  followingIdx: index("followers_following_idx").on(table.followingId)
+}))

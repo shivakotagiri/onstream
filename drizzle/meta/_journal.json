@@ -15,6 +15,13 @@
       "when": 1770455435589,
       "tag": "0001_dashing_bruce_banner",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770902314465,
+      "tag": "0002_steep_lucky_pierre",
+      "breakpoints": true
     }
   ]
 }

@@ -35,7 +35,8 @@ export const auth = betterAuth({
         additionalFields: {}
     },
     rateLimit: {
-        storage: "database"
+        storage: "database",
+        
     },
     socialProviders: {
         google: {

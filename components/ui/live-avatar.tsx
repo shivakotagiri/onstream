@@ -5,17 +5,20 @@ export function LiveAvatar({
   src,
   name,
   isLive,
+  className
 }: {
   src: string
   name: string
-  isLive: boolean
+  isLive: boolean,
+  className?: string
 }) {
   return (
     <div className="relative">
       <Avatar
         className={cn(
           "size-10",
-          isLive && "ring-2 ring-red-500 ring-offset-2 ring-offset-background"
+          isLive && "ring-2 ring-red-500 ring-offset-2 ring-offset-background",
+          className
         )}
       >
         <AvatarImage src={src} alt={name} />

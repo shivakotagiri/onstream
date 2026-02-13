@@ -1,8 +1,9 @@
-import { LiveAvatar } from "./ui/live-avatar";
+import { UserAvatar } from "./ui/live-avatar";
 import { Button } from "./ui/button";
 import { EllipsisVertical } from "lucide-react";
 import FollowButton from "./follow-button";
 import { UserFollowers } from "./user-followers";
+import { getSession } from "@/lib/get-session";
 
 interface ProfileBannerProps {
   CurrentUserFollowing: boolean,
@@ -28,11 +29,15 @@ export async function ProfileBanner({ followingData, CurrentUserFollowing }: Pro
     );
   }
 
+  const session = await getSession()
+
+  const sameUser = followingData.id === session?.user.id;
+
   return (
     <div className="w-full h-full flex flex-col gap-15 ">
-      <div className="w-full relative h-[480px] bg-blue-400 flex justify-center items-center ">
+      <div className="w-full relative h-[380px] bg-blue-400 flex justify-center items-center ">
         <div className="absolute -bottom-10 left-10 ">
-          <LiveAvatar
+          <UserAvatar
             isLive={true}
             name={followingData.name}
             src={followingData.image ?? ""}
@@ -50,7 +55,7 @@ export async function ProfileBanner({ followingData, CurrentUserFollowing }: Pro
           <UserFollowers id={followingData.id} />
         </div>
         <div className="flex gap-1">
-          <FollowButton followingData={followingData} CurrentUserFollowing={CurrentUserFollowing} />
+          {!sameUser && <FollowButton followingData={followingData} CurrentUserFollowing={CurrentUserFollowing} />}
           <Button 
             variant={"ghost"} 
             size={"icon"}

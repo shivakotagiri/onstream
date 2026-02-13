@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   LogIn,
   LogOutIcon,
+  Settings,
   SunMoon,
   User2Icon,
 } from "lucide-react"
@@ -53,17 +54,17 @@ export function UserMenu() {
             <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                     {(session.data && session.data.user) && <div className="w-full h-full">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push("/user/" + session.data?.user.username)}>
                             <BadgeCheckIcon />
-                            Account
+                            Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <LayoutDashboard />
                             Dashboard
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <BellIcon />
-                            Notifications
+                        <DropdownMenuItem onClick={() => router.push("/settings")}>
+                            <Settings />
+                            Settings
                         </DropdownMenuItem>
                     </div>}
                     <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark": "light")}>

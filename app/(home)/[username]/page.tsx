@@ -1,7 +1,14 @@
-export default function UserDashboardPage({ username }: { username: string }) {
-    return (
-        <div className="w-screen h-screen flex justify-center items-center">
-            hello { username }
-        </div>
-    )
+import { ProfileBanner } from "@/components/profile-banner";
+
+export default async function UserDashboardPage({ params }: { 
+    params: Promise<{ username: string }>; 
+}) {
+  const { username } = await params;
+  return (
+    <div className="w-screen h-full flex flex-col items-center">
+      <div className="w-full h-full flex justify-center">
+        <ProfileBanner username={username} />
+      </div>
+    </div>
+  );
 }

@@ -5,12 +5,16 @@ export function LiveAvatar({
   src,
   name,
   isLive,
-  className
+  className,
+  avatarFallbackClassname,
+  badgeClassname
 }: {
   src: string
   name: string
   isLive: boolean,
-  className?: string
+  className?: string,
+  avatarFallbackClassname?: string,
+  badgeClassname?: string
 }) {
   return (
     <div className="relative">
@@ -22,11 +26,12 @@ export function LiveAvatar({
         )}
       >
         <AvatarImage src={src} alt={name} />
-        <AvatarFallback>{name[0]}</AvatarFallback>
+        <AvatarFallback className={cn(avatarFallbackClassname)}>{name[0]}</AvatarFallback>
       </Avatar>
 
       {isLive && (
-        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded px-1.5 py-px text-[5px] font-semibold text-white bg-red-500">
+        <span className={cn("absolute -bottom-1 left-1/2 -translate-x-1/2 rounded px-1.5 py-px text-[5px] font-semibold text-white bg-red-500", badgeClassname)}
+        >
           LIVE
         </span>
       )}

@@ -1,24 +1,32 @@
-import { userFollowers } from "@/actions/followers";
 import { LiveAvatar } from "./ui/live-avatar";
-import { userSearchData } from "@/actions/user-data";
 import { Button } from "./ui/button";
-import { EllipsisVertical, UserPlus } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
+import FollowButton from "./follow-button";
+import { UserFollowers } from "./user-followers";
 
 interface ProfileBannerProps {
-  username: string;
+  CurrentUserFollowing: boolean,
+  followingData: {
+    username: string | null;
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    displayUsername: string | null;
+  } | undefined
 }
 
-export async function ProfileBanner({ username }: ProfileBannerProps) {
-  const data = await userSearchData(username);
-  
-  if (!data) {
+export async function ProfileBanner({ followingData, CurrentUserFollowing }: ProfileBannerProps) {
+  if (!followingData) {
     return (
       <div className="w-full h-[480px] flex justify-center items-center">
         User not found
       </div>
     );
   }
-  const followersData = await userFollowers(data.id);
 
   return (
     <div className="w-full h-full flex flex-col gap-15 ">
@@ -26,8 +34,8 @@ export async function ProfileBanner({ username }: ProfileBannerProps) {
         <div className="absolute -bottom-10 left-10 ">
           <LiveAvatar
             isLive={true}
-            name={data.name}
-            src={data.image ?? ""}
+            name={followingData.name}
+            src={followingData.image ?? ""}
             className="size-25 ring-3 ring-red-500"
             avatarFallbackClassname="text-3xl dark:text-white"
             badgeClassname="text-sm px-3"
@@ -37,15 +45,12 @@ export async function ProfileBanner({ username }: ProfileBannerProps) {
       <div className="flex justify-between items-center w-full px-3 md:px-10">
         <div className="h-fit">
           <div className="lg:text-3xl text-xl">
-            {data.name}
+            {followingData.name}
           </div>
-          <p className="text-md text-muted-foreground flex gap-1">
-            <span>{followersData.length}</span>
-            <span>followers</span>
-          </p>
+          <UserFollowers id={followingData.id} />
         </div>
         <div className="flex gap-1">
-          <Button className="font-semibold px-5 cursor-pointer"><UserPlus />Follow</Button>
+          <FollowButton followingData={followingData} CurrentUserFollowing={CurrentUserFollowing} />
           <Button 
             variant={"ghost"} 
             size={"icon"}
@@ -54,7 +59,6 @@ export async function ProfileBanner({ username }: ProfileBannerProps) {
             <EllipsisVertical className="h-5 w-5" />
           </Button>
         </div>
-
       </div>
     </div>
   );

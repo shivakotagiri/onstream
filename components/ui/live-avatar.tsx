@@ -11,28 +11,32 @@ export function UserAvatar({
 }: {
   src: string
   name: string
-  isLive: boolean,
-  className?: string,
-  avatarFallbackClassname?: string,
+  isLive?: boolean
+  className?: string
+  avatarFallbackClassname?: string
   badgeClassname?: string
 }) {
   return (
-    <div className="relative">
+    <div className="relative inline-block">
       <Avatar
         className={cn(
           "size-10",
-          isLive && "ring-2 ring-red-500 ring-offset-2 ring-offset-background",
+          isLive && "ring-2 ring-destructive ring-offset-2 ring-offset-background",
           className
         )}
       >
-        <AvatarImage src={src} alt={name} />
-        <AvatarFallback className={cn(avatarFallbackClassname)}>{name[0]}</AvatarFallback>
+        <AvatarImage src={src} alt={name} className="object-cover" />
+        <AvatarFallback className={cn("bg-secondary text-secondary-foreground font-medium", avatarFallbackClassname)}>
+          {name.charAt(0).toUpperCase()}
+        </AvatarFallback>
       </Avatar>
 
       {isLive && (
-        <span className={cn("absolute -bottom-1 left-1/2 -translate-x-1/2 rounded px-1.5 py-px text-[5px] font-semibold text-white bg-red-500", badgeClassname)}
-        >
-          LIVE
+        <span className={cn(
+          "absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wider text-destructive-foreground bg-destructive border-[1.5px] border-background shadow-sm uppercase", 
+          badgeClassname
+        )}>
+          Live
         </span>
       )}
     </div>

@@ -1,61 +1,86 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { UserPlus } from "lucide-react";
+import { UserPlus, UserCheck } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { followUser, unFollowUser } from "@/actions/followers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface FollowButtonProps {
-    CurrentUserFollowing: boolean,
+    CurrentUserFollowing: boolean;
     followingData: {
-        image: string | null;
         id: string;
         name: string;
         username: string | null;
-        email: string;
-        emailVerified: boolean;
-        createdAt: Date;
-        updatedAt: Date;
         displayUsername: string | null;
     }
 }
 
 export default function FollowButton({ followingData, CurrentUserFollowing }: FollowButtonProps) {
-    const [isFollowing, setIsFollowing] = useState<boolean>(CurrentUserFollowing);
     const currentUser = useSession().data;
     const router = useRouter();
+    const [isFollowing, setIsFollowing] = useState<boolean>(CurrentUserFollowing);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (!currentUser?.user) {
+            setIsFollowing(false);
+        } else {
+            setIsFollowing(CurrentUserFollowing);
+        }
+    }, [currentUser?.user, CurrentUserFollowing]);
+
     const handleFollow = async () => {
-        if(!currentUser || !currentUser.user) {
-            toast.error("Please login first");
+        if (!currentUser || !currentUser.user) {
+            toast.error("Please login first to follow users.");
             return;
         }
-        else if(isFollowing) {
-            await unFollowUser(currentUser.user.id, followingData.id);
-            setIsFollowing(false);
+
+        setIsLoading(true);
+        try {
+            if (isFollowing) {
+                await unFollowUser(currentUser.user.id, followingData.id);
+                setIsFollowing(false);
+                toast.success(`Unfollowed ${followingData.name}`);
+            } else {
+                await followUser(currentUser.user.id, followingData.id);
+                setIsFollowing(true);
+                toast.success(`Following ${followingData.name}`);
+            }
             router.refresh();
-        }
-        else {
-            await followUser(currentUser.user.id, followingData.id);
-            setIsFollowing(true);
-            router.refresh();
+        } catch (error) {
+            toast.error("Something went wrong. Please try again.");
+            setIsFollowing(CurrentUserFollowing); 
+        } finally {
+            setIsLoading(false);
         }
     }
-
-    //TODO: when i got signout the state is not changing as it is showing "following" when i hard reload the page then the state changes 
 
     return (
         <Button 
             onClick={handleFollow}
-            className="font-semibold px-5 cursor-pointer">
-            { isFollowing ? <div>Following</div>: 
-                <div className="flex gap-1">
-                    <UserPlus />
-                    Follow
+            disabled={isLoading}
+            variant={isFollowing ? "outline" : "default"}
+            className={cn(
+                "font-semibold px-6 rounded-full shadow-none transition-all duration-200",
+                isFollowing ? "hover:border-destructive hover:text-destructive hover:bg-destructive/10" : ""
+            )}
+        >
+            {isFollowing ? (
+                <div className="flex items-center gap-1.5">
+                    <UserCheck className="size-4" />
+                    <span>Following</span>
                 </div>
-            }
+            ) : (
+                <div className="flex items-center gap-1.5">
+                    <UserPlus className="size-4" />
+                    <span>Follow</span>
+                </div>
+            )}
         </Button>
     )
 }

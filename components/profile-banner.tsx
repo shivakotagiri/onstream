@@ -74,7 +74,7 @@ export async function ProfileBanner({ followingData, CurrentUserFollowing }: Pro
                 {followingData.name}
               </h1>
               <p className="text-sm text-muted-foreground">
-                @{followingData.displayUsername || followingData.username || "user"}
+                @{followingData.username || "user"}
               </p>
             </div>
 

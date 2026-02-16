@@ -7,10 +7,11 @@ import {
   boolean,
   integer,
   index,
-  primaryKey
+  primaryKey,
+  date,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable("users", {
+export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -23,6 +24,9 @@ export const users = pgTable("users", {
     .notNull(),
   username: text("username").unique(),
   displayUsername: text("display_username"),
+  bannerImage: text("banner_image"),
+  bio: text("bio"),
+  dob: date("dob")
 });
 
 export const session = pgTable(
@@ -39,7 +43,7 @@ export const session = pgTable(
     userAgent: text("user_agent"),
     userId: text("user_id")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" }),
   },
   (table) => [index("session_userId_idx").on(table.userId)],
 );
@@ -52,7 +56,7 @@ export const account = pgTable(
     providerId: text("provider_id").notNull(),
     userId: text("user_id")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" }),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
@@ -91,29 +95,29 @@ export const rateLimit = pgTable("rate_limit", {
   lastRequest: bigint("last_request", { mode: "number" }),
 });
 
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(users, {
+  user: one(user, {
     fields: [session.userId],
-    references: [users.id],
+    references: [user.id],
   }),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
-  user: one(users, {
+  user: one(user, {
     fields: [account.userId],
-    references: [users.id],
+    references: [user.id],
   }),
 }));
 
 
 export const followers = pgTable("followers", {
-  followerId: text("follower_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  followingId: text("following_id").notNull().references(() => users.id, {onDelete: "cascade"}),
+  followerId: text("follower_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  followingId: text("following_id").notNull().references(() => user.id, {onDelete: "cascade"}),
   createdAt: timestamp("created_at").defaultNow().notNull()
 }, (table) => ({
   pk: primaryKey({ columns: [table.followerId, table.followingId] }),

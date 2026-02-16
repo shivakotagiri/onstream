@@ -30,8 +30,10 @@ import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google";
 import { useSignupStore } from "@/lib/form-state";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { checkUsernameAvailability } from "@/actions/check-username-availability";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar"
 const signupSchema = z.object({
     username: z.string().min(3),
     password: z.string().min(6),
@@ -43,6 +45,7 @@ type SignupForm = z.infer<typeof signupSchema>
 
 export default function SignupForm() {
     const { setPassword, setEmail, setUsername, reset } = useSignupStore();
+    const [open, setOpen] = useState<boolean>(false);
     const form = useForm<SignupForm>({
         resolver: zodResolver(signupSchema),
         defaultValues:{
@@ -64,7 +67,7 @@ export default function SignupForm() {
             name: data.name,
             username: data.username,
             callbackURL: "/", 
-            displayUsername: data.name
+            displayUsername: data.username,
           }, {
           onSuccess: () => {
             setEmail(data.email);
@@ -126,7 +129,7 @@ export default function SignupForm() {
                             control={form.control}
                             name="name"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="w-full">
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input
@@ -137,6 +140,23 @@ export default function SignupForm() {
                                     </FormControl>
                                 </FormItem>
                             )} 
+                        />
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            placeholder="Enter your username"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
                         <FormField
                             control={form.control}
@@ -157,29 +177,10 @@ export default function SignupForm() {
                         />
                         <FormField
                             control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Username</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            {...field}
-                                            placeholder="Enter your username"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <div className="flex justify-between items-center">
-                                        <FormLabel>Password</FormLabel>
-                                    </div>
+                                    <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <InputPassword 
                                             {...field} 
@@ -190,6 +191,47 @@ export default function SignupForm() {
                                 </FormItem>
                             )} 
                         />
+                        {/* <FormField
+                            control={form.control}
+                            name="dob"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Date of birth</FormLabel>
+                                <FormControl>
+                                    <Popover open={open} onOpenChange={setOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="justify-start font-normal w-full"
+                                        >
+                                        {field.value
+                                            ? field.value.toLocaleDateString()
+                                            : "Select date"}
+                                        </Button>
+                                    </PopoverTrigger>
+
+                                    <PopoverContent
+                                        className="w-auto overflow-hidden p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={(date) => {
+                                                field.onChange(date); 
+                                                setOpen(false);
+                                            }}
+                                            captionLayout="dropdown"
+                                            disabled={(date) => date > new Date()}
+                                        />
+                                    </PopoverContent>
+                                    </Popover>
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        /> */}
                         <Button disabled={isSubmitting} type="submit" className="w-full">
                             <LoadingSwap isLoading={isSubmitting}>Sign up</LoadingSwap>
                         </Button>

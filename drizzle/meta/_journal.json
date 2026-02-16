@@ -5,22 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1769285675319,
-      "tag": "0000_unusual_hitman",
+      "when": 1771252123316,
+      "tag": "0000_past_spiral",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1770455435589,
-      "tag": "0001_dashing_bruce_banner",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1770902314465,
-      "tag": "0002_steep_lucky_pierre",
+      "when": 1771259269762,
+      "tag": "0001_brown_puck",
       "breakpoints": true
     }
   ]

@@ -31,12 +31,17 @@ export const auth = betterAuth({
         expiresIn: 60 * 60 * 24,
         updateAge: 60 * 15,
     },
-    user: {
-        additionalFields: {}
-    },
     rateLimit: {
         storage: "database",
         
+    },
+    user: {
+        additionalFields: {
+            dob: {
+                type: 'date',
+                required: false
+            }
+        }
     },
     socialProviders: {
         google: {
@@ -49,7 +54,7 @@ export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: "pg",
         schema: {
-            user: schema.users,
+            user: schema.user,
             session: schema.session,
             account: schema.account,
             verification: schema.verification,

@@ -18,7 +18,7 @@ const InputPassword = ({value, onChange, placeholder}: PasswordProps) => {
     <div className="w-full max-w-sm space-y-2">
       <div className="relative">
         <Input
-          className="bg-background"
+          className="bg-background w-full"
           id="password-toggle"
           placeholder={placeholder}
           type={showPassword ? "text" : "password"}

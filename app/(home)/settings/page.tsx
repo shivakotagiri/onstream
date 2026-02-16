@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSession } from "@/lib/auth-client";
@@ -12,12 +13,20 @@ import { Textarea } from "@/components/ui/textarea";
 export default function SettingsPage() {
   const session = useSession().data;
 
-  const [name, setName] = useState("Bartosz");
-  const [surname, setSurname] = useState("Mcdaniel");
-  const [email, setEmail] = useState("bartmcdaniel@niceguys.com");
-  const [bio, setBio] = useState("");
-  const [bannerUrl, setBannerUrl] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [name, setName] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
+  const [bannerUrl, setBannerUrl] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  useEffect(() => {
+    if(session && session.user) {
+      setName(session.user.name);
+      setUsername(session.user.username || "");
+      setEmail(session.user.email);
+      setAvatarUrl(session.user.image || "")
+    }
+  }, [session, session?.user])
 
   return (
     <div className="w-full min-h-screen bg-background text-foreground px-6 lg:px-12 py-12 font-sans mt-10">
@@ -52,7 +61,6 @@ export default function SettingsPage() {
           </TabsList>
 
           <TabsContent value="account" className="space-y-0">
-            {/* Profile Section */}
             <div className="flex flex-col md:flex-row gap-8 py-10 border-t border-border">
               <div className="w-full md:w-72 shrink-0">
                 <h2 className="text-base font-semibold text-foreground mb-1">Profile</h2>
@@ -70,10 +78,10 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-normal text-muted-foreground">Surname</Label>
+                      <Label className="text-xs font-normal text-muted-foreground">Username</Label>
                       <Input
-                        value={surname}
-                        onChange={(e) => setSurname(e.target.value)}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         className="bg-transparent border-input focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring text-foreground h-11 rounded-lg"
                       />
                     </div>

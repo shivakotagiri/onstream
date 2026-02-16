@@ -45,10 +45,10 @@ export function UserMenu() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar>
-                    <AvatarImage src={session.data?.user.image || "NA"}/>
-                    <AvatarFallback>{session.data?.user.email[0] || <User2Icon />}</AvatarFallback>
-                </Avatar>
+                    <Avatar>
+                        <AvatarImage src={session.data?.user.image || ""}/>
+                        <AvatarFallback>{session.data?.user.email[0] || <User2Icon />}</AvatarFallback>
+                    </Avatar>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

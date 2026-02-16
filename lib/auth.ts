@@ -2,13 +2,15 @@ import { db } from "@/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { username } from "better-auth/plugins";
+import { customSession, username } from "better-auth/plugins";
 import * as schema from "@/db/schema";
 import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
 import { sendEmailVerification } from "./emails/send-email-verification";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET,
+
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
@@ -16,6 +18,7 @@ export const auth = betterAuth({
             await sendPasswordResetEmail({ user, url });
         }
     },
+
     emailVerification: {
         autoSignInAfterVerification: true,
         sendOnSignUp: true,
@@ -23,6 +26,7 @@ export const auth = betterAuth({
             await sendEmailVerification({ user, url })
         }
     },
+
     session: {
         cookieCache: {
             enabled: true,
@@ -31,18 +35,11 @@ export const auth = betterAuth({
         expiresIn: 60 * 60 * 24,
         updateAge: 60 * 15,
     },
+
     rateLimit: {
         storage: "database",
-        
     },
-    user: {
-        additionalFields: {
-            dob: {
-                type: 'date',
-                required: false
-            }
-        }
-    },
+
     socialProviders: {
         google: {
             prompt: "select_account", 
@@ -50,7 +47,9 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
         }
     },
+
     plugins: [nextCookies(), username()],
+
     database: drizzleAdapter(db, {
         provider: "pg",
         schema: {

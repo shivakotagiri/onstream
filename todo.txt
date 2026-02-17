@@ -38,7 +38,7 @@ Level 3 — Medium (one external service)
 
 
 
-Current TODOs:- 
+Current TODOs to work with:- 
     - when user logins with google(continue with google) the username is defined
     - since the issue above, whenever the user clicks on one of the user in sidebar we cant redirect them to /[username] (since username is null)
     - add the bannerImage in profile page

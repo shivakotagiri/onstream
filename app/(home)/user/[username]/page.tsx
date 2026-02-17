@@ -12,7 +12,7 @@ export default async function UserDashboardPage({
   const followingData = await userSearchData(username);
   const session = await getSession();
   const CurrentUserFollowing = await isCurrentUserFollowing(
-    session?.user?.id || "", 
+    session?.userId || "", 
     followingData?.id || ""
   );
 

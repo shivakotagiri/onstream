@@ -8,16 +8,19 @@ import { getSession } from "@/lib/get-session";
 interface ProfileBannerProps {
   CurrentUserFollowing: boolean;
   followingData: {
-    username: string | null;
     id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
     createdAt: Date;
     updatedAt: Date;
+    email: string;
+    emailVerified: boolean;
+    name: string;
+    image: string | null;
+    username: string | null;
     displayUsername: string | null;
-  } | undefined;
+    bannerImage: string | null;
+    bio: string | null;
+    dob: string | null;
+  } | undefined
 }
 
 export async function ProfileBanner({ followingData, CurrentUserFollowing }: ProfileBannerProps) {
@@ -68,25 +71,22 @@ export async function ProfileBanner({ followingData, CurrentUserFollowing }: Pro
             </div>
           </div>
 
-          <div className="space-y-4 max-w-2xl">
+          <div className="space-y-1 max-w-2xl">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
                 {followingData.name}
               </h1>
-              <p className="text-sm text-muted-foreground">
-                @{followingData.username || "user"}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-              <div className="flex items-center gap-1.5 text-muted-foreground">
-                <CalendarDays className="size-4" />
-                <span>Joined {joinedDate}</span>
+              <div className="text-sm text-muted-foreground flex gap-3 items-center">
+                <span>@{followingData.username || "user"}</span>
+                <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
+                  <CalendarDays className="size-4" />
+                  <span>Joined {joinedDate}</span>
+                </div>
               </div>
             </div>
-
             <UserFollowers id={followingData.id} />
           </div>
+          <div className="text-base mt-1">{followingData.bio}</div>
         </div>
       </div>
     </div>

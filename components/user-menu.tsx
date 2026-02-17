@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,78 +9,110 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { signOut, useSession } from "@/lib/auth-client"
+} from "@/components/ui/dropdown-menu";
+import { signOut, useSession } from "@/lib/auth-client";
 import {
   BadgeCheckIcon,
-  BellIcon,
   LayoutDashboard,
   LogIn,
   LogOutIcon,
   Settings,
   SunMoon,
   User2Icon,
-} from "lucide-react"
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export function UserMenu() {
-    const {theme, setTheme} = useTheme();
-    const session = useSession();
-    const router = useRouter();
-    async function handleSignout() {
-        if(!session || !session.data || !session.data.user) {
-            return { error: { message: "User is already logged out" } }
-        } 
-        const res = await signOut();
-        if(res.error) {
-            toast.error(res.error.message || "Failed to Sign out")
-        } else {
-            toast.success("Signed out");
-            router.refresh();
-        }
+  const { theme, setTheme } = useTheme();
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const user = session?.user;
+
+  if (isPending) {
+    return null;
+  }
+
+  async function handleSignout() {
+    if (!user) return;
+
+    const res = await signOut();
+
+    if (res?.error) {
+      toast.error(res.error.message || "Failed to sign out");
+    } else {
+      toast.success("Signed out");
+      router.refresh();
     }
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                    <Avatar>
-                        <AvatarImage src={session.data?.user.image || ""}/>
-                        <AvatarFallback>{session.data?.user.email[0] || <User2Icon />}</AvatarFallback>
-                    </Avatar>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuGroup>
-                    {(session.data && session.data.user) && <div className="w-full h-full">
-                        <DropdownMenuItem onClick={() => router.push("/user/" + session.data?.user.username)}>
-                            <BadgeCheckIcon />
-                            Profile
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <LayoutDashboard />
-                            Dashboard
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => router.push("/settings")}>
-                            <Settings />
-                            Settings
-                        </DropdownMenuItem>
-                    </div>}
-                    <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark": "light")}>
-                        <SunMoon />
-                        Theme
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                {(session.data && session.data.user) ? <DropdownMenuItem onClick={handleSignout}>
-                    <LogOutIcon />
-                    Sign Out
-                </DropdownMenuItem>: <DropdownMenuItem onClick={() => router.push("/auth/login")}>
-                    <LogIn />
-                    Log In
-                </DropdownMenuItem>}
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
+  }
+
+  const firstLetter =
+    user?.email?.charAt(0)?.toUpperCase() ?? undefined;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Avatar>
+            {user?.image && <AvatarImage src={user.image} />}
+            <AvatarFallback>
+              {firstLetter ?? <User2Icon size={18} />}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end">
+        <DropdownMenuGroup>
+          {user && (
+            <>
+              <DropdownMenuItem
+                onClick={() =>
+                  user.username && router.push(`/user/${user.username}`)
+                }
+              >
+                <BadgeCheckIcon size={16} />
+                Profile
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <LayoutDashboard size={16} />
+                Dashboard
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
+                <Settings size={16} />
+                Settings
+              </DropdownMenuItem>
+            </>
+          )}
+
+          <DropdownMenuItem
+            onClick={() =>
+              setTheme(theme === "light" ? "dark" : "light")
+            }
+          >
+            <SunMoon size={16} />
+            Theme
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        {user ? (
+          <DropdownMenuItem onClick={handleSignout}>
+            <LogOutIcon size={16} />
+            Sign Out
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onClick={() => router.push("/auth/login")}>
+            <LogIn size={16} />
+            Log In
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }

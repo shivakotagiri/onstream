@@ -48,7 +48,13 @@ export const auth = betterAuth({
         }
     },
 
-    plugins: [nextCookies(), username()],
+    plugins: [nextCookies(), username(), customSession(async ({ user, session}) => {
+        const fullUser = await db.select().from(schema.user).where(eq(schema.user.id, user.id))
+        return {
+            ...session,
+            user: fullUser[0]
+        }
+    })],
 
     database: drizzleAdapter(db, {
         provider: "pg",

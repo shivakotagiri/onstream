@@ -1,6 +1,6 @@
 "use client";
 
-import { checkUserForPasswordRequest } from "@/actions/check-user-for-password-reset";
+import { checkUserForPasswordRequest } from "@/actions/reset-password"; 
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { SignInWithGoogle } from "@/components/signin-with-google";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";

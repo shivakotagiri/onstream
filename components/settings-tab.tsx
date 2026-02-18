@@ -30,7 +30,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function SettingsTab({ currentUser }: { currentUser: userType }) {
+export function SettingsTab({ currentUser }: { currentUser: userType }) {
 
     const [name, setName] = useState<string>(currentUser.name || "");
     const [username, setUsername] = useState<string>(currentUser.username || "");
@@ -118,7 +118,7 @@ export default function SettingsTab({ currentUser }: { currentUser: userType }) 
 
     return (
         <Tabs defaultValue="account">
-          <TabsList className="bg-transparent w-full justify-start gap-4 lg:gap-8 rounded-none p-0 h-auto flex-wrap mb-10">
+          <TabsList className="bg-transparent w-full justify-start gap-4 lg:gap-8 rounded-none p-0 h-auto flex-wrap mb-5">
             <TabsTrigger 
               value="account" 
               className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-foreground data-[state=active]:text-background bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-all border-none shadow-none"

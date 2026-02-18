@@ -123,4 +123,17 @@ export const followers = pgTable("followers", {
   pk: primaryKey({ columns: [table.followerId, table.followingId] }),
   followerIdx: index("followers_follower_idx").on(table.followerId),
   followingIdx: index("followers_following_idx").on(table.followingId)
-}))
+}));
+
+
+export const blocklist = pgTable("blocklist", {
+  blockerId: text("blocker_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  blockingId: text("blocking_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  }, (table) => ({
+    pk: primaryKey({ columns: [table.blockerId, table.blockingId] }),
+    blockerId: index("blocker_id").on(table.blockerId),
+    blockingId: index("blocking_id").on(table.blockingId)
+  })
+);
+
+

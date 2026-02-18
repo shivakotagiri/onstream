@@ -30,10 +30,8 @@ import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google";
 import { useSignupStore } from "@/lib/form-state";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { checkUsernameAvailability } from "@/actions/check-username-availability";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar"
 const signupSchema = z.object({
     username: z.string().min(3),
     password: z.string().min(6),
@@ -45,7 +43,6 @@ type SignupForm = z.infer<typeof signupSchema>
 
 export default function SignupForm() {
     const { setPassword, setEmail, setUsername, reset } = useSignupStore();
-    const [open, setOpen] = useState<boolean>(false);
     const form = useForm<SignupForm>({
         resolver: zodResolver(signupSchema),
         defaultValues:{
@@ -105,7 +102,7 @@ export default function SignupForm() {
             if(!res.available) {
                 setError("username", {
                     type: "manual",
-                    message: "Username already taken"
+                    message: res.message
                 });
             } else {
                 clearErrors("username");

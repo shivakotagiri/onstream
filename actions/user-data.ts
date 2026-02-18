@@ -2,6 +2,7 @@
 
 import { db } from "@/db"
 import { user } from "@/db/schema";
+import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 
 export const usersData = async () => {
@@ -16,4 +17,12 @@ export const userSearchData = async (username: string) => {
     });
 
     return res;
+}
+
+export const currentUser = async () => {
+    const session = await getSession();
+    if(!session || !session.user) return null;
+    
+    const currentUserData = await db.select().from(user).where(eq(user.id, session.userId));
+    return currentUserData[0];
 }

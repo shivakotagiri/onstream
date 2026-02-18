@@ -13,12 +13,12 @@ import {
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "./ui/live-avatar";
 
-interface FollowersProps {
-    followersOfFollowing: {
+interface FollowedProps {
+    followedByList: {
         followerId: string,
         followingId: string,
         createdAt: Date,
-        follower: {
+        following: {
             image: string | null;
             name: string;
             id: string;
@@ -35,36 +35,36 @@ interface FollowersProps {
     }[]
 }
 
-export function FollowerList({ followersOfFollowing }: FollowersProps) {
+export function FollowedList({ followedByList }: FollowedProps) {
     const router = useRouter();
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button className="p-0 text-muted-foreground flex" variant="link">
-                    <span className="text-foreground font-semibold">{ followersOfFollowing.length }</span>
-                    <span>Followers</span>
+                    <span className="font-semibold text-foreground">{followedByList.length}</span>
+                    <span>Following</span>
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Followers</DialogTitle>
+                    <DialogTitle>Following</DialogTitle>
                 </DialogHeader>
                 <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
                     {
-                        followersOfFollowing.length != 0 ? (followersOfFollowing.map((follow) => (
-                            <div key={follow.follower.id}>
+                        followedByList.length != 0 ? (followedByList.map((follow) => (
+                            <div key={follow.following.id}>
                                 <div
                                     onClick={() =>
-                                    router.push("/user/" + (follow.follower.username || "").replace(/ /g, "").toLowerCase())
+                                    router.push("/user/" + (follow.following.username || "").replace(/ /g, "").toLowerCase())
                                     }
                                     className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
                                 >
-                                    <UserAvatar src={follow.follower.image || ""} name={follow.follower.name} isLive={false} className="size-5" />
-                                    <span className="text-sm font-medium truncate">{follow.follower.name}</span>
+                                    <UserAvatar src={follow.following.image || ""} name={follow.following.name} isLive={false} className="size-5" />
+                                    <span className="text-sm font-medium truncate">{follow.following.name}</span>
                                 </div>
                             </div>
                         ))): 
-                        <p>No followers</p>
+                        <p>No followings</p>
                     }
                 </div>
                 <DialogFooter>

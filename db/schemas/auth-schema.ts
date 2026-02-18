@@ -122,9 +122,19 @@ export const followers = pgTable("followers", {
 }, (table) => ({
   pk: primaryKey({ columns: [table.followerId, table.followingId] }),
   followerIdx: index("followers_follower_idx").on(table.followerId),
-  followingIdx: index("followers_following_idx").on(table.followingId)
+  followingIdx: index("followed_following_idx").on(table.followingId)
 }));
 
+export const followersRelations = relations(followers, ({ one }) => ({
+  follower: one(user, {
+    fields: [followers.followerId],
+    references: [user.id],
+  }),
+  following: one(user, {
+    fields: [followers.followingId],
+    references: [user.id]
+  })
+}))
 
 export const blocklist = pgTable("blocklist", {
   blockerId: text("blocker_id").notNull().references(() => user.id, { onDelete: "cascade" }),

@@ -7,8 +7,23 @@ import { and, eq } from "drizzle-orm"
 export const userFollowers = async (userId: string) => {
     if(!userId) return [];
     const res = await db.query.followers.findMany({
-        where: eq(followers.followingId, userId)
+        where: eq(followers.followingId, userId),
+        with: {
+            follower: true,
+        }
     });
+    return res;
+}
+
+export const usersFollowed = async (userId: string) => {
+    if(!userId) return [];
+    const res = await db.query.followers.findMany({
+        where: eq(followers.followerId, userId),
+        with: {
+            following: true
+        }
+    })
+
     return res;
 }
 

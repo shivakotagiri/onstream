@@ -19,7 +19,7 @@ export const userSearchData = async (username: string) => {
     return res;
 }
 
-export const currentUser = async () => {
+export const currentUserData = async () => {
     const session = await getSession();
     if(!session || !session.user) return null;
     

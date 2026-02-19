@@ -3,8 +3,11 @@ import { FollowerList } from "./follower-list";
 import { FollowedList } from "./followed-list";
 
 export async function UserFollowers({ id }: { id: string }) {
-    const followersOfFollowing = await userFollowers(id);
-    const followedByList = await usersFollowed(id);
+
+    const [followersOfFollowing, followedByList] = await Promise.all([
+        userFollowers(id),
+        usersFollowed(id)
+    ]);
     
     return (
         <div className="flex items-center gap-4">

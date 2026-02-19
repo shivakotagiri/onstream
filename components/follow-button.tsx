@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface FollowButtonProps {
-    CurrentUserFollowing: boolean;
-    followingData: {
+    currentUserFollowing: boolean;
+    searchedUser: {
         id: string;
         name: string;
         username: string | null;
@@ -20,19 +20,19 @@ interface FollowButtonProps {
     }
 }
 
-export default function FollowButton({ followingData, CurrentUserFollowing }: FollowButtonProps) {
+export default function FollowButton({ searchedUser, currentUserFollowing }: FollowButtonProps) {
     const currentUser = useSession().data;
     const router = useRouter();
-    const [isFollowing, setIsFollowing] = useState<boolean>(CurrentUserFollowing);
+    const [isFollowing, setIsFollowing] = useState<boolean>(currentUserFollowing);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (!currentUser?.user) {
             setIsFollowing(false);
         } else {
-            setIsFollowing(CurrentUserFollowing);
+            setIsFollowing(currentUserFollowing);
         }
-    }, [currentUser?.user, CurrentUserFollowing]);
+    }, [currentUser?.user, currentUserFollowing]);
 
     const handleFollow = async () => {
         if (!currentUser || !currentUser.user) {
@@ -43,18 +43,18 @@ export default function FollowButton({ followingData, CurrentUserFollowing }: Fo
         setIsLoading(true);
         try {
             if (isFollowing) {
-                await unFollowUser(currentUser.user.id, followingData.id);
+                await unFollowUser(currentUser.user.id, searchedUser.id);
                 setIsFollowing(false);
-                toast.success(`Unfollowed ${followingData.name}`);
+                toast.success(`Unfollowed ${searchedUser.name}`);
             } else {
-                await followUser(currentUser.user.id, followingData.id);
+                await followUser(currentUser.user.id, searchedUser.id);
                 setIsFollowing(true);
-                toast.success(`Following ${followingData.name}`);
+                toast.success(`Following ${searchedUser.name}`);
             }
             router.refresh();
         } catch (error) {
             toast.error("Something went wrong. Please try again.");
-            setIsFollowing(CurrentUserFollowing); 
+            setIsFollowing(currentUserFollowing); 
         } finally {
             setIsLoading(false);
         }

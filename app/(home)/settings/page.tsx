@@ -1,11 +1,11 @@
-import { getSession } from "@/lib/get-session";
 import { SettingsTab } from "@/components/settings-tab";
 import { redirect } from "next/navigation";
+import { currentUserData } from "@/lib/user-data";
 
 export default async function SettingsPage() {
-  const session = await getSession();
+  const currentUser = await currentUserData();
 
-  if(!session || !session.user) {
+  if(!currentUser) {
     redirect("/");
   }
 
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <SettingsTab currentUser={session.user} />
+        <SettingsTab currentUser={currentUser} />
       </div>
     </div>
   );

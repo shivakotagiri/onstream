@@ -29,7 +29,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google";
-import { useSignupStore } from "@/lib/form-state";
 import { useEffect } from "react";
 import { checkUsernameAvailability } from "@/actions/check-username-availability";
 const signupSchema = z.object({
@@ -42,7 +41,6 @@ const signupSchema = z.object({
 type SignupForm = z.infer<typeof signupSchema>
 
 export default function SignupForm() {
-    const { setPassword, setEmail, setUsername, reset } = useSignupStore();
     const form = useForm<SignupForm>({
         resolver: zodResolver(signupSchema),
         defaultValues:{
@@ -67,16 +65,12 @@ export default function SignupForm() {
             displayUsername: data.username,
           }, {
           onSuccess: () => {
-            setEmail(data.email);
-            setPassword(data.password);
-            setUsername(data.username);
             toast.success("Account created successfully!", {
                 description: "please check your email for verification link"
             });
             router.push(`/auth/email-verification`);
           },
           onError: error => {
-            reset();
             const message =
               (typeof error?.error === "object" && error?.error?.message)
                 || (typeof error?.error === "string" && error.error)

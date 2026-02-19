@@ -1,14 +1,29 @@
 import { UserAvatar } from "./ui/live-avatar";
-import { Button } from "./ui/button";
-import { EllipsisVertical, CalendarDays } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import FollowButton from "./follow-button";
 import { UserFollowers } from "./user-followers";
-import { getSession } from "@/lib/get-session";
 import Image from "next/image";
+import { MoreOptions } from "./more-options";
 
 interface ProfileBannerProps {
-  CurrentUserFollowing: boolean;
-  followingData: {
+  isCurrentUserBlocked: boolean,
+  currentUserFollowing: boolean;
+  isCurrentUserBlockedSearchedUser: boolean,
+  currentUser: {
+      id: string;
+      name: string;
+      email: string;
+      emailVerified: boolean;
+      image: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      username: string | null;
+      displayUsername: string | null;
+      bannerImage: string | null;
+      bio: string | null;
+      dob: string | null;
+  } | null,
+  searchedUser: {
     id: string;
     createdAt: Date;
     updatedAt: Date;
@@ -25,10 +40,13 @@ interface ProfileBannerProps {
 }
 
 export async function ProfileBanner({
-  followingData,
-  CurrentUserFollowing,
+  isCurrentUserBlockedSearchedUser,
+  isCurrentUserBlocked,
+  searchedUser,
+  currentUserFollowing,
+  currentUser
 }: ProfileBannerProps) {
-  if (!followingData) {
+  if (!searchedUser || isCurrentUserBlocked) {
     return (
       <div className="w-full h-[400px] flex justify-center items-center text-muted-foreground">
         User profile not found.
@@ -36,10 +54,9 @@ export async function ProfileBanner({
     );
   }
 
-  const session = await getSession();
-  const sameUser = followingData.id === session?.user?.id;
+  const sameUser = searchedUser.id === currentUser?.id;
 
-  const joinedDate = new Date(followingData.createdAt).toLocaleDateString(
+  const joinedDate = new Date(searchedUser.createdAt).toLocaleDateString(
     "en-US",
     {
       month: "long",
@@ -51,10 +68,10 @@ export async function ProfileBanner({
     <div className="w-full flex flex-col items-center">
       <div className="w-full relative">
         <div className="relative w-full h-[200px] md:h-[420px] overflow-hidden border-b border-border">
-          {followingData.bannerImage ? (
+          {searchedUser.bannerImage ? (
             <>
               <Image
-                src={followingData.bannerImage}
+                src={searchedUser.bannerImage}
                 alt="Banner"
                 fill
                 priority
@@ -72,8 +89,8 @@ export async function ProfileBanner({
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-end gap-4 -mt-16 relative z-10 mb-4">
             <UserAvatar
               isLive={false}
-              name={followingData.name}
-              src={followingData.image ?? ""}
+              name={searchedUser.name}
+              src={searchedUser.image ?? ""}
               className="size-32 rounded-full border-4 border-background bg-card shadow-lg"
               avatarFallbackClassname="text-4xl"
             />
@@ -81,29 +98,23 @@ export async function ProfileBanner({
             <div className="flex items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0 pb-2">
               {!sameUser && (
                 <FollowButton
-                  followingData={followingData}
-                  CurrentUserFollowing={CurrentUserFollowing}
+                  searchedUser={searchedUser}
+                  currentUserFollowing={currentUserFollowing}
                 />
               )}
 
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full shadow-none border-input text-foreground hover:bg-secondary shrink-0"
-              >
-                <EllipsisVertical className="h-5 w-5" />
-              </Button>
+              <MoreOptions isCurrentUserBlockedSearchedUser={isCurrentUserBlockedSearchedUser} currentUser={currentUser} searchedUserId={searchedUser.id} />
             </div>
           </div>
 
           <div className="space-y-1 max-w-2xl">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                {followingData.name}
+                {searchedUser.name}
               </h1>
 
               <div className="text-sm text-muted-foreground flex flex-wrap gap-3 items-center">
-                <span>@{followingData.username || "user"}</span>
+                <span>@{searchedUser.username || "user"}</span>
                 <div className="flex items-center gap-1.5">
                   <CalendarDays className="size-4" />
                   <span>Joined {joinedDate}</span>
@@ -111,11 +122,11 @@ export async function ProfileBanner({
               </div>
             </div>
 
-            <UserFollowers id={followingData.id} />
+            <UserFollowers id={searchedUser.id} />
           </div>
-          {followingData.bio && (
+          {searchedUser.bio && (
             <div className="text-base mt-3 max-w-2xl text-foreground/90">
-              {followingData.bio}
+              {searchedUser.bio}
             </div>
           )}
         </div>

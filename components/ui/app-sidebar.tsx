@@ -8,7 +8,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
-import { usersData } from "@/actions/user-data"
+import { usersData } from "@/lib/user-data"
 import { getSession } from "@/lib/get-session";
 
 export async function AppSidebar() {

@@ -4,13 +4,9 @@ import { db } from "@/db";
 import { blocklist } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
-interface blockUsersProps {
-    blockerId: string,
-    blockedId: string
-}
 
-export const isUserBlocked = async ({ blockerId, blockedId }: blockUsersProps) => {
-    if(!blockerId || blockedId) return false;
+export const isUserBlocked = async (blockerId: string, blockedId: string) => {
+    if(!blockerId || !blockedId) return false;
 
     if(blockerId === blockedId) return false;
 
@@ -25,7 +21,7 @@ export const isUserBlocked = async ({ blockerId, blockedId }: blockUsersProps) =
 }
 
 export const blockUser = async (blockerId: string, blockedId: string) => {
-    if(!blockerId || blockedId) return {
+    if(!blockerId || !blockedId) return {
         status: false,
         message: "User not found",
     }
@@ -94,8 +90,4 @@ export const unBlockUser = async (blockerId: string, blockedId: string) => {
     }
 }
 
-export const onBlock = async (blockerId: string, blockedId: string) => {
-    const res = await blockUser(blockerId, blockedId);
-    
-}
 

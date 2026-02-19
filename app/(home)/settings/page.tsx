@@ -1,4 +1,4 @@
-import { SettingsTab } from "@/components/settings-tab";
+import { Settings } from "./components/settings";
 import { redirect } from "next/navigation";
 import { currentUserData } from "@/lib/user-data";
 
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <SettingsTab currentUser={currentUser} />
+        <Settings currentUser={currentUser} />
       </div>
     </div>
   );

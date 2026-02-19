@@ -26,3 +26,20 @@ export const currentUserData = async () => {
     const currentUserData = await db.select().from(user).where(eq(user.id, session.userId));
     return currentUserData[0];
 }
+
+export type currentUserType = {
+    currentUser: {
+        id: string;
+        name: string;
+        email: string;
+        emailVerified: boolean;
+        image: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        username: string | null;
+        displayUsername: string | null;
+        bannerImage: string | null;
+        bio: string | null;
+        dob: string | null;
+    }
+}

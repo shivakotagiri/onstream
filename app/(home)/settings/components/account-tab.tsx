@@ -6,38 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/ui/live-avatar";
-import { TabsList, TabsTrigger, Tabs, TabsContent } from "@/components/ui/tabs";
-
-type userType = {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    username: string | null;
-    displayUsername: string | null;
-    bannerImage: string | null;
-    bio: string | null;
-    dob: string | null;
-}
+import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { db } from "@/db";
 import { user } from "@/db/schema";
+import { currentUserType } from "@/lib/user-data";
 import { eq } from "drizzle-orm";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function SettingsTab({ currentUser }: { currentUser: userType }) {
-
+export function AccountTab({ currentUser }: currentUserType) {
     const [name, setName] = useState<string>(currentUser.name || "");
     const [username, setUsername] = useState<string>(currentUser.username || "");
     const [bio, setBio] = useState<string>(currentUser.bio || "");
     const [bannerUrl, setBannerUrl] = useState<string>(currentUser.bannerImage || "");
     const [avatarUrl, setAvatarUrl] = useState<string>(currentUser.image || "");
+
     const router = useRouter();
+
 
     async function handleSubmit(): Promise<{ error: { message?: string } | null }> {
         try {
@@ -117,29 +104,7 @@ export function SettingsTab({ currentUser }: { currentUser: userType }) {
     }
 
     return (
-        <Tabs defaultValue="account">
-          <TabsList className="bg-transparent w-full justify-start gap-4 lg:gap-8 rounded-none p-0 h-auto flex-wrap mb-5">
-            <TabsTrigger 
-              value="account" 
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-foreground data-[state=active]:text-background bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-all border-none shadow-none"
-            >
-              Account
-            </TabsTrigger>
-            <TabsTrigger 
-              value="billings" 
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-foreground data-[state=active]:text-background bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-all border-none shadow-none"
-            >
-              Billings
-            </TabsTrigger>
-            <TabsTrigger 
-              value="privacy" 
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-foreground data-[state=active]:text-background bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-all border-none shadow-none"
-            >
-              Privacy and Security
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="account" className="space-y-0">
+        <TabsContent value="account" className="space-y-0">
             <div className="flex flex-col md:flex-row gap-8 py-10 border-t border-border">
               <div className="w-full md:w-72 shrink-0">
                 <h2 className="text-base font-semibold text-foreground mb-1">Profile</h2>
@@ -269,6 +234,5 @@ export function SettingsTab({ currentUser }: { currentUser: userType }) {
               </div>
             </div>
           </TabsContent>
-        </Tabs>
     )
 }

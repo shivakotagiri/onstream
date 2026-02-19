@@ -105,7 +105,7 @@ export function AccountTab({ currentUser }: currentUserType) {
 
     return (
         <TabsContent value="account" className="space-y-0">
-            <div className="flex flex-col md:flex-row gap-8 py-10 border-t border-border">
+            <div className="flex flex-col md:flex-row gap-8 py-10 mt-10 sm:mt-0 border-t border-border">
               <div className="w-full md:w-72 shrink-0">
                 <h2 className="text-base font-semibold text-foreground mb-1">Profile</h2>
                 <p className="text-sm text-muted-foreground">Set your account details</p>

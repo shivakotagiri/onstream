@@ -29,6 +29,13 @@
       "when": 1771432185425,
       "tag": "0003_dear_starfox",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771494706814,
+      "tag": "0004_mysterious_nocturne",
+      "breakpoints": true
     }
   ]
 }

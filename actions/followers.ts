@@ -44,6 +44,16 @@ export const isCurrentUserFollowing = async (followerId: string, followingId: st
 export const followUser = async (followerId: string, followingId: string) => {
     if(!followingId || !followerId) return null;
     if(followingId === followerId) return null;
+
+    const isUserAlreadyFollowing = await db.query.followers.findFirst({
+        where: and(
+            eq(followers.followerId, followerId),
+            eq(followers.followingId, followingId)
+        )
+    });
+
+    if(isUserAlreadyFollowing) return null;
+
     const res = await db.insert(followers).values({
         followerId,
         followingId
@@ -55,6 +65,15 @@ export const followUser = async (followerId: string, followingId: string) => {
 export const unFollowUser = async (followerId: string, followingId: string) => {
     if(!followerId || !followingId) return null;
     if(followerId === followingId) return null;
+
+    const isUserAlreadyFollowing = await db.query.followers.findFirst({
+        where: and(
+            eq(followers.followerId, followerId),
+            eq(followers.followingId, followingId)
+        )
+    });
+
+    if(!isUserAlreadyFollowing) return null;
     await db.delete(followers).where(and(
         eq(followers.followerId, followerId),
         eq(followers.followingId, followingId)

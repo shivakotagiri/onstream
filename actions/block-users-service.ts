@@ -1,0 +1,101 @@
+"use server";
+
+import { db } from "@/db";
+import { blocklist } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
+
+interface blockUsersProps {
+    blockerId: string,
+    blockedId: string
+}
+
+export const isUserBlocked = async ({ blockerId, blockedId }: blockUsersProps) => {
+    if(!blockerId || blockedId) return false;
+
+    if(blockerId === blockedId) return false;
+
+    const isUserBlocked = await db.query.blocklist.findFirst({
+        where: and(
+            eq(blocklist.blockerId, blockerId),
+            eq(blocklist.blockedId, blockedId),
+        )
+    });
+
+    return !!isUserBlocked;
+}
+
+export const blockUser = async (blockerId: string, blockedId: string) => {
+    if(!blockerId || blockedId) return {
+        status: false,
+        message: "User not found",
+    }
+    if(blockerId === blockedId) return {
+        status: false,
+        message: "User can't be same",
+    }
+
+    const alreadyBlocked = await db.query.blocklist.findFirst({
+        where: and(
+            eq(blocklist.blockerId, blockerId),
+            eq(blocklist.blockedId, blockedId),
+        )
+    });
+
+    if(alreadyBlocked) return {
+        status: false,
+        message: "User already blocked"
+    }
+
+    const res = await db.insert(blocklist).values({
+        blockerId,
+        blockedId
+    }).returning();
+
+    return {
+        status: !!res,
+        message: "Blocked the user"
+    }
+}
+
+export const unBlockUser = async (blockerId: string, blockedId: string) => {
+    if(!blockerId || !blockedId) return {
+        status: false,
+        message: "User not found",
+        res: null
+    }
+    if(blockerId === blockedId) return {
+        status: false,
+        message: "Invalid user",
+        res: null
+    }
+
+    const isUserBlocked = await db.query.blocklist.findFirst({
+        where: and(
+            eq(blocklist.blockerId, blockerId),
+            eq(blocklist.blockedId, blockedId)
+        )
+    });
+
+    if(!isUserBlocked) return {
+        status: false,
+        message: "User is not blocked",
+        res: null
+    }
+
+    const res = await db.delete(blocklist).where(and(
+        eq(blocklist.blockerId, blockerId),
+        eq(blocklist.blockedId, blockedId) 
+    ));
+
+    return {
+        status: !!res,
+        message: "Unblocked user",
+        res
+    }
+}
+
+export const onBlock = async (blockerId: string, blockedId: string) => {
+    const res = await blockUser(blockerId, blockedId);
+    
+}
+

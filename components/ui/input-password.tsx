@@ -4,18 +4,20 @@ import { Eye, EyeOff } from "lucide-react"
 import { ChangeEvent, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
 interface PasswordProps {
   value: string,
   onChange: (e: ChangeEvent<HTMLInputElement>) => void,
   placeholder: string,
+  className?: string
 }
 
-const InputPassword = ({value, onChange, placeholder}: PasswordProps) => {
+const InputPassword = ({value, onChange, placeholder, className}: PasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className="w-full max-w-sm space-y-2">
+    <div className={cn("w-full max-w-sm space-y-2", className)}>
       <div className="relative">
         <Input
           className="bg-background w-full"

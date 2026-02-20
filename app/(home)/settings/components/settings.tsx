@@ -1,6 +1,9 @@
+"use client";
+
 import { TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
 import { AccountTab } from "./account-tab";
 import { PrivacyTab } from "./privacy-tab";
+import { userSettingsTabStore } from "@/store/settings-tab";
 
 type userType = {
     id: string;
@@ -18,8 +21,9 @@ type userType = {
 }
 
 export function Settings({ currentUser }: { currentUser: userType }) {
+    const { tab, setTab } = userSettingsTabStore();
     return (
-        <Tabs defaultValue="account">
+        <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="bg-transparent w-full justify-start gap-4 lg:gap-8 rounded-none p-0 h-auto flex-wrap mb-5">
             <TabsTrigger 
               value="account" 

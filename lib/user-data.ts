@@ -28,18 +28,16 @@ export const currentUserData = async () => {
 }
 
 export type currentUserType = {
-    currentUser: {
-        id: string;
-        name: string;
-        email: string;
-        emailVerified: boolean;
-        image: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        username: string | null;
-        displayUsername: string | null;
-        bannerImage: string | null;
-        bio: string | null;
-        dob: string | null;
-    }
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    username: string | null;
+    displayUsername: string | null;
+    bannerImage: string | null;
+    bio: string | null;
+    dob: string | null;
 }

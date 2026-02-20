@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function AccountTab({ currentUser }: currentUserType) {
+export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
     const [name, setName] = useState<string>(currentUser.name || "");
     const [username, setUsername] = useState<string>(currentUser.username || "");
     const [bio, setBio] = useState<string>(currentUser.bio || "");

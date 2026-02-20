@@ -42,17 +42,5 @@ export const currentUserData = async () => {
     return currentUserData[0];
 }
 
-export const deleteUser = async (id: string) => {
-    try {
-        await db.delete(user).where(eq(user.id, id));
-        return {
-            status: true,
-            message: "User deleted successfully"
-        }
-    } catch(err) {
-        return {
-            status: false,
-            message: err || "Something went wrong"
-        }
-    }
-}
+
+

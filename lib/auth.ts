@@ -10,6 +10,12 @@ import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET,
+    
+    user: {
+        deleteUser: {
+            enabled: true
+        }
+    }, 
 
     emailAndPassword: {
         enabled: true,

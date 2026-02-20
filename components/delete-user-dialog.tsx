@@ -1,7 +1,26 @@
-import { DialogTrigger, Dialog, DialogContent, DialogHeader, DialogFooter, DialogClose } from "./ui/dialog";
+import { DialogTrigger, Dialog, DialogContent, DialogHeader, DialogFooter, DialogClose, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { BetterAuthActionButton } from "./better-auth-action-button";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function DeleteUserDialog() {
+    const router = useRouter();
+    async function handleDelete() {
+        const res = await authClient.deleteUser({
+            callbackURL: "/",
+        });
+
+        if(res.error) {
+            return { error: { message: res.error.message } }
+        } else {
+            toast.success("User deleted Successfull");
+            router.refresh();
+            return { error: null }
+        }
+    }
+    
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -10,13 +29,17 @@ export function DeleteUserDialog() {
                 </Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogHeader>Are you sure?</DialogHeader>
+                <DialogHeader>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                </DialogHeader>
                 <span className="text-sm text-muted-foreground">
                     Deleting your account will remove all your data permanently. This action cannot be reversed.
                 </span>
                 <DialogFooter>
-                    <Button variant={"destructive"}>Delete</Button>
-                    <DialogClose>
+                    <BetterAuthActionButton action={handleDelete}>
+                        Delete
+                    </BetterAuthActionButton>
+                    <DialogClose asChild>
                         <Button variant={"outline"}>Close</Button>
                     </DialogClose>
                 </DialogFooter>

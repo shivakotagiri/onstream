@@ -5,6 +5,21 @@ import { user } from "@/db/schema";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 
+export type currentUserType = {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    username: string | null;
+    displayUsername: string | null;
+    bannerImage: string | null;
+    bio: string | null;
+    dob: string | null;
+}
+
 export const usersData = async () => {
     const res = await db.query.user.findMany({})
     return res;
@@ -27,17 +42,17 @@ export const currentUserData = async () => {
     return currentUserData[0];
 }
 
-export type currentUserType = {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    username: string | null;
-    displayUsername: string | null;
-    bannerImage: string | null;
-    bio: string | null;
-    dob: string | null;
+export const deleteUser = async (id: string) => {
+    try {
+        await db.delete(user).where(eq(user.id, id));
+        return {
+            status: true,
+            message: "User deleted successfully"
+        }
+    } catch(err) {
+        return {
+            status: false,
+            message: err || "Something went wrong"
+        }
+    }
 }

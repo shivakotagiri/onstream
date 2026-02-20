@@ -1,6 +1,6 @@
 "use client";
 
-import { currentUserType } from "@/lib/user-data";
+import { currentUserType } from "@/actions/user";
 import { DialogContent, DialogTrigger, Dialog, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "./ui/dialog";
 import { UserAvatar } from "./ui/live-avatar";
 import { ChangeEvent, useState } from "react";

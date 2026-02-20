@@ -1,6 +1,6 @@
 import { Settings } from "./components/settings";
 import { redirect } from "next/navigation";
-import { currentUserData } from "@/lib/user-data";
+import { currentUserData } from "@/actions/user";
 
 export default async function SettingsPage() {
   const currentUser = await currentUserData();

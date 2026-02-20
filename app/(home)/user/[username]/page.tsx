@@ -1,6 +1,6 @@
 import { isUserBlocked } from "@/actions/block-users-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
-import { currentUserData, userSearchData } from "@/lib/user-data";
+import { currentUserData, userSearchData } from "@/actions/user";
 import { ProfileBanner } from "@/components/profile-banner";
 
 export default async function UserDashboardPage({

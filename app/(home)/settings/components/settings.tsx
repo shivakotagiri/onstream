@@ -23,7 +23,7 @@ type userType = {
 export function Settings({ currentUser }: { currentUser: userType }) {
     const { tab, setTab } = userSettingsTabStore();
     return (
-        <Tabs value={tab} onValueChange={setTab}>
+        <Tabs value={tab} defaultValue="account" onValueChange={setTab}>
           <TabsList className="bg-transparent w-full justify-start gap-4 lg:gap-8 rounded-none p-0 h-auto flex-wrap mb-5">
             <TabsTrigger 
               value="account" 

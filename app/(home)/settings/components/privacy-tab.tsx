@@ -4,7 +4,7 @@ import { ChangePasswordDialog } from "@/components/change-password-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
-import { currentUserType } from "@/lib/user-data";
+import { currentUserType } from "@/actions/user";
 import { Edit2Icon, Eye, EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ChangeEvent, useState } from "react";
@@ -100,13 +100,15 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
                             </div>
                         </div>
                         <hr />
-                        <div className="flex flex-col w-full gap-3">
+                        <div className="flex flex-col w-full gap-1">
                             <div className="flex flex-col">
                                 <div>Phone number</div>
                                 <span className="text-sm text-muted-foreground">You can add your mobile number here</span>
                             </div>
                             <div>
-                                {!editPhoneNumber && <Button onClick={() => setEditPhoneNumber(true)} variant={"link"} className="p-0 text-foreground cursor-pointer">Add Phone number</Button>}
+                                {!editPhoneNumber && <Button onClick={() => setEditPhoneNumber(true)} variant={"link"} className="p-0 cursor-pointer text-red-500">
+                                    Add Phone number
+                                </Button>}
                                 {editPhoneNumber && <div className="w-full flex flex-col gap-4">
                                     <div className="flex flex-col gap-1">
                                         <Input  

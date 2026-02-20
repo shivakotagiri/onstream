@@ -10,11 +10,12 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { db } from "@/db";
 import { user } from "@/db/schema";
-import { currentUserType } from "@/lib/user-data";
+import { currentUserType } from "@/actions/user";
 import { eq } from "drizzle-orm";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DeleteUserDialog } from "@/components/delete-user-dialog";
 
 export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
     const [name, setName] = useState<string>(currentUser.name || "");
@@ -225,11 +226,9 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                     <h3 className="text-sm font-medium text-destructive">Delete Account</h3>
                     <p className="text-xs text-muted-foreground">
                       Permanently remove your account and all associated data from our servers. This action cannot be undone.
-                    </p>
+                    </p> 
                   </div>
-                  <Button variant="destructive" className="shadow-none shrink-0">
-                    Delete Account
-                  </Button>
+                  <DeleteUserDialog />
                 </div>
               </div>
             </div>

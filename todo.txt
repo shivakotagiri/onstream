@@ -54,6 +54,7 @@ Current TODOs to work with:-
 
     - add the phoneNumber (through verifcation via OTP)
     - settings page is rendered slowly try to make rendering faster
+    - in the profile section of user in more options it shows block user(user can't himself block right??)
 
 -----------------------------------------------------------------------------------------------
     

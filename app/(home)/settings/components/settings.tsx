@@ -4,24 +4,11 @@ import { TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
 import { AccountTab } from "./account-tab";
 import { PrivacyTab } from "./privacy-tab";
 import { userSettingsTabStore } from "@/store/settings-tab";
+import { currentUserType } from "@/actions/user";
 
-type userType = {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    username: string | null;
-    displayUsername: string | null;
-    bannerImage: string | null;
-    bio: string | null;
-    dob: string | null;
-}
-
-export function Settings({ currentUser }: { currentUser: userType }) {
+export function Settings({ currentUser }: { currentUser: currentUserType }) {
     const { tab, setTab } = userSettingsTabStore();
+    if(!currentUser || !currentUser.id) return <div>User not found</div>
     return (
         <Tabs value={tab} defaultValue="account" onValueChange={setTab}>
           <TabsList className="bg-transparent w-full justify-start gap-4 lg:gap-8 rounded-none p-0 h-auto flex-wrap mb-5">

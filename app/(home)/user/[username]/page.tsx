@@ -21,6 +21,8 @@ export default async function UserDashboardPage({
       isUserBlocked(searchedUser?.id || "", currentUser?.id || ""),
       isUserBlocked(currentUser?.id || "", searchedUser?.id || "")
     ]);
+
+    if(!searchedUser) return <div>User not found</div>
   
   return (
     <div className="w-full min-h-screen bg-background pb-20">

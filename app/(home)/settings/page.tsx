@@ -1,12 +1,11 @@
 import { Settings } from "./components/settings";
-import { redirect } from "next/navigation";
 import { currentUserData } from "@/actions/user";
 
 export default async function SettingsPage() {
   const currentUser = await currentUserData();
 
   if(!currentUser) {
-    redirect("/");
+    return <div>User not found</div>
   }
 
   return (

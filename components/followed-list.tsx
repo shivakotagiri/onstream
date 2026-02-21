@@ -15,22 +15,24 @@ import { UserAvatar } from "./ui/live-avatar";
 
 interface FollowedProps {
     followedByList: {
-        followerId: string,
-        followingId: string,
-        createdAt: Date,
+        createdAt: Date;
+        followerId: string;
+        followingId: string;
         following: {
             image: string | null;
             name: string;
             id: string;
             email: string;
+            emailVerified: boolean;
             createdAt: Date;
             updatedAt: Date;
-            emailVerified: boolean;
             username: string | null;
             displayUsername: string | null;
-            bannerImage: string | null;
+            phoneNumber: string | null;
+            phoneNumberVerified: boolean | null;
             bio: string | null;
-            dob: string | null;
+            bannerImage: string | null;
+            dob: Date | null;
         };
     }[]
 }

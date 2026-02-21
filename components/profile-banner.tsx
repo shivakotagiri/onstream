@@ -10,33 +10,38 @@ interface ProfileBannerProps {
   currentUserFollowing: boolean;
   isCurrentUserBlockedSearchedUser: boolean,
   currentUser: {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    username: string | null;
+    displayUsername: string | null;
+    phoneNumber: string | null;
+    phoneNumberVerified: boolean | null;
+    bio: string | null;
+    bannerImage: string | null;
+    dob: Date | null;
+  } | null,
+
+  searchedUser: {
       id: string;
       name: string;
+      image: string | null;
       email: string;
       emailVerified: boolean;
-      image: string | null;
       createdAt: Date;
       updatedAt: Date;
       username: string | null;
       displayUsername: string | null;
-      bannerImage: string | null;
+      phoneNumber: string | null;
+      phoneNumberVerified: boolean | null;
       bio: string | null;
-      dob: string | null;
-  } | null,
-  searchedUser: {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    email: string;
-    emailVerified: boolean;
-    name: string;
-    image: string | null;
-    username: string | null;
-    displayUsername: string | null;
-    bannerImage: string | null;
-    bio: string | null;
-    dob: string | null;
-  } | undefined;
+      bannerImage: string | null;
+      dob: Date | null;
+  }
 }
 
 export async function ProfileBanner({

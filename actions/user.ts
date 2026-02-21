@@ -15,9 +15,11 @@ export type currentUserType = {
     updatedAt: Date;
     username: string | null;
     displayUsername: string | null;
-    bannerImage: string | null;
+    phoneNumber: string | null;
+    phoneNumberVerified: boolean | null;
     bio: string | null;
-    dob: string | null;
+    bannerImage: string | null;
+    dob: Date | null;
 }
 
 export const usersData = async () => {

@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
+
     const [editEmail, setEditEmail] = useState<boolean>(false);
     const [editPhoneNumber, setEditPhoneNumber] = useState<boolean>(false);
     const [reveal, setReveal] = useState<boolean>(false);

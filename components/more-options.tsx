@@ -6,24 +6,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import {useState } from "react";
 import { blockUser, unBlockUser } from "@/actions/block-users-service";
 import { toast } from "sonner";
+import { currentUserType } from "@/actions/user";
 
 interface MoreOptionsProps {
     isCurrentUserBlockedSearchedUser: boolean,
     searchedUserId: string,
-    currentUser: {
-        id: string;
-        name: string;
-        email: string;
-        emailVerified: boolean;
-        image: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        username: string | null;
-        displayUsername: string | null;
-        bannerImage: string | null;
-        bio: string | null;
-        dob: string | null;
-    } | null
+    currentUser: currentUserType | null
 }
 
 export function MoreOptions({ searchedUserId, currentUser, isCurrentUserBlockedSearchedUser }: MoreOptionsProps) {

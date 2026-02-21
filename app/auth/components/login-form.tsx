@@ -51,8 +51,8 @@ export default function LoginForm() {
     async function handleLogin(data: LoginForm) {
         await signIn.username(
             {
-                username: data.username,
-                password: data.password,
+                username: data.username.trim(),
+                password: data.password.trim(),
                 callbackURL: "/"
             },
             {

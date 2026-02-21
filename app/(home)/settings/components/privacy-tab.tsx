@@ -9,6 +9,10 @@ import { Edit2Icon, Eye, EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ChangeEvent, useState } from "react";
 import { ShowBlowckedUsersDialog } from "@/components/ui/dialogs/show-blocked-users-dialog";
+import { BetterAuthActionButton } from "@/components/better-auth-action-button";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
     const [editEmail, setEditEmail] = useState<boolean>(false);
@@ -17,6 +21,7 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
     const [email, setEmail] = useState<string>(currentUser.email);
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [username, setUsername] = useState<string>("");
+    const router = useRouter();
 
     async function handleEdit() {
         setEditEmail(true);
@@ -37,6 +42,35 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
 
     function handleUsernameChange(e: ChangeEvent<HTMLInputElement>) {
         setUsername(e.target.value)
+    }
+
+    async function handleAddPhoneNumber() {
+        console.log(phoneNumber);
+    }
+
+    async function handleSignoutEveryWhere() {
+        // https://github.com/better-auth/better-auth/discussions/5526
+        //TODO:- fix delay in signout of all users
+
+        /* 
+            when the user clicks the "sign out everywhere" -> it actually revokes all the devices session but the problem is 
+            -> since we cached the session cookies for 5mins, the devices cant be signed out for 5 mins eventhough the sessions are revoked in the DB
+
+            -> if we remove the cache the DB hits increases per each user request
+            -> if we ensure the cache, the user from different devices cant be signed out
+            
+            -> SOLUTION:- https://chatgpt.com/c/6999e60a-8d8c-8320-ad74-151157ec9c21
+                Session Version Pattern (try to search about it in google)
+        */
+
+        const res = await authClient.revokeSessions();
+        if(!res) {
+            return { error: { message: "Unable to signout from all the devices" } }
+        } else {
+            toast.success("Signed out from all devices");
+            router.push("/");
+            return { error: null }
+        }
     }
 
     const hiddenEmail = email.substring(0, 2) + ".".repeat(email.substring(2).split("@")[0].length) + "@gmail.com";
@@ -122,7 +156,13 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
                                     </div>
                                     
                                     <div className="flex gap-3">
-                                        <Button disabled={email.length < 11} className="cursor-pointer">Save Changes</Button>
+                                        {/* TODO:- add the Phone number by verification */}
+                                        <Button 
+                                            disabled={phoneNumber.length < 13} className="cursor-pointer"
+                                            onClick={handleAddPhoneNumber}
+                                        >
+                                            Save Changes
+                                        </Button>
                                         <Button 
                                             className="cursor-pointer" 
                                             onClick={() => setEditPhoneNumber(false)} 
@@ -170,14 +210,14 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
                             <div className="flex flex-col gap-1">
                                 <div>Sign out everywhere</div>
                                 <span className="inline-block text-sm text-muted-foreground">
-                                    This will log out you of Twitch everywhere you&apos;re logged in, including third party applications. If you believe your account has been compromised, we recommend you{" "}
+                                    This will log out you of Onstream everywhere you&apos;re logged in, including third party applications. If you believe your account has been compromised, we recommend you{" "}
                                     
                                     <span className="inline">
                                         <ChangePasswordDialog text="change your password" currentUser={currentUser}/>
                                     </span>
                                 </span>
                             </div>
-                            <Button className="max-w-xs">Sign out Everywhere</Button>
+                            <BetterAuthActionButton action={handleSignoutEveryWhere} className="max-w-xs cursor-pointer">Sign out Everywhere</BetterAuthActionButton>
                         </div>
                     </div>
                 </div>
@@ -214,7 +254,7 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
                                             value={username} 
                                             onChange={handleUsernameChange} 
                                         />
-                                        <Button className="px-5 py-2">Block User</Button>
+                                        <Button className="px-5 py-2 cursor-pointer">Block User</Button>
                                     </div>
                                 </div>
                                 <ShowBlowckedUsersDialog />

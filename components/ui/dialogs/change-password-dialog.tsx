@@ -9,17 +9,36 @@ import { Label } from "@/components/ui/label";
 import { Button } from "../button"; 
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { changePassword } from "@/actions/password";
+import { BetterAuthActionButton } from "@/components/better-auth-action-button";
+import { toast } from "sonner";
 
 export function ChangePasswordDialog({ currentUser, className, text }: {
     currentUser: currentUserType,
     className?: string,
     text: string
 }) {
-    const [password, setPassword] = useState<string>("");
+
+    const [currentPassword, setCurrentPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
     const router = useRouter();
 
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
+    const handleCurrentPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setCurrentPassword(e.target.value);
+    }
+
+    const handleNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewPassword(e.target.value);
+    }
+
+    async function handleSetPassword() {
+        const res = await changePassword(currentPassword.trim(), newPassword.trim());
+        if(!res.status) {
+            return { error: { message: res.message } };
+        } else {
+            toast.success(res.message);
+            return { error: null };
+        }
     }
     return (
         <Dialog>
@@ -54,8 +73,8 @@ export function ChangePasswordDialog({ currentUser, className, text }: {
                                 <InputPassword 
                                     className="w-full max-w-full"
                                     placeholder="........" 
-                                    value={password} 
-                                    onChange={handlePasswordChange} 
+                                    value={currentPassword} 
+                                    onChange={handleCurrentPasswordChange} 
                                 />
                             </div>
                             <div className="w-full flex flex-col gap-2">
@@ -63,8 +82,8 @@ export function ChangePasswordDialog({ currentUser, className, text }: {
                                 <InputPassword 
                                     className="w-full max-w-full"
                                     placeholder="........" 
-                                    value={password} 
-                                    onChange={handlePasswordChange} 
+                                    value={newPassword} 
+                                    onChange={handleNewPasswordChange} 
                                 />
                             </div>
                         </div>
@@ -72,7 +91,7 @@ export function ChangePasswordDialog({ currentUser, className, text }: {
                     </div>
                 </div>
                 <DialogFooter className="flex w-full justify-between">
-                    <Button className="flex-1">Set Password</Button>
+                    <BetterAuthActionButton action={handleSetPassword} className="flex-1">Set Password</BetterAuthActionButton>
                     <DialogClose asChild className="max-w-[125px] w-full">
                         <Button variant={"outline"} className="w-full">
                             Close

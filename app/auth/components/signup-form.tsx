@@ -57,12 +57,12 @@ export default function SignupForm() {
 
         await signUp.email(
           { 
-            email: data.email,
-            password: data.password,
-            name: data.name,
-            username: data.username,
+            email: data.email.trim(),
+            password: data.password.trim(),
+            name: data.name.trim(),
+            username: data.username.trim(),
             callbackURL: "/", 
-            displayUsername: data.username,
+            displayUsername: data.username.trim(),
           }, {
           onSuccess: () => {
             toast.success("Account created successfully!", {

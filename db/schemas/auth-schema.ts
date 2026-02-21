@@ -7,8 +7,6 @@ import {
   boolean,
   integer,
   index,
-  primaryKey,
-  date,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -24,9 +22,11 @@ export const user = pgTable("user", {
     .notNull(),
   username: text("username").unique(),
   displayUsername: text("display_username"),
-  bannerImage: text("banner_image"),
-  bio: text("bio"),
-  dob: date("dob")
+  phoneNumber: text("phone_number").default(""),
+  phoneNumberVerified: boolean("phone_number_verified"),
+  bio: text("bio").default(""),
+  bannerImage: text("banner_image").default(""),
+  dob: timestamp("dob"),
 });
 
 export const session = pgTable(
@@ -90,9 +90,9 @@ export const verification = pgTable(
 
 export const rateLimit = pgTable("rate_limit", {
   id: text("id").primaryKey(),
-  key: text("key"),
-  count: integer("count"),
-  lastRequest: bigint("last_request", { mode: "number" }),
+  key: text("key").notNull().unique(),
+  count: integer("count").notNull(),
+  lastRequest: bigint("last_request", { mode: "number" }).notNull(),
 });
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -113,48 +113,3 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
-
-
-export const followers = pgTable("followers", {
-  followerId: text("follower_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  followingId: text("following_id").notNull().references(() => user.id, {onDelete: "cascade"}),
-  createdAt: timestamp("created_at").defaultNow().notNull()
-}, (table) => ({
-  pk: primaryKey({ columns: [table.followerId, table.followingId] }),
-  followerIdx: index("followers_follower_idx").on(table.followerId),
-  followingIdx: index("followed_following_idx").on(table.followingId)
-}));
-
-export const followersRelations = relations(followers, ({ one }) => ({
-  follower: one(user, {
-    fields: [followers.followerId],
-    references: [user.id],
-  }),
-  following: one(user, {
-    fields: [followers.followingId],
-    references: [user.id]
-  })
-}))
-
-export const blocklist = pgTable("blocklist", {
-  blockerId: text("blocker_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  blockedId: text("blocked_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  }, (table) => ({
-    pk: primaryKey({ columns: [table.blockerId, table.blockedId] }),
-    blockerId: index("blocker_id").on(table.blockerId),
-    blockedId: index("blocked_id").on(table.blockedId)
-  })
-);
-
-export const blocklistRelations = relations(blocklist, ({ one }) => ({
-  blockerId: one(user, {
-    fields: [blocklist.blockerId],
-    references: [user.id]
-  }),
-  blockedId: one(user, {
-    fields: [blocklist.blockedId],
-    references: [user.id]
-  })
-}));
-
-

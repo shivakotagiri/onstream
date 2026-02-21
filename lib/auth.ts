@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { customSession, username } from "better-auth/plugins";
+import { customSession, phoneNumber, username } from "better-auth/plugins";
 import * as schema from "@/db/schema";
 import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
 import { sendEmailVerification } from "./emails/send-email-verification";
@@ -14,6 +14,36 @@ export const auth = betterAuth({
     user: {
         deleteUser: {
             enabled: true
+        },
+
+        additionalFields: {
+            phoneNumber: {
+                type: 'string',
+                required: false,
+                defaultValue: "",
+                input: true
+            },
+
+            bio: {
+                type: 'string',
+                required: false,
+                defaultValue: "",
+                input: true
+            },
+
+            bannerImage: {
+                type: 'string',
+                required: false,
+                defaultValue: "",
+                input: true
+            },
+
+            dob: {
+                type: 'date',
+                required: false,
+                defaultValue: null,
+                input: true
+            }
         }
     }, 
 
@@ -40,6 +70,7 @@ export const auth = betterAuth({
         },
         expiresIn: 60 * 60 * 24,
         updateAge: 60 * 15,
+        
     },
 
     rateLimit: {
@@ -54,7 +85,7 @@ export const auth = betterAuth({
         }
     },
 
-    plugins: [nextCookies(), username(), customSession(async ({ user, session}) => {
+    plugins: [nextCookies(), username(), phoneNumber(), customSession(async ({ user, session}) => {
         const fullUser = await db.select().from(schema.user).where(eq(schema.user.id, user.id))
         return {
             ...session,

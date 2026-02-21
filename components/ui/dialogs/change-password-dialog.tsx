@@ -1,12 +1,12 @@
 "use client";
 
 import { currentUserType } from "@/actions/user";
-import { DialogContent, DialogTrigger, Dialog, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "./ui/dialog";
-import { UserAvatar } from "./ui/live-avatar";
+import { DialogContent, DialogTrigger, Dialog, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "./dialog";
+import { UserAvatar } from "../live-avatar";
 import { ChangeEvent, useState } from "react";
-import InputPassword from "./ui/input-password";
+import InputPassword from "../input-password";
 import { Label } from "@/components/ui/label";
-import { Button } from "./ui/button";
+import { Button } from "../button"; 
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 

@@ -1,6 +1,6 @@
-import { DialogTrigger, Dialog, DialogContent, DialogHeader, DialogFooter, DialogClose, DialogTitle } from "./ui/dialog";
-import { Button } from "./ui/button";
-import { BetterAuthActionButton } from "./better-auth-action-button";
+import { DialogTrigger, Dialog, DialogContent, DialogHeader, DialogFooter, DialogClose, DialogTitle } from "./dialog";
+import { Button } from "../button";
+import { BetterAuthActionButton } from "../../better-auth-action-button";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";

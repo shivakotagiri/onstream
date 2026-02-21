@@ -15,7 +15,7 @@ import { eq } from "drizzle-orm";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { DeleteUserDialog } from "@/components/delete-user-dialog";
+import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 
 
 export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
     const [name, setName] = useState<string>(currentUser.name || "");

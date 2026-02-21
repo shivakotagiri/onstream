@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangePasswordDialog } from "@/components/change-password-dialog";
+import { ChangePasswordDialog } from "@/components/ui/dialogs/change-password-dialog"; 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
@@ -8,6 +8,7 @@ import { currentUserType } from "@/actions/user";
 import { Edit2Icon, Eye, EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ChangeEvent, useState } from "react";
+import { ShowBlowckedUsersDialog } from "@/components/ui/dialogs/show-blocked-users-dialog";
 
 export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
     const [editEmail, setEditEmail] = useState<boolean>(false);
@@ -216,12 +217,7 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
                                         <Button className="px-5 py-2">Block User</Button>
                                     </div>
                                 </div>
-                                <Button 
-                                    variant={"link"} 
-                                    className="p-0 max-w-[150px] cursor-pointer"
-                                >
-                                    Show blocked users
-                                </Button>
+                                <ShowBlowckedUsersDialog />
                             </div>
                         </div>
                     </div>

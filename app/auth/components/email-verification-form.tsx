@@ -7,15 +7,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import TextSeparator from "@/components/ui/text-separator";
-import { authClient, useSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { ChangeEvent, useRef, useState } from "react";
 import z from "zod";
 
 const emailZod = z.email();
 export function EmailVerificationForm() {
-    const session = useSession()
-    const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [timeToNextResend, setTimeToNextResend] = useState<number>(0);
     const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
@@ -60,11 +57,6 @@ export function EmailVerificationForm() {
 
         return res;
     }
-
-
-    useEffect(() => {
-        if(session.data?.user.email) router.push("/");
-    }, [router, session.data?.user.email]);
 
     return (
         <Card className="max-w-md w-full">

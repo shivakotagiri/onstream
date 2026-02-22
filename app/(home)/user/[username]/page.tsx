@@ -3,27 +3,23 @@ import { isCurrentUserFollowing } from "@/actions/followers";
 import { currentUserData, userSearchData } from "@/actions/user";
 import { ProfileBanner } from "@/components/profile-banner";
 
-export default async function UserDashboardPage({
-  params,
-}: {
-  params: { username: string };
-}) {
+export default async function UserDashboardPage({ params }: { params: { username: string }; }) {
   const { username } = await params;
 
-  const [ searchedUser, currentUser ] = await Promise.all([
-    userSearchData(username),
-    currentUserData()
-  ])
+  const searchedUserPromise = userSearchData(username);
+  const currentUserDataPromise = currentUserData();
+
+  const searchedUser = await searchedUserPromise;
+  const currentUser = await currentUserDataPromise;
+
+  if(!searchedUser || !currentUser?.id) return <div>User not found</div>
 
   const[currentUserFollowing, isCurrentUserBlocked, isCurrentUserBlockedSearchedUser] = 
     await Promise.all([
-      isCurrentUserFollowing(currentUser?.id || "", searchedUser?.id || ""),
+      isCurrentUserFollowing(searchedUser?.id || ""),
       isUserBlocked(searchedUser?.id || "", currentUser?.id || ""),
       isUserBlocked(currentUser?.id || "", searchedUser?.id || "")
     ]);
-
-    if(!searchedUser) return <div>User not found</div>
-  
   return (
     <div className="w-full min-h-screen bg-background pb-20">
       <div className="w-full mx-auto">

@@ -43,15 +43,14 @@ export default function FollowButton({ searchedUser, currentUserFollowing }: Fol
         setIsLoading(true);
         try {
             if (isFollowing) {
-                await unFollowUser(currentUser.user.id, searchedUser.id);
+                await unFollowUser(searchedUser.id);
                 setIsFollowing(false);
                 toast.success(`Unfollowed ${searchedUser.name}`);
             } else {
-                await followUser(currentUser.user.id, searchedUser.id);
+                await followUser(searchedUser.id);
                 setIsFollowing(true);
                 toast.success(`Following ${searchedUser.name}`);
             }
-            router.refresh();
         } catch (error) {
             toast.error("Something went wrong. Please try again.");
             setIsFollowing(currentUserFollowing); 

@@ -12,7 +12,6 @@ import { db } from "@/db";
 import { user } from "@/db/schema";
 import { currentUserType } from "@/actions/user";
 import { eq } from "drizzle-orm";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 
@@ -23,9 +22,6 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
     const [bio, setBio] = useState<string>(currentUser.bio || "");
     const [bannerUrl, setBannerUrl] = useState<string>(currentUser.bannerImage || "");
     const [avatarUrl, setAvatarUrl] = useState<string>(currentUser.image || "");
-
-    const router = useRouter();
-
 
     async function handleSubmit(): Promise<{ error: { message?: string } | null }> {
         try {
@@ -42,7 +38,6 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                     }
                 }
             }
-            router.refresh();
             toast.success("Update successfull");
             return { error: null };
         } catch( error ) {
@@ -67,7 +62,6 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                     }
                 }
             }
-            router.refresh();
             toast.success("Update profile picture successfull");
             return { error: null };
         } catch( error ) {
@@ -92,7 +86,6 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                     }
                 }
             }
-            router.refresh();
             toast.success("Deleted profile picture");
             return { error: null };
         } catch( error ) {

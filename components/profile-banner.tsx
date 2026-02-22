@@ -24,7 +24,7 @@ interface ProfileBannerProps {
     bio: string | null;
     bannerImage: string | null;
     dob: Date | null;
-  } | null,
+  },
 
   searchedUser: {
       id: string;

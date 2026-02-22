@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { user } from "@/db/schema";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
+import { cache } from "react";
 
 export type currentUserType = {
     id: string;
@@ -27,20 +28,20 @@ export const usersData = async () => {
     return res;
 }
 
-export const userSearchData = async (username: string) => {
+export const userSearchData = cache(async (username: string) => {
     const cleanUsername = username.trim().toLowerCase();
     const res = await db.query.user.findFirst({
         where: eq(user.username, cleanUsername)
     });
 
     return res;
-}
+});
 
 export const currentUserData = async () => {
     const session = await getSession();
     if(!session || !session.user) return null;
     
-    const currentUserData = await db.select().from(user).where(eq(user.id, session.userId));
+    const currentUserData = await db.select().from(user).where(eq(user.id, session.user.id));
     return currentUserData[0];
 }
 

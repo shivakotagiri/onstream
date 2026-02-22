@@ -2,9 +2,11 @@
 
 import { db } from "@/db"
 import { followers } from "@/db/schema"
+import { getSession } from "@/lib/get-session";
 import { and, eq } from "drizzle-orm"
+import { cache } from "react";
 
-export const userFollowers = async (userId: string) => {
+export const userFollowers = cache(async (userId: string) => {
     if(!userId) return [];
     const res = await db.query.followers.findMany({
         where: eq(followers.followingId, userId),
@@ -13,9 +15,9 @@ export const userFollowers = async (userId: string) => {
         }
     });
     return res;
-}
+})
 
-export const usersFollowed = async (userId: string) => {
+export const usersFollowed = cache(async (userId: string) => {
     if(!userId) return [];
     const res = await db.query.followers.findMany({
         where: eq(followers.followerId, userId),
@@ -25,10 +27,15 @@ export const usersFollowed = async (userId: string) => {
     })
 
     return res;
-}
+})
 
-export const isCurrentUserFollowing = async (followerId: string, followingId: string) => {
-    if(!followerId || !followingId) return false;
+export const isCurrentUserFollowing = async (followingId: string) => {
+    if(!followingId) return false;
+
+    const session = await getSession();
+    if(!session || !session.user) return false;
+
+    const followerId = session.user.id;
     const res = await db.query.followers.findFirst({
         where: and(
             eq(followers.followerId, followerId),
@@ -41,7 +48,12 @@ export const isCurrentUserFollowing = async (followerId: string, followingId: st
     return true;
 }
 
-export const followUser = async (followerId: string, followingId: string) => {
+export const followUser = async (followingId: string) => {
+    const session = await getSession();
+    if(!session || !session.user) return false;
+
+    const followerId = session.user.id;
+
     if(!followingId || !followerId) return null;
     if(followingId === followerId) return null;
 
@@ -62,7 +74,12 @@ export const followUser = async (followerId: string, followingId: string) => {
     return res;
 }
 
-export const unFollowUser = async (followerId: string, followingId: string) => {
+export const unFollowUser = async (followingId: string) => {
+    const session = await getSession();
+    if(!session || !session.user) return false;
+
+    const followerId = session.user.id;
+    
     if(!followerId || !followingId) return null;
     if(followerId === followingId) return null;
 

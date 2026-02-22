@@ -2,11 +2,10 @@ import { db } from "@/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { customSession, phoneNumber, username } from "better-auth/plugins";
+import { phoneNumber, username } from "better-auth/plugins";
 import * as schema from "@/db/schema";
 import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
 import { sendEmailVerification } from "./emails/send-email-verification";
-import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET,
@@ -85,13 +84,7 @@ export const auth = betterAuth({
         }
     },
 
-    plugins: [nextCookies(), username(), phoneNumber(), customSession(async ({ user, session}) => {
-        const fullUser = await db.select().from(schema.user).where(eq(schema.user.id, user.id))
-        return {
-            ...session,
-            user: fullUser[0]
-        }
-    })],
+    plugins: [nextCookies(), username(), phoneNumber()],
 
     database: drizzleAdapter(db, {
         provider: "pg",

@@ -3,10 +3,8 @@ import { Button } from "../button";
 import { BetterAuthActionButton } from "../../better-auth-action-button";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 
 export function DeleteUserDialog() {
-    const router = useRouter();
     async function handleDelete() {
         const res = await authClient.deleteUser({
             callbackURL: "/",
@@ -16,7 +14,6 @@ export function DeleteUserDialog() {
             return { error: { message: res.error.message } }
         } else {
             toast.success("User deleted Successfull");
-            router.refresh();
             return { error: null }
         }
     }

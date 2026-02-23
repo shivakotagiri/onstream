@@ -12,7 +12,7 @@ export default async function UserDashboardPage({ params }: { params: { username
   const searchedUser = await searchedUserPromise;
   const currentUser = await currentUserDataPromise;
 
-  if(!searchedUser || !currentUser?.id) return <div>User not found</div>
+  if(!searchedUser) return <div>User not found</div>
 
   const[currentUserFollowing, isCurrentUserBlocked, isCurrentUserBlockedSearchedUser] = 
     await Promise.all([

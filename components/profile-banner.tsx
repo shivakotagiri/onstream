@@ -24,7 +24,7 @@ interface ProfileBannerProps {
     bio: string | null;
     bannerImage: string | null;
     dob: Date | null;
-  },
+  } | null,
 
   searchedUser: {
       id: string;
@@ -68,6 +68,12 @@ export async function ProfileBanner({
       year: "numeric",
     }
   );
+
+  function print() {
+    console.log(searchedUser);
+  }
+
+  print();
 
   return (
     <div className="w-full flex flex-col items-center">

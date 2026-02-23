@@ -11,7 +11,7 @@ import { currentUserType } from "@/actions/user";
 interface MoreOptionsProps {
     isCurrentUserBlockedSearchedUser: boolean,
     searchedUserId: string,
-    currentUser: currentUserType 
+    currentUser: currentUserType | null
 }
 
 export function MoreOptions({ searchedUserId, currentUser, isCurrentUserBlockedSearchedUser }: MoreOptionsProps) {
@@ -49,7 +49,7 @@ export function MoreOptions({ searchedUserId, currentUser, isCurrentUserBlockedS
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="flex justify-center items-center mt-1" align="end">
-                { searchedUserId !== currentUser.id && <DropdownMenuItem onClick={!block ? handleBlock: handleUnBlock} className="text-center hover:bg-transparent">
+                { searchedUserId !== currentUser?.id && <DropdownMenuItem onClick={!block ? handleBlock: handleUnBlock} className="text-center hover:bg-transparent">
                     {block ? "Unblock User": "Block User"}
                 </DropdownMenuItem>}
             </DropdownMenuContent>

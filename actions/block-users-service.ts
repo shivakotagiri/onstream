@@ -3,6 +3,22 @@
 import { db } from "@/db";
 import { blocklist } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+import { currentUserData } from "./user";
+
+
+export const blockedUsersList = async () => {
+    const currentUser = await currentUserData();
+    if(!currentUser) return [];
+
+    const blockedUsers = await db.query.blocklist.findMany({
+        where: eq(blocklist.blockedId, currentUser.id),
+        with: {
+            blockedUser: true
+        }
+    });
+
+    return blockedUsers;
+}
 
 
 export const isUserBlocked = async (blockerId: string, blockedId: string) => {
@@ -20,7 +36,13 @@ export const isUserBlocked = async (blockerId: string, blockedId: string) => {
     return !!isUserBlocked;
 }
 
-export const blockUser = async (blockerId: string, blockedId: string) => {
+export const blockUser = async (blockedId: string) => {
+    const currentUser = await currentUserData();
+    if(!currentUser) return {
+        status: false,
+        message: "Login first",
+    }
+    const blockerId = currentUser.id;
     if(!blockerId || !blockedId) return {
         status: false,
         message: "User not found",

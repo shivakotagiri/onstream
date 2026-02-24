@@ -1,12 +1,12 @@
 import { isUserBlocked } from "@/actions/block-users-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
-import { currentUserData, userSearchData } from "@/actions/user";
+import { currentUserData, searchUserByUsername } from "@/actions/user";
 import { ProfileBanner } from "@/components/profile-banner";
 
 export default async function UserDashboardPage({ params }: { params: { username: string }; }) {
   const { username } = await params;
 
-  const searchedUserPromise = userSearchData(username);
+  const searchedUserPromise = searchUserByUsername(username);
   const currentUserDataPromise = currentUserData();
 
   const searchedUser = await searchedUserPromise;

@@ -29,7 +29,7 @@ export const usersData = async () => {
     return res;
 }
 
-export const userSearchData = (async (username: string) => {
+export const searchUserByUsername = (async (username: string) => {
     const cleanUsername = username.trim();
     const res = await db.query.user.findFirst({
         where: eq(user.username, cleanUsername)

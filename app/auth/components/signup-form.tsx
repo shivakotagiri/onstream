@@ -91,7 +91,7 @@ export default function SignupForm() {
         }
 
         const timeout = setTimeout(async () => {
-            const res = await checkUsernameAvailability(username);
+            const res = await checkUsernameAvailability(username.trim());
 
             if(!res.available) {
                 setError("username", {

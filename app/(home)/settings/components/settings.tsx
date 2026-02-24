@@ -6,7 +6,29 @@ import { PrivacyTab } from "./privacy-tab";
 import { userSettingsTabStore } from "@/store/settings-tab";
 import { currentUserType } from "@/actions/user";
 
-export function Settings({ currentUser }: { currentUser: currentUserType }) {
+interface BlockedUsersProps {
+    blockedId: string;
+    blockerId: string;
+    blockedUser: {
+        name: string;
+        image: string | null;
+        id: string;
+        email: string;
+        emailVerified: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+        username: string | null;
+        displayUsername: string | null;
+        phoneNumber: string | null;
+        phoneNumberVerified: boolean | null;
+        bio: string | null;
+        bannerImage: string | null;
+        dob: Date | null;
+    }
+}
+
+
+export function Settings({ currentUser, blockedUsers }: { currentUser: currentUserType, blockedUsers: BlockedUsersProps[]}) {
     const { tab, setTab } = userSettingsTabStore();
     if(!currentUser || !currentUser.id) return <div>User not found</div>
     return (
@@ -32,7 +54,7 @@ export function Settings({ currentUser }: { currentUser: currentUserType }) {
             </TabsTrigger>
           </TabsList>
           <AccountTab currentUser={currentUser} />
-          <PrivacyTab currentUser={currentUser} />
+          <PrivacyTab currentUser={currentUser} blockedUsers={blockedUsers} />
         </Tabs>
     )
 }

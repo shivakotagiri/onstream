@@ -4,7 +4,30 @@ import { Button } from "../button";
 import { UserAvatar } from "../live-avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
 
-export function ShowBlowckedUsersDialog() {
+interface BlockedUsersProps {
+    blockedUsers: {
+        blockedId: string;
+        blockerId: string;
+        blockedUser: {
+            name: string;
+            image: string | null;
+            id: string;
+            email: string;
+            emailVerified: boolean;
+            createdAt: Date;
+            updatedAt: Date;
+            username: string | null;
+            displayUsername: string | null;
+            phoneNumber: string | null;
+            phoneNumberVerified: boolean | null;
+            bio: string | null;
+            bannerImage: string | null;
+            dob: Date | null;
+        };
+    }[]
+}
+
+export function ShowBlowckedUsersDialog({ blockedUsers }: BlockedUsersProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -30,22 +53,16 @@ export function ShowBlowckedUsersDialog() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="flex w-full items-center justify-between pb-3 border-b">
-                                <td className="max-w-[10%] w-full flex items-center justify-center pl-5">
-                                    <UserAvatar name="KaiCenat" src="" />
-                                </td>
-                                <td className="w-[30%] text-center">KaiCenat</td>
-                                <td className="w-[30%] text-center">21/02/26</td>
-                                <td className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
-                            </tr>
-                            <tr className="flex w-full items-center justify-between pb-3">
-                                <td className="max-w-[10%] w-full flex items-center justify-center pl-5">
-                                    <UserAvatar name="IshowSpeed" src="" />
-                                </td>
-                                <td className="w-[30%] text-center">IshowSpeed</td>
-                                <td className="w-[30%] text-center">21/02/26</td>
-                                <td className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
-                            </tr>
+                            { blockedUsers.map((blockedUser) => (
+                                <tr key={blockedUser.blockedId} className="flex w-full items-center justify-between pb-3 border-b">
+                                    <td className="max-w-[10%] w-full flex items-center justify-center pl-5">
+                                        <UserAvatar name={blockedUser.blockedUser.name} src={blockedUser.blockedUser.image || ""} />
+                                    </td>
+                                    <td className="w-[30%] text-center">{ blockedUser.blockedUser.name}</td>
+                                    <td className="w-[30%] text-center">21/02/26</td>
+                                    <td className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

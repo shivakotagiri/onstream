@@ -1,8 +1,10 @@
+import { blockedUsersList } from "@/actions/block-users-service";
 import { Settings } from "./components/settings";
 import { currentUserData } from "@/actions/user";
 
 export default async function SettingsPage() {
   const currentUser = await currentUserData();
+  const blockedUsers = await blockedUsersList();
 
   if(!currentUser) {
     return <div>User not found</div>
@@ -18,7 +20,7 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <Settings currentUser={currentUser} />
+        <Settings blockedUsers={blockedUsers} currentUser={currentUser} />
       </div>
     </div>
   );

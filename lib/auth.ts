@@ -6,6 +6,7 @@ import { phoneNumber, username } from "better-auth/plugins";
 import * as schema from "@/db/schema";
 import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
 import { sendEmailVerification } from "./emails/send-email-verification";
+import { sendChangeEmailConfirmationRequest } from "./emails/send-change-email-confirmation";
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET,
@@ -13,6 +14,20 @@ export const auth = betterAuth({
     user: {
         deleteUser: {
             enabled: true
+        },
+
+        changeEmail: {
+            enabled: true,
+            sendChangeEmailConfirmation: async ({ newEmail, url, user }) => {
+                const email = user.email;
+                console.log("[auth] sendChangeEmailConfirmation triggered for:", newEmail);
+                await sendChangeEmailConfirmationRequest({ email, url, user });
+            },
+            sendChangeEmailVerification: async ({ newEmail, url, user }) => {
+                const email = newEmail;
+                console.log("[auth] sendChangeEmailVerification triggered for:", newEmail);
+                await sendChangeEmailConfirmationRequest({ email, url, user });
+            }
         },
 
         additionalFields: {

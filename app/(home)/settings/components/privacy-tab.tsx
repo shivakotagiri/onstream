@@ -13,6 +13,7 @@ import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { changeEmail } from "@/actions/user";
 
 export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
 
@@ -34,7 +35,7 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
     }
 
     function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
-        setEmail(e.target.value);
+        setEmail(e.target.value.trim());
     }
 
     function handlePhoneNumberChange(e: ChangeEvent<HTMLInputElement>) {
@@ -74,6 +75,19 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
         }
     }
 
+    async function handleSetEmail() {
+        const res = await changeEmail(currentUser.email, email);
+        if(!res.status) {
+            console.error("[handleSetEmail] Email change failed:", res.message);
+            return { error: { message: res.message || "Failed to change email" } }
+        } else {
+            console.log("[handleSetEmail] Email change initiated successfully");
+            toast.success(res.message);
+            setEditEmail(false);
+            return { error: null }
+        }
+    }
+
     const hiddenEmail = email.substring(0, 2) + ".".repeat(email.substring(2).split("@")[0].length) + "@gmail.com";
 
     return (
@@ -103,13 +117,21 @@ export function PrivacyTab({ currentUser }: { currentUser: currentUserType }) {
                                             <Input  
                                                 className="px-3 py-5 text-base" 
                                                 onChange={handleEmailChange}
-                                                value={email} 
+                                                value={email}
+                                                type="email"
+                                                placeholder="Enter your new email"
                                             />
                                             <span className="text-sm text-muted-foreground">Please confirm your new email address</span>
                                         </div>
                                         
                                         <div className="flex gap-3">
-                                            <Button disabled={email.length < 11} className="cursor-pointer">Save Changes</Button>
+                                            <BetterAuthActionButton 
+                                                action={handleSetEmail}
+                                                disabled={email.length < 5 || !email.includes('@') || email === currentUser.email}
+                                                className="cursor-pointer"
+                                            >
+                                                Save Changes
+                                            </BetterAuthActionButton>
                                             <Button 
                                                 className="cursor-pointer" 
                                                 onClick={() => setEditEmail(false)} 

@@ -1,11 +1,11 @@
-import { currentUserData } from "@/actions/user";
+import { getCurrentUser } from "@/actions/user";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function SettingsLayout({ children }: {
     children: Readonly<ReactNode>
 }) {
-    const currentUser = await currentUserData();
+    const currentUser = await getCurrentUser();
     if(!currentUser) redirect("/auth/login");
     return <>{ children }</>
 }

@@ -10,7 +10,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { db } from "@/db";
 import { user } from "@/db/schema";
-import { currentUserType } from "@/actions/user";
+import { currentUserType, updateUserDetails } from "@/actions/user";
 import { eq } from "drizzle-orm";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -21,38 +21,25 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
     const [username, setUsername] = useState<string>(currentUser.username || "");
     const [bio, setBio] = useState<string>(currentUser.bio || "");
     const [bannerUrl, setBannerUrl] = useState<string>(currentUser.bannerImage || "");
-    const [avatarUrl, setAvatarUrl] = useState<string>(currentUser.image || "");
+    const [imageUrl, setImageUrl] = useState<string>(currentUser.image || "");
 
-    async function handleSubmit(): Promise<{ error: { message?: string } | null }> {
-        try {
-            const res = await db.update(user).set({
-                name: name.trim(),
-                bio: bio.trim(),
-                bannerImage: bannerUrl.trim()
-            }).where(eq(user.id, currentUser.id)).returning();
-
-            if(!res.length) {
-                return {
-                    error: {
-                        message: "Unable to update the changes",
-                    }
-                }
-            }
-            toast.success("Update successfull");
-            return { error: null };
-        } catch( error ) {
-            return {
-                error: {
-                    message: "Something went wrong",
-                }
-            }
-        }
+    async function handleSubmit() {
+      const res = await updateUserDetails(name, bio, bannerUrl)
+      if(!res.status) {
+          return {
+              error: {
+                  message: res.message,
+              }
+          }
+      }
+      toast.success(res.message);
+      return { error: null };
     }
 
     async function handleProfilePicSubmit(): Promise<{ error: { message?: string } | null }> {
         try {
             const res = await db.update(user).set({
-                image: avatarUrl.trim(),
+                image: imageUrl.trim(),
             }).where(eq(user.id, currentUser.id)).returning();
 
             if(!res.length) {
@@ -162,7 +149,7 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
 
                 <div className="flex flex-col items-center gap-5 shrink-0 w-full lg:w-48 lg:pt-2">
                   <UserAvatar
-                    src={avatarUrl}
+                    src={imageUrl}
                     isLive={false}
                     name={name}
                     className="size-32 rounded-full object-cover ring-1 ring-border"
@@ -172,8 +159,8 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                   <div className="w-full space-y-2">
                     <Label className="text-xs font-normal text-muted-foreground text-center block">Profile Picture URL</Label>
                     <Input 
-                      value={avatarUrl}
-                      onChange={(e) => setAvatarUrl(e.target.value)}
+                      value={imageUrl}
+                      onChange={(e) => setImageUrl(e.target.value)}
                       placeholder="https://example.com/avatar.jpg"
                       className="bg-transparent border-input focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring text-foreground h-10 text-xs rounded-lg text-center" 
                     />

@@ -38,12 +38,12 @@ export const searchUserByUsername = (async (username: string) => {
     return res;
 });
 
-export const currentUserData = async () => {
+export const getCurrentUser = async () => {
     const session = await getSession();
     if(!session || !session.user) return null;
     
-    const currentUserData = await db.select().from(user).where(eq(user.id, session.user.id));
-    return currentUserData[0];
+    const getCurrentUser = await db.select().from(user).where(eq(user.id, session.user.id));
+    return getCurrentUser[0];
 }
 
 export const changeEmail = async (currentEmail: string, newEmail: string) => {
@@ -112,6 +112,44 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
             message: "Failed to send verification email. Please try again.",
         }
     }
+}
+
+export const updateUserDetails = async (name: string, bio: string, bannerUrl: string) => {
+    const currentUser = await getCurrentUser();
+    if(!currentUser) {
+        return {
+            status: false,
+            message: "User doesn't exists"
+        }
+    }
+    try {
+        const res = await db.update(user).set({
+            name: name.trim(),
+            bio: bio.trim(),
+            bannerImage: bannerUrl.trim()
+        }).where(eq(user.id, currentUser.id)).returning();
+
+        if(!res) {
+            return {
+                status: false,
+                message: "Something went wrong"
+            }
+        } else {
+            return {
+                status: true,
+                message: "User details updated"
+            }
+        }
+    } catch(err) {
+        return {
+            status: false,
+            message: "Something went wrong"
+        }
+    }
+}
+
+export const updateProfilePic = async (imageUrl: string) => {
+    // TODO: write the logic to update the profile pic
 }
 
 

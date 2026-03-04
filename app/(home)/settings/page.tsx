@@ -1,9 +1,9 @@
 import { blockedUsersList } from "@/actions/block-users-service";
 import { Settings } from "./components/settings";
-import { currentUserData } from "@/actions/user";
+import { getCurrentUser } from "@/actions/user";
 
 export default async function SettingsPage() {
-  const currentUser = await currentUserData();
+  const currentUser = await getCurrentUser();
   const blockedUsers = await blockedUsersList();
 
   if(!currentUser) {

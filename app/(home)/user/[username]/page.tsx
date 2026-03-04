@@ -1,16 +1,16 @@
 import { isUserBlocked } from "@/actions/block-users-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
-import { currentUserData, searchUserByUsername } from "@/actions/user";
+import { getCurrentUser, searchUserByUsername } from "@/actions/user";
 import { ProfileBanner } from "@/components/profile-banner";
 
 export default async function UserDashboardPage({ params }: { params: { username: string }; }) {
   const { username } = await params;
 
   const searchedUserPromise = searchUserByUsername(username);
-  const currentUserDataPromise = currentUserData();
+  const getCurrentUserPromise = getCurrentUser();
 
   const searchedUser = await searchedUserPromise;
-  const currentUser = await currentUserDataPromise;
+  const currentUser = await getCurrentUserPromise;
 
   if(!searchedUser) return <div>User not found</div>
 

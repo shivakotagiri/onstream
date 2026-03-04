@@ -1,7 +1,7 @@
 1. Don't do Waterfall Fetching like below
 
 const searchedUser = await userSearchData(username);
-const currentUser = await currentUserData();
+const currentUser = await getCurrentUser();
 const currentUserFollowing = await isCurrentUserFollowing(...)
 const isCurrentUserBlocked = await isUserBlocked(...)
 const isCurrentUserBlockedSearchedUser = await isUserBlocked(...)
@@ -12,7 +12,7 @@ above is the waterfall fetching don't do that
 
 2. instead of doing mutiple db calls for a single page, Fetch everything in ONE DB query (joins).
 
-Your page does: userSearchData, currentUserData, isCurrentUserFollowing, isUserBlocked, isUserBlocked, userFollowers, usersFollowed
+Your page does: userSearchData, getCurrentUser, isCurrentUserFollowing, isUserBlocked, isUserBlocked, userFollowers, usersFollowed
 
 👉 That is 7 DB calls on first render.
 

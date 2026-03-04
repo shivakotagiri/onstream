@@ -7,12 +7,17 @@ export function SignInWithGoogle() {
         <BetterAuthActionButton 
             className="w-full" 
             type="button"
-            action={() => {
-                return signIn.social({
-                    provider: "google" 
-                })
+            action={async () => {
+                const res = await signIn.social({
+                        provider: "google",
+                        callbackURL: "/",
+                    })
+                if(!res) {
+                    return { error: { message: "Something went wrong"} }
+                } else {
+                    return { error: null }
+                }
             }}
-            successMessage="Login Successfull"
         >
         Continue with Google <GoogleIcon />
         </BetterAuthActionButton>

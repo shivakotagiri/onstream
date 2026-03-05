@@ -58,6 +58,7 @@ Current TODOs to work with:-
     - there is a bug in ShowBlowckedUsersDialog.tsx find it later
     - bug in email confirmation and verifcation
     - add a ban feature
+    - write the logic for saving the user details in /welcome page
 
 -----------------------------------------------------------------------------------------------
     

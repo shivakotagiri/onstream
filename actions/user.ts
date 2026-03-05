@@ -62,8 +62,7 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
         status: false,
         message: "New email must be different to current email"
     }
-
-    // Validate email format
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newEmail)) {
         return {

@@ -38,10 +38,10 @@ const signupSchema = z.object({
     name: z.string().min(3),
 });
 
-type SignupForm = z.infer<typeof signupSchema>
+type SignupFormType = z.infer<typeof signupSchema>
 
 export default function SignupForm() {
-    const form = useForm<SignupForm>({
+    const form = useForm<SignupFormType>({
         resolver: zodResolver(signupSchema),
         defaultValues:{
             email: "",
@@ -53,7 +53,7 @@ export default function SignupForm() {
     
     const { isSubmitting } = form.formState
     const router = useRouter();
-    async function handleSignup(data: SignupForm) {
+    async function handleSignup(data: SignupFormType) {
 
         await signUp.email(
           { 

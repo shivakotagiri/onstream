@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db"
-import { user } from "@/db/schema";
+import { account, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
@@ -44,6 +44,17 @@ export const getCurrentUser = async () => {
     
     const getCurrentUser = await db.select().from(user).where(eq(user.id, session.user.id));
     return getCurrentUser[0];
+}
+
+export const getUserAccount = async () => {
+    const session = await getSession();
+    if(!session || !session.user) return null;
+
+    const getCurrentUserAccount = await db.query.account.findFirst({
+        where: eq(account.id, session.user.id)
+    });
+
+    return getCurrentUserAccount;
 }
 
 export const changeEmail = async (currentEmail: string, newEmail: string) => {
@@ -190,6 +201,12 @@ export const deleteProfilePic = async () => {
     } catch (err) {
         return { status: false, message: "Something went wrong, please try again later" }
     }
+}
+
+export const isUserHasPassword = async () => {
+    const userAccount = await getUserAccount();
+    if(!userAccount || !userAccount.password) return false;
+    else return true;
 }
 
 

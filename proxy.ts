@@ -10,7 +10,9 @@ export async function proxy(req: NextRequest) {
     const isSettingsPage = pathname.startsWith("/settings");
 
     if(isAuthPage && session && session.user) {
-        return NextResponse.redirect(new URL("/", req.url));
+        if(!pathname.startsWith("/auth/reset-password")) {
+            return NextResponse.redirect(new URL("/", req.url));
+        }
     }
 
     if(isSettingsPage && (!session || !session.user)) {

@@ -1,13 +1,13 @@
+"use client";
+
 import { currentUserType } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import { ChangePasswordDialog } from "@/components/ui/dialogs/change-password-dialog";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function SecuritySection({ currentUser }: { currentUser: currentUserType }) {
-    const router = useRouter();
+export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { currentUser: currentUserType, isCurrentUserHasPassword: boolean }) {
     async function handleSignoutEveryWhere() {
         // https://github.com/better-auth/better-auth/discussions/5526
         //TODO:- fix delay in signout of all users
@@ -28,7 +28,6 @@ export function SecuritySection({ currentUser }: { currentUser: currentUserType 
             return { error: { message: "Unable to signout from all the devices" } }
         } else {
             toast.success("Signed out from all devices");
-            router.push("/");
             return { error: null }
         }
     }
@@ -51,7 +50,7 @@ export function SecuritySection({ currentUser }: { currentUser: currentUserType 
                             Improve your security with a strong password.
                         </span>
                     </div>
-                    <ChangePasswordDialog currentUser={currentUser} text="Change Password" />
+                    { isCurrentUserHasPassword ? <ChangePasswordDialog currentUser={currentUser} text="Change Password" /> : <span className="text-red-500 text-sm hover:underline underline-offset-4 cursor-pointer">Add Password</span>}
                 </div>
                 <hr />
                 <div className="flex flex-col gap-5">

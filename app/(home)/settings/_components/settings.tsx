@@ -28,7 +28,7 @@ interface BlockedUsersProps {
 }
 
 
-export function Settings({ currentUser, blockedUsers }: { currentUser: currentUserType, blockedUsers: BlockedUsersProps[]}) {
+export function Settings({ currentUser, blockedUsers, isCurrentUserHasPassword }: { currentUser: currentUserType, blockedUsers: BlockedUsersProps[], isCurrentUserHasPassword: boolean}) {
     const { tab, setTab } = userSettingsTabStore();
     if(!currentUser || !currentUser.id) return <div>User not found</div>
     return (
@@ -54,7 +54,7 @@ export function Settings({ currentUser, blockedUsers }: { currentUser: currentUs
             </TabsTrigger>
           </TabsList>
           <AccountTab currentUser={currentUser} />
-          <PrivacyTab currentUser={currentUser} blockedUsers={blockedUsers} />
+          <PrivacyTab currentUser={currentUser} blockedUsers={blockedUsers} isCurrentUserHasPassword={isCurrentUserHasPassword} />
         </Tabs>
     )
 }

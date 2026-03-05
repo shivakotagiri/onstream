@@ -43,6 +43,7 @@ export function UserMenu() {
     if (res?.error) {
       toast.error(res.error.message || "Failed to sign out");
     } else {
+      router.refresh();
       toast.success("Signed out");
     }
   }

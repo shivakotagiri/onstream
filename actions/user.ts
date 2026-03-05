@@ -149,7 +149,47 @@ export const updateUserDetails = async (name: string, bio: string, bannerUrl: st
 }
 
 export const updateProfilePic = async (imageUrl: string) => {
-    // TODO: write the logic to update the profile pic
+    if(!imageUrl.trim()) return { status: false, message: "Invalid image url" }
+    const currentUser = await getCurrentUser();
+    if(!currentUser) return { status: false, message: "User not found" }
+
+    try {
+        const res = await db.update(user).set({
+            image: imageUrl.trim(),
+        }).where(eq(user.id, currentUser.id)).returning();
+
+        if(!res) {
+            return {
+                status: false,
+                message: "Something went wrong"
+            }
+        }
+
+        return { status: true, message: "Update Successfull" }
+    } catch(err) {
+        return {
+            status: false,
+            message: "Something went wrong"
+        }
+    }
+}
+
+export const deleteProfilePic = async () => {
+    try {
+        const currentUser = await getCurrentUser();
+        if(!currentUser) return { status: false, message: "User not found" };
+        const res = await db.delete(user).where(eq(user.id, currentUser.id));
+        if(!res) {
+            return {
+                status: false,
+                message: "Unable to delete the profile pic"
+            }
+        } else {
+            return { status: true, message: "Profile picture deleted" }
+        }
+    } catch (err) {
+        return { status: false, message: "Something went wrong, please try again later" }
+    }
 }
 
 

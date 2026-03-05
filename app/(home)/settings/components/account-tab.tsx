@@ -8,9 +8,7 @@ import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/ui/live-avatar";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { db } from "@/db";
-import { user } from "@/db/schema";
-import { currentUserType, updateUserDetails } from "@/actions/user";
+import { currentUserType, deleteProfilePic, updateProfilePic, updateUserDetails } from "@/actions/user";
 import { eq } from "drizzle-orm";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -31,57 +29,40 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                   message: res.message,
               }
           }
+      } else {
+        toast.success(res.message);
+        return { error: null };
       }
-      toast.success(res.message);
-      return { error: null };
     }
 
-    async function handleProfilePicSubmit(): Promise<{ error: { message?: string } | null }> {
-        try {
-            const res = await db.update(user).set({
-                image: imageUrl.trim(),
-            }).where(eq(user.id, currentUser.id)).returning();
-
-            if(!res.length) {
-                return {
-                    error: {
-                        message: "Unable to update the changes",
-                    }
-                }
-            }
-            toast.success("Update profile picture successfull");
-            return { error: null };
-        } catch( error ) {
-            return {
-                error: {
-                    message: "Something went wrong",
-                }
-            }
-        }
+    async function handleProfilePicSubmit() {
+      const res = await updateProfilePic(imageUrl);
+      if(!res.status) {
+          return {
+              error: {
+                  message: res.message
+              }
+          }
+      } else {
+        toast.success(res.message);
+        return { error: null };
+      }
     }
 
-    async function handleProfilePicDelete(): Promise<{ error: { message?: string } | null }> {
-        try {
-            const res = await db.update(user).set({
-                image: "",
-            }).where(eq(user.id, currentUser.id)).returning();
+    async function handleProfilePicDelete() {
+      const res = await deleteProfilePic();
 
-            if(!res.length) {
-                return {
-                    error: {
-                        message: "Unable to delete the profile picture",
-                    }
-                }
-            }
-            toast.success("Deleted profile picture");
-            return { error: null };
-        } catch( error ) {
-            return {
-                error: {
-                    message: "Something went wrong",
-                }
-            }
-        }
+      if(!res.status) {
+          return {
+              error: {
+                  message: res.message,
+              }
+          }
+      }
+      else {
+        toast.success(res.message);
+        return { error: null };
+      }
     }
 
     return (
@@ -184,23 +165,11 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
 
             <div className="flex flex-col md:flex-row gap-8 py-10 border-t border-border">
               <div className="w-full md:w-72 shrink-0">
-                <h2 className="text-base font-semibold text-foreground mb-1">Danger Zone</h2>
+                <h2 className="text-base font-semibold text-foreground mb-1">Delete Account</h2>
                 <p className="text-sm text-muted-foreground">Irreversible and destructive actions</p>
               </div>
               
               <div className="flex-1 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 border border-border rounded-xl bg-card">
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-medium text-foreground">Deactivate Account</h3>
-                    <p className="text-xs text-muted-foreground">
-                      Temporarily hide your profile, followers, and content. You can reactivate by logging back in.
-                    </p>
-                  </div>
-                  <Button variant="outline" className="text-foreground border-input shadow-none hover:bg-secondary">
-                    Deactivate Account
-                  </Button>
-                </div>
-
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 border border-destructive/20 rounded-xl bg-destructive/5">
                   <div className="space-y-1">
                     <h3 className="text-sm font-medium text-destructive">Delete Account</h3>

@@ -9,14 +9,13 @@ export function SignInWithGoogle() {
             type="button"
             action={async () => {
                 const res = await signIn.social({
-                        provider: "google",
-                        callbackURL: "/",
-                    })
-                if(!res) {
-                    return { error: { message: "Something went wrong"} }
-                } else {
-                    return { error: null }
-                }
+                    provider: "google",
+                    callbackURL: "/",
+                })
+
+
+                if(!res) return { error: { message: "Something went wrong" } }
+                else return { error: null }
             }}
         >
         Continue with Google <GoogleIcon />

@@ -7,6 +7,7 @@ import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { checkUsernameAvailability } from "./check-username-availability";
+import { setPassword } from "./password";
 
 export type currentUserType = {
     id: string;
@@ -51,8 +52,8 @@ export const getUserAccount = async () => {
     const session = await getSession();
     if(!session || !session.user) return null;
 
-    const getCurrentUserAccount = await db.query.account.findFirst({
-        where: eq(account.id, session.user.id)
+    const getCurrentUserAccount = await db.query.account.findMany({
+        where: eq(account.userId, session.user.id)
     });
 
     return getCurrentUserAccount;
@@ -150,7 +151,7 @@ export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?:
     try {
         const res = await db.update(user).set(updateData).where(eq(user.id, currentUser.id)).returning();
 
-        if(!res) {
+        if(res.length === 0) {
             return { status: false, message: "Something went wrong" }
         } else {
             return { status: true, message: "User details updated" }
@@ -171,7 +172,7 @@ export const updateProfilePic = async (imageUrl: string) => {
             image: imageUrl.trim(),
         }).where(eq(user.id, currentUser.id)).returning();
 
-        if(!res) {
+        if(res.length === 0) {
             return {
                 status: false,
                 message: "Something went wrong"
@@ -191,7 +192,7 @@ export const deleteProfilePic = async () => {
     try {
         const currentUser = await getCurrentUser();
         if(!currentUser) return { status: false, message: "User not found" };
-        const res = await db.delete(user).where(eq(user.id, currentUser.id));
+        const res = await db.update(user).set({ image: null }).where(eq(user.id, currentUser.id));
         if(!res) {
             return {
                 status: false,
@@ -207,8 +208,27 @@ export const deleteProfilePic = async () => {
 
 export const isUserHasPassword = async () => {
     const userAccount = await getUserAccount();
-    if(!userAccount || !userAccount.password) return false;
-    else return true;
+    if(!userAccount || userAccount.length === 0) return false;
+    const res = userAccount.filter(user => user.password && user.password.length !== 0);
+
+    return res.length !== 0;
+}
+
+export const setupNewAccount = async (username: string, password: string) => {
+
+    const usernameRes = await updateUserDetails(undefined, undefined, undefined, username);
+
+    if(!usernameRes.status) {
+        return { status:false, message: usernameRes.message }
+    }
+
+    const passwordRes = await setPassword(password);
+
+    if(!passwordRes) {
+        return { status:false, message: "Username updated but password failed" }
+    }
+
+    return { status:true, message: "Username and Password updated" }
 }
 
 

@@ -32,8 +32,8 @@ import { SignInWithGoogle } from "@/components/signin-with-google";
 
 
 const loginSchema = z.object({
-    username: z.string().min(3),
-    password: z.string().min(6)
+    username: z.string().trim().min(3),
+    password: z.string().trim().min(6)
 });
 
 type LoginForm = z.infer<typeof loginSchema>;

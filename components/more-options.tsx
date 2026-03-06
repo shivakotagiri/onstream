@@ -18,7 +18,7 @@ export function MoreOptions({ searchedUserId, currentUser, isCurrentUserBlockedS
     const [block, setBlock] = useState<boolean>(isCurrentUserBlockedSearchedUser);
 
     async function handleBlock() {
-        const res = await blockUser(currentUser?.id || "", searchedUserId);
+        const res = await blockUser(searchedUserId);
         if(res.status) {
             toast.success(res.message);
             setBlock(true);

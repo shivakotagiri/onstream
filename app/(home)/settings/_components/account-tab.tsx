@@ -9,7 +9,6 @@ import { UserAvatar } from "@/components/ui/live-avatar";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { currentUserType, deleteProfilePic, updateProfilePic, updateUserDetails } from "@/actions/user";
-import { eq } from "drizzle-orm";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 

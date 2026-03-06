@@ -32,10 +32,10 @@ import { SignInWithGoogle } from "@/components/signin-with-google";
 import { useEffect } from "react";
 import { checkUsernameAvailability } from "@/actions/check-username-availability";
 const signupSchema = z.object({
-    username: z.string().min(3),
-    password: z.string().min(6),
-    email: z.email().min(1),
-    name: z.string().min(3),
+    username: z.string().trim().min(3),
+    password: z.string().trim().min(6),
+    email: z.email().trim().min(1),
+    name: z.string().trim().min(3),
 });
 
 type SignupFormType = z.infer<typeof signupSchema>

@@ -16,14 +16,14 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { Button } from "@/components/ui/button";
-import { updateUserDetails } from "@/actions/user";
+import { setupNewAccount, updateUserDetails } from "@/actions/user";
 import { setPassword } from "@/actions/password";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const AccountDetailsSchema = z.object({
-    username: z.string().min(3),
-    password: z.string().min(6),
+    username: z.string().trim().min(3),
+    password: z.string().trim().min(6),
 });
 
 type AccountDetailsType = z.infer<typeof AccountDetailsSchema>;
@@ -38,22 +38,17 @@ export function FinishNewAccountDetailsForm() {
     });
 
     const { isSubmitting } = form.formState;
-    const { username, password } = form.getValues();
 
     const router = useRouter();
 
-    async function handleNewAccountDetailsSubmit() {
-        const [updateUsername, setCurrentUserPassword] = await Promise.all([updateUserDetails(username), setPassword(password)]);
-
-        if(!updateUsername.status && setCurrentUserPassword) {
-            toast.error(updateUsername.message + "password is updated");
-        } else if(updateUsername.status && !setCurrentUserPassword) {
-            toast.error("Username updated, but Password is not updated")
-        } else if(!updateUsername.status && !setCurrentUserPassword) {
-            toast.error("Something went wrong can't update the username & password");
-        } else {
-            toast.success("Username & Password Updated!!");
+    async function handleNewAccountDetailsSubmit(data: AccountDetailsType) {
+        const { username, password } = data;
+        const res = await setupNewAccount(username, password);
+        if(res.status) {
+            toast.success(res.message);
             router.push("/");
+        } else {
+            toast.error(res.message);
         }
     }
     return (

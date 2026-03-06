@@ -7,6 +7,17 @@ import { authClient } from "@/lib/auth-client";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
+export const setPassword = async (password: string) => {
+    const res = await auth.api.setPassword({
+        body: {
+            newPassword: password
+        },
+        headers: await headers(),
+    });
+
+    return res.status;
+}
+
 export async function requestPasswordReset(email: string) {
     const res = await authClient.requestPasswordReset({
         email,

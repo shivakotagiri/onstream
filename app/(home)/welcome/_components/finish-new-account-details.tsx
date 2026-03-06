@@ -16,6 +16,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { Button } from "@/components/ui/button";
+import { updateUserDetails } from "@/actions/user";
+import { setPassword } from "@/actions/password";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const AccountDetailsSchema = z.object({
     username: z.string().min(3),
@@ -34,9 +38,23 @@ export function FinishNewAccountDetailsForm() {
     });
 
     const { isSubmitting } = form.formState;
+    const { username, password } = form.getValues();
+
+    const router = useRouter();
 
     async function handleNewAccountDetailsSubmit() {
-        //TODO: write the logic to save the user details
+        const [updateUsername, setCurrentUserPassword] = await Promise.all([updateUserDetails(username), setPassword(password)]);
+
+        if(!updateUsername.status && setCurrentUserPassword) {
+            toast.error(updateUsername.message + "password is updated");
+        } else if(updateUsername.status && !setCurrentUserPassword) {
+            toast.error("Username updated, but Password is not updated")
+        } else if(!updateUsername.status && !setCurrentUserPassword) {
+            toast.error("Something went wrong can't update the username & password");
+        } else {
+            toast.success("Username & Password Updated!!");
+            router.push("/");
+        }
     }
     return (
         <Card className="max-w-md w-full">

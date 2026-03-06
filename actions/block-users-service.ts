@@ -36,7 +36,7 @@ export const isUserBlocked = async (blockerId: string, blockedId: string) => {
     return !!isUserBlocked;
 }
 
-export const blockUser = async (blockedId: string) => {
+export const blockUser = async (blockedId: string, searchedUserId: string) => {
     const currentUser = await getCurrentUser();
     if(!currentUser) return {
         status: false,

@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { checkUsernameAvailability } from "./check-username-availability";
 
 export type currentUserType = {
     id: string;
@@ -124,37 +125,39 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
     }
 }
 
-export const updateUserDetails = async (name: string, bio: string, bannerUrl: string) => {
-    const currentUser = await getCurrentUser();
+export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?: string, username?: string) => {
+
+    const [currentUser, checkUsernameAlreadyExists] = await Promise.all([getCurrentUser(), checkUsernameAvailability(username?.trim() || "")])
+
     if(!currentUser) {
-        return {
-            status: false,
-            message: "User doesn't exists"
-        }
+        return { status: false, message: "User doesn't exists" }
     }
+
+    if(!checkUsernameAlreadyExists.available) {
+        return { status: false, message: checkUsernameAlreadyExists.message}
+    } 
+
+    const updateData: Partial<typeof user.$inferInsert> = {};
+    if(name && name !== currentUser.name) updateData.name = name.trim();
+    if(bio && bio !== currentUser.bio) updateData.bio = bio.trim();
+    if(username && username !== currentUser.username) updateData.username = username.trim();
+    if(bannerUrl && bannerUrl !== currentUser.bannerImage) updateData.bannerImage = bannerUrl.trim();
+
+    if(Object.keys(updateData).length === 0) {
+        return { status: false, message: "Nothing to update" }
+    }
+
     try {
-        const res = await db.update(user).set({
-            name: name.trim(),
-            bio: bio.trim(),
-            bannerImage: bannerUrl.trim()
-        }).where(eq(user.id, currentUser.id)).returning();
+        const res = await db.update(user).set(updateData).where(eq(user.id, currentUser.id)).returning();
 
         if(!res) {
-            return {
-                status: false,
-                message: "Something went wrong"
-            }
+            return { status: false, message: "Something went wrong" }
         } else {
-            return {
-                status: true,
-                message: "User details updated"
-            }
+            return { status: true, message: "User details updated" }
         }
+
     } catch(err) {
-        return {
-            status: false,
-            message: "Something went wrong"
-        }
+        return { status: false, message: "Something went wrong" }
     }
 }
 

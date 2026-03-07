@@ -85,7 +85,7 @@ export default function SignupForm() {
     const username = watch("username");
 
     useEffect(() => {
-        if(username.length < 3) {
+        if(username.length < 3) {       
             clearErrors("username");
             return;
         }

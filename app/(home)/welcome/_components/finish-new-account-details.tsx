@@ -16,10 +16,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { Button } from "@/components/ui/button";
-import { setupNewAccount, updateUserDetails } from "@/actions/user";
-import { setPassword } from "@/actions/password";
+import { setupNewAccount } from "@/actions/user";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { checkUsernameAvailability } from "@/actions/check-username-availability";
 
 const AccountDetailsSchema = z.object({
     username: z.string().trim().min(3),
@@ -51,6 +52,32 @@ export function FinishNewAccountDetailsForm() {
             toast.error(res.message);
         }
     }
+
+    const {setError, clearErrors, watch} = form;
+    const username = watch("username");
+
+    useEffect(() => {
+        if(username.length < 3) {
+            clearErrors("username");
+            return;
+        }
+
+        const timeout = setTimeout(async () => {
+            const res = await checkUsernameAvailability(username.trim());
+            if(!res.available) {
+                setError("username", {
+                    type: "manual",
+                    message: res.message
+                });
+            } else {
+                clearErrors("username");
+            }
+        }, 300);
+
+        return () => clearTimeout(timeout);
+
+    }, [clearErrors, setError, username])
+
     return (
         <Card className="max-w-md w-full">
             <CardHeader>

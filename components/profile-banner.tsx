@@ -96,8 +96,8 @@ export async function ProfileBanner({
             <div className="w-full h-full bg-linear-to-tr from-zinc-800 to-zinc-900" />
           )}
         </div>
-        <div className="px-6 md:px-8 pb-8 flex flex-col">
-          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-end gap-4 -mt-16 relative z-10 mb-4">
+        <div className="px-6 md:px-8 pb-8 flex flex-col w-full">
+          <div className="w-full flex justify-between items-center gap-4 -mt-16 relative z-10 mb-4">
             <UserAvatar
               isLive={false}
               name={searchedUser.name}

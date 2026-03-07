@@ -123,7 +123,7 @@ export function UserMenu() {
 }
 
 
-// bug: 
+// bug: fix: avatar not updating after sign out without hard reload
 // solution:- 
 
 /*

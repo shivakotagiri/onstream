@@ -25,37 +25,42 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export function UserMenu() {
-  const { theme, setTheme } = useTheme();
-  const { data: session, isPending } = useSession();
-  const router = useRouter();
-
+  const { data: session } = useSession();
   const user = session?.user;
 
-  if (isPending) {
-    return null;
-  }
-
+  const { theme, setTheme } = useTheme();
+  const router = useRouter();
+ 
   async function handleSignout() {
     if (!user) return;
 
-    const res = await signOut();
+    await signOut({
+      fetchOptions: {
+        onSuccess: async() => {
+          toast.success("Signed out");
+          router.push("/");
+          await router.refresh();
+        },
+        onError: async (error) => {
+          toast.error(error?.error.message || "Failed to sign out");
+        }
+      }
+    });
 
-    if (res?.error) {
-      toast.error(res.error.message || "Failed to sign out");
-    } else {
-      router.refresh();
-      toast.success("Signed out");
-    }
+    // if (res?.error) {
+    //   toast.error(res.error.message || "Failed to sign out");
+    // } else {
+    //   toast.success("Signed out");
+    // }
   }
 
-  const firstLetter =
-    user?.email?.charAt(0)?.toUpperCase() ?? undefined;
+  const firstLetter = user?.name?.charAt(0)?.toUpperCase() ?? user?.email?.charAt(0)?.toUpperCase();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
-          <Avatar>
+          <Avatar key={user?.id ?? "guest"}>
             {user?.image && <AvatarImage src={user.image} />}
             <AvatarFallback>
               {firstLetter ?? <User2Icon size={18} />}

@@ -54,6 +54,7 @@ export function FinishNewAccountDetailsForm() {
     }
 
     const {setError, clearErrors, watch} = form;
+    // eslint-disable-next-line react-hooks/incompatible-library
     const username = watch("username");
 
     useEffect(() => {

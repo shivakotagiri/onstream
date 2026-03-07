@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import { db } from "@/db"
@@ -6,7 +7,6 @@ import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { checkUsernameAvailability } from "./check-username-availability";
 import { setPassword } from "./password";
 
 export type currentUserType = {
@@ -128,15 +128,15 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
 
 export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?: string, username?: string) => {
 
-    const [currentUser, checkUsernameAlreadyExists] = await Promise.all([getCurrentUser(), checkUsernameAvailability(username?.trim() || "")])
+    const currentUser = await getCurrentUser()
 
     if(!currentUser) {
         return { status: false, message: "User doesn't exists" }
     }
 
-    if(!checkUsernameAlreadyExists.available) {
-        return { status: false, message: checkUsernameAlreadyExists.message}
-    } 
+    // if(!checkUsernameAlreadyExists.available) {
+    //     return { status: false, message: checkUsernameAlreadyExists.message}
+    // } 
 
     const updateData: Partial<typeof user.$inferInsert> = {};
     if(name && name !== currentUser.name) updateData.name = name.trim();

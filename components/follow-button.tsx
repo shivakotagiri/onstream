@@ -51,6 +51,7 @@ export default function FollowButton({ searchedUser, currentUserFollowing }: Fol
                 setIsFollowing(true);
                 toast.success(`Following ${searchedUser.name}`);
             }
+            router.refresh();
         } catch (error) {
             toast.error("Something went wrong. Please try again.");
             setIsFollowing(currentUserFollowing); 

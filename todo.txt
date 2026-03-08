@@ -55,6 +55,8 @@ Current TODOs to work with:-
     - bug in email confirmation and verifcation & check whether the new email is available or not before assigning it
     - add a ban feature
     - here there is cache in profile which is making it an issue after saving the account info from /welcome page
+    - whenever the user follows a person, the followers count doesn't refresh
+    - whenever you refresh the page the follow-button state restarts(from default value to actuall value)
 
 -----------------------------------------------------------------------------------------------
     

@@ -1,0 +1,94 @@
+/validate-email.ts 
+check email format, ---> validate.js
+prevent disposable emails, ---> mailchecker
+check the email in MX records, ---> deep-email-vaildator or node:dns/promises
+create the unverified user, 
+send mail verifcation, 
+delete unverified user after 24hrs,
+--------------------------------------------------------------------------------
+
+api based tools for above ----> kickbox api, mailboxvalidator, varifalia
+
+--------------------------------------------------------------------------------
+/ratelimiting --> upstash/redis upstash/ratelimit
+
+Account lockout after repeated failed logins
+
+session hardening (short expiry + rotation + secure cookies)
+--------------------------------------------------------------------------------
+Level 2 — Easy
+(small logic, no infra)
+
+    Middleware guard
+        Allow only POST on auth routes
+        Block missing headers / bad user-agents
+
+    Account lockout
+        Lock user after N failed login attempts
+        Add cooldown (e.g. 15–30 mins)
+--------------------------------------------------------------------------------
+Level 3 — Medium (one external service)
+    Edge rate limiting
+        Upstash @upstash/ratelimit
+        Apply in middleware.ts to /api/auth/*
+
+    Bot protection
+        Cloudflare Turnstile on login/signup/reset
+--------------------------------------------------------------------------------
+
+
+
+Performance issues
+
+Fix 5 — DB call explosion (real reason most devs miss)
+
+Your page does:
+
+userSearchData
+
+getCurrentUser
+
+isCurrentUserFollowing
+
+isUserBlocked
+
+isUserBlocked
+
+userFollowers
+
+usersFollowed
+
+👉 That is 7 DB calls on first render.
+
+Production apps combine these.
+
+⭐ Senior Level Fix (VERY IMPORTANT)
+
+Create one action:
+
+👉 getUserProfilePageData()
+
+Fetch everything in ONE DB query (joins).
+
+This is how Twitter / Instagram do.
+
+🚀 Extra performance tips for your code
+1. Image
+quality={100} ❌ very expensive
+
+
+Use:
+
+quality={75}
+
+2. Avoid router.refresh after follow
+
+That triggers full server rerender.
+
+Better:
+
+optimistic update (you already do)
+
+no refresh unless needed
+
+Huge UX improvement.

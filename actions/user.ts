@@ -6,6 +6,7 @@ import { account, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export type currentUserType = {
@@ -23,6 +24,7 @@ export type currentUserType = {
     bio: string | null;
     bannerImage: string | null;
     dob: Date | null;
+    sessionVersion: number | null
 }
 
 export const usersData = async () => {
@@ -56,10 +58,12 @@ export const checkUsernameAvailability = async (username: string) => {
 export const getCurrentUser = async () => {
     const session = await getSession();
     if(!session || !session.user) return null;
-    
-    return await db.query.user.findFirst({
+
+    const res = await db.query.user.findFirst({
         where: eq(user.id, session.user.id)
     })
+    
+    return res ?? null;
 }
 
 export const getUserAccount = async () => {
@@ -154,9 +158,9 @@ export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?:
 
     const updateData: Partial<typeof user.$inferInsert> = {};
     if(name && name !== currentUser.name) updateData.name = name.trim();
-    if(bio && bio !== currentUser.bio) updateData.bio = bio.trim();
+    if(bio !== currentUser.bio) updateData.bio = bio?.trim();
     if(username && username !== currentUser.username) updateData.username = username.trim();
-    if(bannerUrl && bannerUrl !== currentUser.bannerImage) updateData.bannerImage = bannerUrl.trim();
+    if(bannerUrl !== currentUser.bannerImage) updateData.bannerImage = bannerUrl?.trim();
 
     if(Object.keys(updateData).length === 0) {
         return { status: false, message: "Nothing to update" }
@@ -168,6 +172,9 @@ export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?:
         if(res.length === 0) {
             return { status: false, message: "Something went wrong" }
         } else {
+            revalidatePath("/*");
+            revalidatePath("/settings");
+            revalidatePath("/user/path:*");
             return { status: true, message: "User details updated" }
         }
 
@@ -192,7 +199,9 @@ export const updateProfilePic = async (imageUrl: string) => {
                 message: "Something went wrong"
             }
         }
-
+        revalidatePath("/", "layout");
+        revalidatePath("/settings");
+        revalidatePath("/user/path:*");
         return { status: true, message: "Update Successfull" }
     } catch(err) {
         return {
@@ -213,6 +222,9 @@ export const deleteProfilePic = async () => {
                 message: "Unable to delete the profile pic"
             }
         } else {
+            revalidatePath("/", "layout");
+            revalidatePath("/settings");
+            revalidatePath("/user/path:*");
             return { status: true, message: "Profile picture deleted" }
         }
     } catch (err) {
@@ -262,6 +274,8 @@ export const setupNewAccount = async (username: string, password: string) => {
             status: false,
             message: "Username saved. Please set your password in settings"
         };
+
+        revalidatePath("/", "layout")
 
         return {
             status: true,

@@ -10,7 +10,7 @@ export async function UserFollowers({ id }: { id: string }) {
     ]);
     
     return (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 -translate-y-1">
             <p className="text-sm flex gap-1.5 items-center hover:underline cursor-pointer">
                 <span className="text-muted-foreground"><FollowerList followersOfFollowing={followersOfFollowing} /></span>
             </p>

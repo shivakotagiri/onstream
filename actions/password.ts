@@ -5,6 +5,7 @@ import { user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function requestPasswordReset(email: string) {
@@ -41,7 +42,11 @@ export async function changePassword(currentPassword: string, newPassword: strin
                 revokeOtherSessions: true
             },
             headers: await headers()
-        })
+        });
+
+        revalidatePath("/", "layout");
+        revalidatePath("/settings");
+        revalidatePath("/user/path:*");
 
         return {
             status: !!res,

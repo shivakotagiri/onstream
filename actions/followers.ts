@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { followers } from "@/db/schema"
 import { getSession } from "@/lib/get-session";
 import { and, eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache";
 import { cache } from "react";
 
 export const userFollowers = cache(async (userId: string) => {
@@ -61,7 +62,7 @@ export const followUser = async (followingId: string) => {
         .values({ followerId, followingId })
         .onConflictDoNothing()
         .returning();
-
+    revalidatePath("/user/path:*");
     if(res.length === 0) return null;
 
     return res;
@@ -83,6 +84,6 @@ export const unFollowUser = async (followingId: string) => {
                 eq(followers.followingId, followingId)
             )
         ).returning();
-
+    revalidatePath("/user/path:*");
     if(res.length === 0) return null;
 }

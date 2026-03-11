@@ -4,44 +4,15 @@ import FollowButton from "./follow-button";
 import { UserFollowers } from "./user-followers";
 import Image from "next/image";
 import { MoreOptions } from "./more-options";
+import { currentUserType } from "@/actions/user";
 
 interface ProfileBannerProps {
   isCurrentUserBlocked: boolean,
   currentUserFollowing: boolean;
   isCurrentUserBlockedSearchedUser: boolean,
-  currentUser: {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    username: string | null;
-    displayUsername: string | null;
-    phoneNumber: string | null;
-    phoneNumberVerified: boolean | null;
-    bio: string | null;
-    bannerImage: string | null;
-    dob: Date | null;
-  } | null,
+  currentUser: currentUserType | null
 
-  searchedUser: {
-      id: string;
-      name: string;
-      image: string | null;
-      email: string;
-      emailVerified: boolean;
-      createdAt: Date;
-      updatedAt: Date;
-      username: string | null;
-      displayUsername: string | null;
-      phoneNumber: string | null;
-      phoneNumberVerified: boolean | null;
-      bio: string | null;
-      bannerImage: string | null;
-      dob: Date | null;
-  }
+  searchedUser: currentUserType | null
 }
 
 export async function ProfileBanner({
@@ -118,7 +89,7 @@ export async function ProfileBanner({
             </div>
           </div>
 
-          <div className="space-y-1 max-w-2xl">
+          <div className="max-w-2xl">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
                 {searchedUser.name}
@@ -132,11 +103,10 @@ export async function ProfileBanner({
                 </div>
               </div>
             </div>
-
             <UserFollowers id={searchedUser.id} />
           </div>
           {searchedUser.bio && (
-            <div className="text-base mt-3 max-w-2xl text-foreground/90">
+            <div className="text-base max-w-2xl text-foreground/90 -translate-y-2.5">
               {searchedUser.bio}
             </div>
           )}

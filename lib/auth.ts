@@ -57,6 +57,13 @@ export const auth = betterAuth({
                 required: false,
                 defaultValue: null,
                 input: true
+            },
+
+            sessionVersion: {
+                type: 'number',
+                required: false,
+                defaultValue: 0,
+                input: false
             }
         }
     }, 

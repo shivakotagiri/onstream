@@ -1,4 +1,4 @@
-import { blockedUsersList } from "@/actions/block-users-service";
+import { blockedUsersList } from "@/actions/block-service";
 import { Settings } from "./_components/settings";
 import { getCurrentUser, isUserHasPassword } from "@/actions/user";
 

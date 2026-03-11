@@ -29,6 +29,7 @@ export const user = pgTable("user", {
   bio: text("bio").default(""),
   bannerImage: text("banner_image").default(""),
   dob: timestamp("dob"),
+  sessionVersion: integer("session_version").default(0),
 });
 
 export const session = pgTable(

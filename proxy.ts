@@ -13,20 +13,22 @@ export async function proxy(req: NextRequest) {
     const isSettingsPage = pathname.startsWith("/settings");
     const isWelcomePage = pathname.startsWith("/welcome");
 
-    const hasPassword = userAccount?.filter(account => account.password && account.password.length > 0)
+    const hasUsername = Boolean(session?.user.username);
     
     if(session && session.user) {
-        if(isAuthPage && !pathname.startsWith("/auth/reset-password")) {
-            return NextResponse.redirect(new URL("/", req.url));
-        }  
+        
 
-        if(!isWelcomePage && !hasPassword && !session.user.username) {
+        if(!hasUsername && !isWelcomePage) {
             return NextResponse.redirect(new URL("/welcome", req.url));
         }
 
-        if(isWelcomePage && hasPassword && session.user.username) {
+        if(isWelcomePage && hasUsername) {
             return NextResponse.redirect(new URL("/", req.url));
         }
+
+        if(isAuthPage && !pathname.startsWith("/auth/reset-password")) {
+            return NextResponse.redirect(new URL("/", req.url));
+        }  
 
     } else {
         if(isSettingsPage) {

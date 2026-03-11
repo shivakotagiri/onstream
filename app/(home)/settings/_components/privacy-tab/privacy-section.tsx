@@ -1,4 +1,4 @@
-import { blockUser } from "@/actions/block-users-service";
+import { blockUser } from "@/actions/block-service";
 import { searchUserByUsername } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { ShowBlowckedUsersDialog } from "@/components/ui/dialogs/show-blocked-users-dialog";

@@ -4,7 +4,7 @@ import { EllipsisVertical } from "lucide-react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import {useState } from "react";
-import { blockUser, unBlockUser } from "@/actions/block-users-service";
+import { blockUser, unBlockUser } from "@/actions/block-service";
 import { toast } from "sonner";
 import { currentUserType } from "@/actions/user";
 

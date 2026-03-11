@@ -8,10 +8,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
-import { recommendationUsers } from "@/actions/recommendation";
+import { recommendedUsers } from "@/actions/recommendation";
 
 export async function AppSidebar() {
-    const recommendUsers = await recommendationUsers();
+    const recommendUsers = await recommendedUsers();
 
     return (
       <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">

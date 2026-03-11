@@ -26,7 +26,7 @@ export async function Navbar() {
                         <SignupButton />
                     </div>
                 )}
-                <UserMenu />
+                <UserMenu user={session?.user} />
             </div>
         </nav>
     );

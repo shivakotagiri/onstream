@@ -3,7 +3,7 @@ import { getCurrentUser } from "./user"
 import { and, eq, exists, not, or } from "drizzle-orm";
 import { blocklist, user } from "@/db/schema";
 
-export const recommendationUsers = async () => {
+export const recommendedUsers = async () => {
     const currentUser = await getCurrentUser();
     
     if(!currentUser) return await db.query.user.findMany({

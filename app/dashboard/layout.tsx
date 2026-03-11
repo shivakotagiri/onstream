@@ -9,8 +9,8 @@ export default async function Layout({ children }: {
         <main className="w-screen h-full">
             <Navbar />
             <SidebarProvider className="max-w-screen w-full">
-                <div className="flex w-full h-full">
-                    <AppSidebar />
+                <div className="flex w-full h-full mt-13">
+                    <AppSidebar  />
                     { children }
                 </div>
             </SidebarProvider>

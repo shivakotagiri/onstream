@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { blocklist } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { getCurrentUser } from "./user";
+import { revalidatePath } from "next/cache";
 
 
 export const blockedUsersList = async () => {
@@ -57,6 +58,8 @@ export const blockUser = async (blockedId: string) => {
         .onConflictDoNothing()
         .returning();
 
+    revalidatePath("/user/path:*");
+
     if(res.length === 0) {
         return { 
             status: false, 
@@ -88,6 +91,8 @@ export const unBlockUser = async (blockerId: string, blockedId: string) => {
             eq(blocklist.blockedId, blockedId)
         )
     ).returning();
+
+    revalidatePath("/user/path:*");
 
     if(res.length === 0) {
         return {

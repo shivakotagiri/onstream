@@ -8,14 +8,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
-import { usersData } from "@/actions/user"
-import { getSession } from "@/lib/get-session";
+import { recommendationUsers } from "@/actions/recommendation";
 
 export async function AppSidebar() {
-    const usersInfo = (await usersData()).filter(({ emailVerified }) => emailVerified === true); 
-    const session = await getSession();
-
-    const users = (session && session.user) ? usersInfo.filter(({ id }) => id !== session.user.id): usersInfo;
+    const recommendUsers = await recommendationUsers();
 
     return (
       <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">
@@ -35,7 +31,7 @@ export async function AppSidebar() {
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-1">
-              {users.map((user, id) => (
+              {recommendUsers.map((user, id) => (
                 <SidebarUserItem
                   key={user.id}
                   name={user.name}

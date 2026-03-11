@@ -11,7 +11,7 @@ export const blockedUsersList = async () => {
     if(!currentUser) return [];
 
     const blockedUsers = await db.query.blocklist.findMany({
-        where: eq(blocklist.blockedId, currentUser.id),
+        where: eq(blocklist.blockerId, currentUser.id),
         with: {
             blockedUser: true
         }
@@ -52,22 +52,17 @@ export const blockUser = async (blockedId: string) => {
         message: "User can't be same",
     }
 
-    const alreadyBlocked = await db.query.blocklist.findFirst({
-        where: and(
-            eq(blocklist.blockerId, blockerId),
-            eq(blocklist.blockedId, blockedId),
-        )
-    });
+    const res = await db.insert(blocklist)
+        .values({ blockerId, blockedId })
+        .onConflictDoNothing()
+        .returning();
 
-    if(alreadyBlocked) return {
-        status: false,
-        message: "User already blocked"
+    if(res.length === 0) {
+        return { 
+            status: false, 
+            message: "User already blocked" 
+        }
     }
-
-    const res = await db.insert(blocklist).values({
-        blockerId,
-        blockedId
-    }).returning();
 
     return {
         status: !!res,
@@ -87,23 +82,20 @@ export const unBlockUser = async (blockerId: string, blockedId: string) => {
         res: null
     }
 
-    const isUserBlocked = await db.query.blocklist.findFirst({
-        where: and(
+    const res = await db.delete(blocklist).where(
+        and(
             eq(blocklist.blockerId, blockerId),
             eq(blocklist.blockedId, blockedId)
         )
-    });
+    ).returning();
 
-    if(!isUserBlocked) return {
-        status: false,
-        message: "User is not blocked",
-        res: null
+    if(res.length === 0) {
+        return {
+            status: false,
+            message: "User is not blocked",
+            res: null
+        }
     }
-
-    const res = await db.delete(blocklist).where(and(
-        eq(blocklist.blockerId, blockerId),
-        eq(blocklist.blockedId, blockedId) 
-    ));
 
     return {
         status: !!res,

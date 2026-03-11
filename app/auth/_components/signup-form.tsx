@@ -30,7 +30,7 @@ import { useRouter } from "next/navigation";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { SignInWithGoogle } from "@/components/signin-with-google";
 import { useEffect } from "react";
-import { checkUsernameAvailability } from "@/actions/check-username-availability";
+import { checkUsernameAvailability } from "@/actions/user";
 const signupSchema = z.object({
     username: z.string().trim().min(3),
     password: z.string().trim().min(6),

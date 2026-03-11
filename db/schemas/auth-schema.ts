@@ -8,6 +8,8 @@ import {
   integer,
   index,
 } from "drizzle-orm/pg-core";
+import { followers } from "./followers-schema";
+import { blocklist } from "./blocklist-schema";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -98,6 +100,19 @@ export const rateLimit = pgTable("rate_limit", {
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  followers: many(followers, {
+    relationName: "following"
+  }),
+  following: many(followers, {
+    relationName: "follower"
+  }),
+  blockedUsers: many(blocklist, {
+    relationName: "blocker",
+  }),
+
+  blockedBy: many(blocklist, {
+    relationName: "blockedUser",
+  }),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

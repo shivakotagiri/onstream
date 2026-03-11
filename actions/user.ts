@@ -7,7 +7,6 @@ import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { setPassword } from "./password";
 
 export type currentUserType = {
     id: string;
@@ -40,12 +39,27 @@ export const searchUserByUsername = (async (username: string) => {
     return res;
 });
 
+export const checkUsernameAvailability = async (username: string) => {
+    if(!username || username.length < 3) {
+        return { available: false, message: "Username should be atleast 3 characters" }
+    }
+    const res = await db.query.user.findFirst({
+        where: eq(user.username, username),
+    });
+
+    if(res && res.id) {
+        return { available: false, message: "Username already taken" }
+    }
+    return { available: true, message: "Username available" };
+}
+
 export const getCurrentUser = async () => {
     const session = await getSession();
     if(!session || !session.user) return null;
     
-    const getCurrentUser = await db.select().from(user).where(eq(user.id, session.user.id));
-    return getCurrentUser[0];
+    return await db.query.user.findFirst({
+        where: eq(user.id, session.user.id)
+    })
 }
 
 export const getUserAccount = async () => {
@@ -216,19 +230,49 @@ export const isUserHasPassword = async () => {
 
 export const setupNewAccount = async (username: string, password: string) => {
 
-    const usernameRes = await updateUserDetails(undefined, undefined, undefined, username);
-
-    if(!usernameRes.status) {
-        return { status:false, message: usernameRes.message }
+    const currentUser = await getCurrentUser();
+    if(!currentUser) return {
+        status: false,
+        message: "User not found"
     }
 
-    const passwordRes = await setPassword(password);
-
-    if(!passwordRes) {
-        return { status:false, message: "Username updated but password failed" }
+    const usernameAvailable = await checkUsernameAvailability(username.trim());
+    if(!usernameAvailable) return {
+        status: false,
+        message: "Username is not available"
     }
 
-    return { status:true, message: "Username and Password updated" }
+    try {
+        const usernameRes = await auth.api.updateUser({
+            body: { username: username.trim() },
+            headers: await headers(),
+        });
+
+        if(!usernameRes) return {
+            status: false,
+            message: "Failed to set the username"
+        }
+
+        const passwordRes = await auth.api.setPassword({
+            body: { newPassword: password.trim() },
+            headers: await headers(),
+        });
+
+        if(!passwordRes) return {
+            status: false,
+            message: "Username saved. Please set your password in settings"
+        };
+
+        return {
+            status: true,
+            message: "Account setup complete"
+        };
+    } catch(err) {
+        return {
+            status: false,
+            message:"Something went wrong"
+        }
+    }
 }
 
 

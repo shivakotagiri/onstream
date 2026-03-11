@@ -20,7 +20,7 @@ import { setupNewAccount } from "@/actions/user";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { checkUsernameAvailability } from "@/actions/check-username-availability";
+import { checkUsernameAvailability } from "@/actions/user";
 
 const AccountDetailsSchema = z.object({
     username: z.string().trim().min(3),

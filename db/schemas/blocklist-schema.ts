@@ -19,10 +19,12 @@ export const blocklist = pgTable("blocklist", {
 
 export const blocklistRelations = relations(blocklist, ({ one }) => ({
   blocker: one(user, {
+    relationName: "blocker",
     fields: [blocklist.blockerId],
     references: [user.id]
   }),
   blockedUser: one(user, {
+    relationName: "blockedUser",
     fields: [blocklist.blockedId],
     references: [user.id]
   })

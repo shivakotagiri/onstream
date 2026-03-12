@@ -5,7 +5,7 @@ import { db } from "@/db"
 import { account, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -287,6 +287,23 @@ export const setupNewAccount = async (username: string, password: string) => {
             message:"Something went wrong"
         }
     }
+}
+
+export const updateSessionVersion = async (id: string) => {
+    if(!id) return false;
+    
+    const res = await db
+        .update(user)
+        .set({ sessionVersion: sql `${user.sessionVersion} + 1`})
+        .where(eq(user.id, id));
+
+    revalidatePath("/", "layout");
+    revalidatePath("/", "page");
+    revalidatePath("/settings");
+    revalidatePath("/user/path:*");
+    revalidatePath("/dashboard");
+
+    return !!res;
 }
 
 

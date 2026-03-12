@@ -1,13 +1,15 @@
 "use client";
 
-import { currentUserType } from "@/actions/user";
+import { currentUserType, updateSessionVersion } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import { ChangePasswordDialog } from "@/components/ui/dialogs/change-password-dialog";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { currentUser: currentUserType, isCurrentUserHasPassword: boolean }) {
+    const router = useRouter();
     async function handleSignoutEveryWhere() {
         // https://github.com/better-auth/better-auth/discussions/5526
         //TODO:- fix delay in signout of all users
@@ -22,12 +24,18 @@ export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { cur
             -> SOLUTION:- https://chatgpt.com/c/6999e60a-8d8c-8320-ad74-151157ec9c21
                 Session Version Pattern (try to search about it in google)
         */
-
-        const res = await authClient.revokeSessions();
-        if(!res) {
-            return { error: { message: "Unable to signout from all the devices" } }
+        const updateSessionVersionRes = await updateSessionVersion(currentUser.id);
+        if(updateSessionVersionRes) {
+            const res = await authClient.revokeSessions();
+            if(!res) {
+                return { error: { message: "Unable to signout from all the devices" } }
+            } else {
+                router.refresh();
+                toast.success("Signed out from all devices");
+                return { error: null }
+            }
         } else {
-            toast.success("Signed out from all devices");
+            toast.success("Something went wrong");
             return { error: null }
         }
     }

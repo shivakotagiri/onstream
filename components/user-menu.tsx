@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import {
   BadgeCheckIcon,
   LayoutDashboard,
@@ -24,26 +24,26 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-type User = {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    email: string;
-    emailVerified: boolean;
-    name: string;
-    image?: string | null | undefined;
-    phoneNumber: string | null | undefined;
-    bio: string | null | undefined;
-    bannerImage: string | null | undefined;
-    sessionVersion: number | null | undefined;
-    dob?: Date | null | undefined;
-    username?: string | null | undefined;
-    displayUsername?: string | null | undefined;
-    phoneNumberVerified?: boolean | null | undefined;
-} | undefined
+// type User = {
+//     id: string;
+//     createdAt: Date;
+//     updatedAt: Date;
+//     email: string;
+//     emailVerified: boolean;
+//     name: string;
+//     image?: string | null | undefined;
+//     phoneNumber: string | null | undefined;
+//     bio: string | null | undefined;
+//     bannerImage: string | null | undefined;
+//     sessionVersion: number | null | undefined;
+//     dob?: Date | null | undefined;
+//     username?: string | null | undefined;
+//     displayUsername?: string | null | undefined;
+//     phoneNumberVerified?: boolean | null | undefined;
+// } | undefined
 
-export function UserMenu({ user }: { user: User}) {
-
+export function UserMenu() {
+  const user = useSession().data?.user;
   const { theme, setTheme } = useTheme();
   const router = useRouter();
  

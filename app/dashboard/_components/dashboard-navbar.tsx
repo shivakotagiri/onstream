@@ -1,13 +1,13 @@
-import { UserMenu } from "./user-menu";
-import { SignupButton } from "./auth-buttons";
-import { Search } from "./search";
-import { Logo } from "./logo";
-import { getSession } from "@/lib/get-session";
+"use client";
 
-export async function Navbar() {
-    const session = await getSession();
-    // max-w-[90%] lg:max-w-[80%] top-3 rounded-3xl
+import { UserMenu } from "@/components/user-menu"; 
+import { Search } from "@/components/search"; 
+import { Logo } from "@/components/logo"; 
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
+export function NavbarDashboard() {
+    const router = useRouter();
     return (
         <nav className="h-14 shadow-xl shadow-secondary/10 fixed left-1/2 -translate-x-1/2 bg-background w-full flex items-center gap-3 lg:gap-6 px-4 lg:px-6 z-10 border border-neutral-200 dark:border-neutral-800">
             <div className="shrink-0 flex items-center">
@@ -21,11 +21,15 @@ export async function Navbar() {
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-                {!session?.user && (
-                    <div className="hidden md:flex gap-2">
-                        <SignupButton />
-                    </div>
-                )}
+                <div className="flex gap-2">
+                    <Button 
+                        className="px-5 py-2 cursor-pointer"
+                        variant={"outline"} 
+                        onClick={() => router.push("/")}
+                    >
+                        Exit
+                    </Button>
+                </div>
                 <UserMenu />
             </div>
         </nav>

@@ -2,11 +2,10 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "./lib/get-session";
-import { getUserAccount } from "./actions/user";
 
 
 export async function proxy(req: NextRequest) {
-    const [session, userAccount] = await Promise.all([getSession(), getUserAccount()]);
+    const session = await getSession();
 
     const { pathname } = req.nextUrl;
     const isAuthPage = pathname.startsWith("/auth");

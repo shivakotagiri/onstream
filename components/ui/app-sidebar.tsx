@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
 import { recommendedUsers } from "@/actions/recommendation";
+import { Skeleton } from "./skeleton";
 
 export async function AppSidebar() {
     const recommendUsers = await recommendedUsers();
@@ -45,5 +46,15 @@ export async function AppSidebar() {
         </SidebarContent>
         <SidebarFooter />
     </Sidebar>
+  )
+}
+
+
+function SidebarItemSkeleton() {
+  return (
+    <Skeleton className="flex flex-col w-full h-15">
+      <Skeleton className="w-5 h-5" />
+      <Skeleton className="w-full" />
+    </Skeleton>
   )
 }

@@ -8,6 +8,7 @@ Current TODOs to work with:-
     - whenever you refresh the page the follow-button state restarts(from default value to actuall value)
     - ratelimiting, bot identification etc..
     - do some optimisation on getSession & getCurrentUser
+    - remove hydration warning
 
 completed:-
 - issue:- fix delay in signout from all the devices

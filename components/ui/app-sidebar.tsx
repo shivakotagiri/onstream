@@ -55,8 +55,6 @@ export function AppSidebar() {
     }
   }, []);
 
-  const { state, isMobile } = useSidebar()
-
   return (
     <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">
       <SidebarHeader>

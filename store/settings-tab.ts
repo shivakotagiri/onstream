@@ -9,7 +9,7 @@ type userSettingsTabStoreType = {
 export const userSettingsTabStore = create<userSettingsTabStoreType>()(
     persist( //here i did this persist the state even the page hard reloads
         (set) => ({
-            tab: "", // i kept the tab by default "" why because when i reload first it goes to default tab then changes to persisted tab
+            tab: "account", // i kept the tab by default "" why because when i reload first it goes to default tab then changes to persisted tab
             setTab: (tab) => set({ tab })
         }),
         { name: "settings-tab" }

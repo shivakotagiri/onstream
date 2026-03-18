@@ -8,6 +8,7 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
 import { recommendedUsers } from "@/actions/recommendation";
@@ -38,7 +39,10 @@ export function AppSidebar() {
   
   async function fetchData() {
     const res = await recommendedUsers();
-    if(res) setStatus(true);
+    if(res) {
+      setRecommendUsers(res);
+      setStatus(true);
+    }
     else setStatus(false);
   }
 
@@ -49,12 +53,14 @@ export function AppSidebar() {
       setStatus(false);
       setRecommendUsers([]);
     }
-  }, [])
+  }, []);
+
+  const { state, isMobile } = useSidebar()
 
   return (
     <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2">
+        <div className="flex items-center gap-2 px-2 mb-5">
           <SidebarTrigger className="md:block hidden" />
 
           <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
@@ -68,7 +74,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent className="flex flex-col gap-1">
+          <SidebarGroupContent className="flex flex-col gap-5">
             {status ? recommendUsers.map((user, id) => (
               <SidebarUserItem
                 key={user.id}
@@ -77,7 +83,7 @@ export function AppSidebar() {
                 isLive={id % 2 == 0}
                 username={user.username || user.name}
               />
-            )): [1, 2, 3, 4, 5].map((user, id) => (
+            )): [1, 2, 3].map((user, id) => (
               <SidebarItemSkeleton key={id} />
             ))}
           </SidebarGroupContent>
@@ -87,12 +93,15 @@ export function AppSidebar() {
   </Sidebar>
 )}
 
-
 function SidebarItemSkeleton() {
+  const { state, isMobile } = useSidebar();
+
   return (
-    <Skeleton className="flex flex-col w-full h-15">
-      <Skeleton className="w-5 h-5" />
-      <Skeleton className="w-full" />
-    </Skeleton>
-  )
+    <div className="flex items-center gap-2 rounded-md">
+      <Skeleton className="size-8 rounded-full shrink-0" />
+      {(state === "expanded" || !isMobile) && (
+        <Skeleton className="h-8 w-full" />
+      )}
+    </div>
+  );
 }

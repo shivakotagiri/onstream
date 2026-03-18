@@ -13,6 +13,9 @@ export type SidebarProps = {
   setIsMobile: (value: boolean) => void
 
   toggleSidebar: () => void
+
+  hasHydrated: boolean
+  setHasHydrated: (value: boolean) => void
 }
 
 export const useSidebar = create<SidebarProps>()(
@@ -43,10 +46,16 @@ export const useSidebar = create<SidebarProps>()(
           const next = !prev.open
           return { open: next, state: next ? "expanded" : "collapsed" }
         }),
+
+      hasHydrated: false,
+      setHasHydrated: (value: boolean) => set({ hasHydrated: value }),
     }),
     {
       name: "sidebar-storage",
       partialize: (state) => ({ open: state.open, state: state.state }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
     }
   )
 )

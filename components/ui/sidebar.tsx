@@ -31,7 +31,7 @@ function SidebarProvider({
   ...props
 }: React.ComponentProps<"div">) {
   const isMobile = useIsMobile()
-  const { setIsMobile, toggleSidebar } = useSidebar()
+  const { setIsMobile, toggleSidebar, hasHydrated } = useSidebar()
 
   React.useEffect(() => {
     setIsMobile(isMobile)
@@ -48,17 +48,17 @@ function SidebarProvider({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [toggleSidebar])
 
+  if (!hasHydrated) return null
+
   return (
     <TooltipProvider delayDuration={0}>
       <div
         data-slot="sidebar-wrapper"
-        style={
-          {
-            "--sidebar-width": SIDEBAR_WIDTH,
-            "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
-            ...style,
-          } as React.CSSProperties
-        }
+        style={{
+          "--sidebar-width": SIDEBAR_WIDTH,
+          "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+          ...style,
+        } as React.CSSProperties}
         className={cn(
           "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
           className

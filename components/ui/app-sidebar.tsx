@@ -14,6 +14,7 @@ import { SidebarUserItem } from "./sidebar-user-item"
 import { recommendedUsers } from "@/actions/recommendation";
 import { Skeleton } from "./skeleton";
 import { useEffect, useState } from "react";
+import { useSession } from "@/lib/auth-client";
 
 type recommendationUsersType = {
   image: string | null;
@@ -36,6 +37,7 @@ type recommendationUsersType = {
 export function AppSidebar() {
   const [recommendUsers, setRecommendUsers] = useState<recommendationUsersType[]>([]);
   const [status, setStatus] = useState<boolean>(false);
+  const session = useSession();
   
   async function fetchData() {
     const res = await recommendedUsers();
@@ -53,7 +55,7 @@ export function AppSidebar() {
       setStatus(false);
       setRecommendUsers([]);
     }
-  }, []);
+  }, [session]);
 
   return (
     <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">

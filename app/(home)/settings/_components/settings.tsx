@@ -3,7 +3,7 @@
 import { TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
 import { AccountTab } from "./account-tab";
 import { PrivacyTab } from "./privacy-tab";
-import { userSettingsTabStore } from "@/store/settings-tab";
+import { userSettingsTabStore } from "@/store/use-settings-tab";
 import { currentUserType } from "@/actions/user";
 
 interface BlockedUsersProps {

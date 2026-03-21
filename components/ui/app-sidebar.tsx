@@ -11,51 +11,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"
-import { recommendedUsers } from "@/actions/recommendation";
 import { Skeleton } from "./skeleton";
-import { useEffect, useState } from "react";
-import { useSession } from "@/lib/auth-client";
+import { useEffect } from "react";
+import { useRecommendStore } from "@/store/use-recommend-store";
 
-type recommendationUsersType = {
-  image: string | null;
-  id: string;
-  name: string;
-  username: string | null;
-  email: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  displayUsername: string | null;
-  phoneNumber: string | null;
-  phoneNumberVerified: boolean | null;
-  bio: string | null;
-  bannerImage: string | null;
-  dob: Date | null;
-  sessionVersion: number | null;
-}
-
-export function AppSidebar() {
-  const [recommendUsers, setRecommendUsers] = useState<recommendationUsersType[]>([]);
-  const [status, setStatus] = useState<boolean>(false);
-  const session = useSession();
-  
-  async function fetchData() {
-    const res = await recommendedUsers();
-    if(res) {
-      setRecommendUsers(res);
-      setStatus(true);
-    }
-    else setStatus(false);
-  }
+export function AppSidebar({ userId }: { userId: string | null }) {
+  const { loading, users, fetchUsers } = useRecommendStore();
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchData();
-    return () => {
-      setStatus(false);
-      setRecommendUsers([]);
-    }
-  }, [session]);
+    fetchUsers(userId);
+  }, [fetchUsers, userId]);
 
   return (
     <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">
@@ -75,7 +40,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="flex flex-col gap-5">
-            {status ? recommendUsers.map((user, id) => (
+            {!loading ? users.map((user, id) => (
               <SidebarUserItem
                 key={user.id}
                 name={user.name}

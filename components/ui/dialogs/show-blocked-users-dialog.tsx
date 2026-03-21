@@ -27,6 +27,10 @@ interface BlockedUsersProps {
     }[]
 }
 
+async function handleUnblockUser() {
+
+}
+
 export function ShowBlowckedUsersDialog({ blockedUsers }: BlockedUsersProps) {
     return (
         <Dialog>
@@ -60,7 +64,7 @@ export function ShowBlowckedUsersDialog({ blockedUsers }: BlockedUsersProps) {
                                     </td>
                                     <td className="w-[30%] text-center">{ blockedUser.blockedUser.name}</td>
                                     <td className="w-[30%] text-center">21/02/26</td>
-                                    <td className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
+                                    <td onClick={handleUnblockUser} className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
                                 </tr>
                             ))}
                         </tbody>

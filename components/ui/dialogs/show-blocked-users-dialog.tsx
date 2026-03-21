@@ -1,8 +1,10 @@
 "use client";
 
+import { unBlockUser } from "@/actions/block-service";
 import { Button } from "../button";
 import { UserAvatar } from "../live-avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
+import { toast } from "sonner";
 
 interface BlockedUsersProps {
     blockedUsers: {
@@ -27,8 +29,14 @@ interface BlockedUsersProps {
     }[]
 }
 
-async function handleUnblockUser() {
+async function handleUnblockUser(userId: string, blockedId: string) {
+    const res = await unBlockUser(userId, blockedId);
 
+    if(res.status) {
+        toast.success(res.message);
+    } else {
+        toast.error(res.message)
+    }
 }
 
 export function ShowBlowckedUsersDialog({ blockedUsers }: BlockedUsersProps) {
@@ -64,7 +72,7 @@ export function ShowBlowckedUsersDialog({ blockedUsers }: BlockedUsersProps) {
                                     </td>
                                     <td className="w-[30%] text-center">{ blockedUser.blockedUser.name}</td>
                                     <td className="w-[30%] text-center">21/02/26</td>
-                                    <td onClick={handleUnblockUser} className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
+                                    <td onClick={() => handleUnblockUser(blockedUser.blockerId, blockedUser.blockedUser.id)} className="w-[30%] text-center text-primary hover:underline underline-offset-4 cursor-pointer">unblock</td>
                                 </tr>
                             ))}
                         </tbody>

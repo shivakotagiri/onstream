@@ -40,21 +40,26 @@ export function PrivacySection({ blockedUsers }: BlockedUsersProps) {
     }
 
     const handleBlockUser = async () => {
-        const searchedUser = await searchUserByUsername(username);
-        if(!searchedUser) {
-            return {
-                error: {
-                    message: "User not found",
-                }
-            }
+        if(!username.trim()) {
+            toast.error("Please enter valid username of the user");
+            return { error: null }
         } else {
-            const res = await blockUser(searchedUser.id);
-            if(!res.status) {
-                return { error: {message: res.message || "Failed to block the user" }};
+            const searchedUser = await searchUserByUsername(username.trim());
+            if(!searchedUser) {
+                return {
+                    error: {
+                        message: "User not found",
+                    }
+                }
             } else {
-                toast.success(res.message);
-                setUsername("");
-                return { error: null }
+                const res = await blockUser(searchedUser.id);
+                if(!res.status) {
+                    return { error: {message: res.message || "Failed to block the user" }};
+                } else {
+                    toast.success(res.message);
+                    setUsername("");
+                    return { error: null }
+                }
             }
         }
     }

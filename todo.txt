@@ -1,14 +1,11 @@
 Current TODOs to work with:- 
     - add the phoneNumber (through verifcation via OTP)
-    - there is a bug in ShowBlowckedUsersDialog.tsx find it later
     - bug in email confirmation and verifcation & check whether the new email is available or not before assigning it
     - add a ban feature
     - here there is cache in profile which is making it an issue after saving the account info from /welcome page
-    - whenever the user follows a person, the followers count doesn't refresh
     - whenever you refresh the page the follow-button state restarts(from default value to actuall value)
     - ratelimiting, bot identification etc..
     - do some optimisation on getSession & getCurrentUser
-    - remove hydration warning
 
 completed:-
 - issue:- fix delay in signout from all the devices

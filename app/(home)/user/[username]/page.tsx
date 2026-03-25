@@ -1,14 +1,17 @@
 import { isUserBlocked } from "@/actions/block-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
-import { getCurrentUser, searchUserByUsername } from "@/actions/user";
+import { searchUserByUsername } from "@/actions/user";
 import { ProfileBanner } from "@/components/profile-banner";
 import { Suspense } from "react";
 import { ProfileBannerSkeleton } from "./_components/profile-page-skeleton";
+import { getInfo } from "@/lib/get-session";
 
 export default async function ProfilePage({ params }: { params: { username: string }; }) {
   const { username } = await params;
 
-  const [currentUser, searchedUser] = await Promise.all([getCurrentUser(), searchUserByUsername(username)]);
+  const [data, searchedUser] = await Promise.all([getInfo(), searchUserByUsername(username)]);
+
+  const currentUser = data?.currentUser || null;
 
   if(!searchedUser) return <div>User not found</div>
 

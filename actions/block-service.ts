@@ -3,12 +3,13 @@
 import { db } from "@/db";
 import { blocklist } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { getCurrentUser } from "./user";
 import { revalidatePath } from "next/cache";
+import { getInfo } from "@/lib/get-session";
 
 
 export const blockedUsersList = async () => {
-    const currentUser = await getCurrentUser();
+    const data = await getInfo();
+    const currentUser = data?.currentUser || null;
     if(!currentUser) return [];
 
     const blockedUsers = await db.query.blocklist.findMany({
@@ -38,7 +39,8 @@ export const isUserBlocked = async (blockerId: string, blockedId: string) => {
 }
 
 export const blockUser = async (blockedId: string) => {
-    const currentUser = await getCurrentUser();
+    const data = await getInfo();
+    const currentUser = data?.currentUser || null;
     if(!currentUser) return {
         status: false,
         message: "Login first",

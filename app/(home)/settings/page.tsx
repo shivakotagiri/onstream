@@ -1,13 +1,16 @@
 import { blockedUsersList } from "@/actions/block-service";
 import { Settings } from "./_components/settings";
-import { getCurrentUser, isUserHasPassword } from "@/actions/user";
+import { isUserHasPassword } from "@/actions/user";
+import { getInfo } from "@/lib/get-session";
 
 export default async function SettingsPage() {
-  // const currentUser = await getCurrentUser();
+  // const data = await getInfo();
   // const blockedUsers = await blockedUsersList();
   // const isUserHadPassword = await isUserHasPassword();
 
-  const [currentUser, blockedUsers, isCurrentUserHasPassword] = await Promise.all([getCurrentUser(), blockedUsersList(), isUserHasPassword()]);
+  const [data, blockedUsers, isCurrentUserHasPassword] = await Promise.all([getInfo(), blockedUsersList(), isUserHasPassword()]);
+
+  const currentUser = data?.currentUser || null;
 
   if(!currentUser) {
     return <div>User not found</div>

@@ -4,7 +4,7 @@
 import { db } from "@/db"
 import { account, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { getSession } from "@/lib/get-session";
+import { getInfo } from "@/lib/get-session";
 import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -55,19 +55,21 @@ export const checkUsernameAvailability = async (username: string) => {
     return { available: true, message: "Username available" };
 }
 
-export const getCurrentUser = async () => {
-    const session = await getSession();
-    if(!session || !session.user) return null;
+// export const getCurrentUser = async () => {
+//     const data = await getInfo();
+//     const session = data?.session || null;
+//     if(!session || !session.user) return null;
 
-    const res = await db.query.user.findFirst({
-        where: eq(user.id, session.user.id)
-    })
+//     const res = await db.query.user.findFirst({
+//         where: eq(user.id, session.user.id)
+//     })
     
-    return res ?? null;
-}
+//     return res ?? null;
+// }
 
 export const getUserAccount = async () => {
-    const session = await getSession();
+    const data = await getInfo();
+    const session = data?.session || null;
     if(!session || !session.user) return null;
 
     const getCurrentUserAccount = await db.query.account.findMany({
@@ -146,7 +148,8 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
 
 export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?: string, username?: string) => {
 
-    const currentUser = await getCurrentUser()
+    const data = await getInfo();
+    const currentUser = data?.currentUser || null;
 
     if(!currentUser) {
         return { status: false, message: "User doesn't exists" }
@@ -185,7 +188,8 @@ export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?:
 
 export const updateProfilePic = async (imageUrl: string) => {
     if(!imageUrl.trim()) return { status: false, message: "Invalid image url" }
-    const currentUser = await getCurrentUser();
+    const data = await getInfo();
+    const currentUser = data?.currentUser || null;;
     if(!currentUser) return { status: false, message: "User not found" }
 
     try {
@@ -213,7 +217,8 @@ export const updateProfilePic = async (imageUrl: string) => {
 
 export const deleteProfilePic = async () => {
     try {
-        const currentUser = await getCurrentUser();
+    const data = await getInfo();
+    const currentUser = data?.currentUser || null;;
         if(!currentUser) return { status: false, message: "User not found" };
         const res = await db.update(user).set({ image: null }).where(eq(user.id, currentUser.id));
         if(!res) {
@@ -242,7 +247,8 @@ export const isUserHasPassword = async () => {
 
 export const setupNewAccount = async (username: string, password: string) => {
 
-    const currentUser = await getCurrentUser();
+    const data = await getInfo();
+    const currentUser = data?.currentUser || null;;
     if(!currentUser) return {
         status: false,
         message: "User not found"

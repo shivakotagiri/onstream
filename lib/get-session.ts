@@ -1,12 +1,12 @@
-"use server"
-
 import { headers } from "next/headers";
 import { auth } from "./auth";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { user } from "@/db/schema";
+import { cache } from "react";
 
-export async function getSession() {
+
+export const getInfo = cache(async () => {
     const session = await auth.api.getSession({
         headers: await headers()
     });
@@ -18,8 +18,11 @@ export async function getSession() {
     });
     
     if(currentUser && session.user.sessionVersion === currentUser.sessionVersion) {
-        return session;
+        return {
+            session,
+            currentUser
+        }
     } else {
         return null;
     }
-}
+});

@@ -2,10 +2,9 @@ import { UserMenu } from "./user-menu";
 import { SignupButton } from "./auth-buttons";
 import { Search } from "./search";
 import { Logo } from "./logo";
-import { getSession } from "@/lib/get-session";
+import { type Session } from "@/lib/auth-client"
 
-export async function Navbar() {
-    const session = await getSession();
+export async function Navbar({ session }: { session: Session | null }) {
     // max-w-[90%] lg:max-w-[80%] top-3 rounded-3xl
 
     return (

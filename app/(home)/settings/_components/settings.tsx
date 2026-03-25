@@ -58,3 +58,4 @@ export function Settings({ currentUser, blockedUsers, isCurrentUserHasPassword }
         </Tabs>
     )
 }
+

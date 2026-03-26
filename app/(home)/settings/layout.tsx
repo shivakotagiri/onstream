@@ -10,3 +10,5 @@ export default async function SettingsLayout({ children }: {
     if(!currentUser) redirect("/auth/login");
     return <>{ children }</>
 }
+
+

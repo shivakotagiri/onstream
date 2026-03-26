@@ -80,13 +80,16 @@ export const getUserAccount = async () => {
 }
 
 export const changeEmail = async (currentEmail: string, newEmail: string) => {
-    if(currentEmail.trim() === newEmail.trim()) return {
+    const normalizedCurrentEmail = currentEmail.trim().toLowerCase();
+    const normalizedNewEmail = newEmail.trim().toLowerCase();
+
+    if(normalizedCurrentEmail === normalizedNewEmail) return {
         status: false,
         message: "New email must be different to current email"
     }
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(newEmail)) {
+    if (!emailRegex.test(normalizedNewEmail)) {
         return {
             status: false,
             message: "Please enter a valid email address"
@@ -98,7 +101,7 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
         
         const res = await auth.api.changeEmail({
             body: {
-                newEmail,
+                newEmail: normalizedNewEmail,
                 callbackURL: "/settings",
             },
             headers: await headers(),
@@ -106,10 +109,16 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
 
         console.log("[changeEmail] Response received:", res);
 
-        // Better validate the response
-        if (!res || (typeof res === 'object' && 'error' in res)) {
-            const errorMessage = typeof res?.error === 'string' ? res.error : 'Unknown error occurred';
-            console.error("[changeEmail] Error in response:", errorMessage);
+        const error = (res as { error?: unknown } | null | undefined)?.error;
+        const errorMessage =
+            typeof error === "string"
+                ? error
+                : typeof (error as { message?: unknown } | undefined)?.message === "string"
+                  ? (error as { message?: string }).message
+                  : undefined;
+
+        if (!res || errorMessage) {
+            console.error("[changeEmail] Error in response:", errorMessage ?? res);
             return {
                 status: false,
                 message: errorMessage || "Failed to send verification email",
@@ -124,7 +133,6 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error("[changeEmail] Exception caught:", { error: errorMessage, fullError: error });
         
-        // Provide more specific error messages based on error type
         if (errorMessage.includes('already exists') || errorMessage.includes('already in use')) {
             return {
                 status: false,

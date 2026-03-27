@@ -3,13 +3,35 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { phoneNumber, username } from "better-auth/plugins";
-import * as schema from "@/db/schema";
 import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
 import { sendEmailVerification } from "./emails/send-email-verification";
 import { sendChangeEmailConfirmationRequest } from "./emails/send-change-email-confirmation";
+import * as schema from "@/db/schema";
+import { APIError } from "better-auth/api";
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET,
+
+    databaseHooks: {
+        user: {
+            create: {
+                after: async (user) => {
+                    try {
+                        await db.insert(schema.stream).values({
+                            userId: user.id,
+                            name: `${user.name}'s Stream`
+                        });
+                    } catch (err) {
+                        if(err instanceof Error) {
+                            throw new APIError("EXPECTATION_FAILED", {
+                                message: err.message
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    },
     
     user: {
         deleteUser: {

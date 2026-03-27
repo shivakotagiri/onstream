@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { followers } from "./followers-schema";
 import { blocklist } from "./blocklist-schema";
+import { stream } from "./stream-schema";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -101,6 +102,7 @@ export const rateLimit = pgTable("rate_limit", {
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  stream: many(stream),
   followers: many(followers, {
     relationName: "following"
   }),
@@ -129,3 +131,10 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const streamRelation = relations(stream, ({ one }) => ({
+  user: one(user, {
+    fields: [stream.userId],
+    references: [user.id]
+  })
+}))

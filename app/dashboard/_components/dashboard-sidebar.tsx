@@ -12,11 +12,12 @@ import {
 import { SidebarUserItem } from "./sidebar-user-item"; 
 import { Fullscreen, KeyRound, MessageSquare, Users } from "lucide-react";
 import { currentUserType } from "@/actions/user";
+import { usePathname } from "next/navigation";
 
 export function DashboardSidebar({ currentUser }: { currentUser: currentUserType | null}) {
     const data = [{
         label: "Stream",
-        route: `/dashboard/${currentUser?.username}`,
+        route: `/dashboard`,
         icon: Fullscreen
     }, {
         label: "Keys",
@@ -32,6 +33,8 @@ export function DashboardSidebar({ currentUser }: { currentUser: currentUserType
         icon: Users
     },]
 
+    const pathname = usePathname();
+
     return (
       <Sidebar className="bg-[#1A1B1E] mt-13 border-none shadow-2xl" collapsible="icon">
         <SidebarHeader>
@@ -41,7 +44,7 @@ export function DashboardSidebar({ currentUser }: { currentUser: currentUserType
             <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
               <h2 className="text-sm font-semibold">For you</h2>
               <p className="text-xs text-muted-foreground">
-                Dashboard
+                Dashboard {pathname}
               </p>
             </div>
           </div>
@@ -56,6 +59,7 @@ export function DashboardSidebar({ currentUser }: { currentUser: currentUserType
                   icon={item.icon}
                   label={item.label}
                   route={item.route}
+                  isActive={item.route === pathname}
                 />
               ))}
             </SidebarGroupContent>

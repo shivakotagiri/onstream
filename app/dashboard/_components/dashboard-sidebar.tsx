@@ -44,7 +44,7 @@ export function DashboardSidebar({ currentUser }: { currentUser: currentUserType
             <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
               <h2 className="text-sm font-semibold">For you</h2>
               <p className="text-xs text-muted-foreground">
-                Dashboard {pathname}
+                Dashboard
               </p>
             </div>
           </div>

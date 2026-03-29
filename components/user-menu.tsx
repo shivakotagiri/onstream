@@ -91,7 +91,7 @@ export function UserMenu() {
             <>
               <DropdownMenuItem
                 onClick={() =>
-                  user.username && router.push(`/user/${user.username}`)
+                  user.username && router.push(`/${user.username}`)
                 }
               >
                 <BadgeCheckIcon size={16} />

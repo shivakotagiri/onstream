@@ -1,6 +1,6 @@
 import { userFollowers, usersFollowed } from "@/actions/followers";
 import { FollowerList } from "./follower-list";
-import { FollowedList } from "./followed-list";
+import { FollowedList } from "../../../../components/followed-list";
 
 export async function UserFollowers({ id }: { id: string }) {
 

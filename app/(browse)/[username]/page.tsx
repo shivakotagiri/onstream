@@ -1,7 +1,7 @@
 import { isUserBlocked } from "@/actions/block-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
 import { searchUserByUsername } from "@/actions/user";
-import { ProfileBanner } from "@/components/profile-banner";
+import { ProfileBanner } from "./_components/profile-banner";
 import { Suspense } from "react";
 import { ProfileBannerSkeleton } from "./_components/profile-page-skeleton";
 import { getInfo } from "@/lib/get-session";

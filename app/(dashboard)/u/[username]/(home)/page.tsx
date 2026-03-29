@@ -1,7 +1,7 @@
 export default async function DashboardPage() {
     return (
         <div>
-            Dashboard Page
+            Stream Page
         </div>
     )
 }

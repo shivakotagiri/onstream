@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
-import { UserAvatar } from "./ui/live-avatar";
+import { UserAvatar } from "@/components/ui/live-avatar";
 
 interface FollowersProps {
     followersOfFollowing: {

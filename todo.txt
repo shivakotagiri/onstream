@@ -1,11 +1,11 @@
 Current TODOs to work with:- 
+    - change the entire project structure
     - add the phoneNumber (through verifcation via OTP)
     - bug in email confirmation and verifcation & check whether the new email is available or not before assigning it
     - add a ban feature
     - here there is cache in profile which is making it an issue after saving the account info from /welcome page
-    - whenever you refresh the page the follow-button state restarts(from default value to actuall value)
     - ratelimiting, bot identification etc..
-    - do some optimisation on getSession & getCurrentUser
+    
 
 completed:-
 - issue:- fix delay in signout from all the devices
@@ -18,5 +18,7 @@ completed:-
             
             -> SOLUTION:- https://chatgpt.com/c/6999e60a-8d8c-8320-ad74-151157ec9c21
                 Session Version Pattern (try to search about it in google)
+            -> whenever you refresh the page the follow-button state restarts(from default value to actuall value)
+            -> do some optimisation on getSession & getCurrentUser
 
 -----------------------------------------------------------------------------------------------

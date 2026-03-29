@@ -1,8 +1,8 @@
 "use client";
 
 import { EllipsisVertical } from "lucide-react";
-import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {useState } from "react";
 import { blockUser, unBlockUser } from "@/actions/block-service";
 import { toast } from "sonner";

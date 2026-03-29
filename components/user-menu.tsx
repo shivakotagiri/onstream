@@ -98,7 +98,7 @@ export function UserMenu() {
                 Profile
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+              <DropdownMenuItem onClick={() => router.push(`/u/${user.username}`)}>
                 <LayoutDashboard size={16} />
                 Dashboard
               </DropdownMenuItem>

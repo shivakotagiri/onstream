@@ -2,7 +2,7 @@
 "use client";
 
 import { UserPlus, UserCheck } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { followUser, unFollowUser } from "@/actions/followers";

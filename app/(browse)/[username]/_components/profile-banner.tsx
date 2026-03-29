@@ -1,4 +1,4 @@
-import { UserAvatar } from "./ui/live-avatar";
+import { UserAvatar } from "@/components/ui/live-avatar";
 import { CalendarDays } from "lucide-react";
 import FollowButton from "./follow-button";
 import { UserFollowers } from "./user-followers";

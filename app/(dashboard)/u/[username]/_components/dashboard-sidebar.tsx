@@ -17,19 +17,19 @@ import { usePathname } from "next/navigation";
 export function DashboardSidebar({ currentUser }: { currentUser: currentUserType | null}) {
     const data = [{
         label: "Stream",
-        route: `/dashboard`,
+        route: `/u/${currentUser?.username}`,
         icon: Fullscreen
     }, {
         label: "Keys",
-        route: `/dashboard/${currentUser?.username}/keys`,
+        route: `/u/${currentUser?.username}/keys`,
         icon: KeyRound
     }, {
         label: "Chat",
-        route: `/dashboard/${currentUser?.username}/chat`,
+        route: `/u/${currentUser?.username}/chat`,
         icon: MessageSquare
     }, {
         label: "Community",
-        route: `/dashboard/${currentUser?.username}/community`,
+        route: `/u/${currentUser?.username}/community`,
         icon: Users
     },]
 

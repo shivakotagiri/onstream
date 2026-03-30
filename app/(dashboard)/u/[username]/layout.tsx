@@ -2,12 +2,27 @@ import { NavbarDashboard } from "./_components/dashboard-navbar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "./_components/dashboard-sidebar"
 import { getInfo } from "@/lib/get-session";
+import { redirect } from "next/navigation";
+import { getStreamByUserId } from "@/actions/stream";
+import React from "react";
 
-export default async function Layout({ children }: {
-    children: React.ReactNode
+export default async function Layout({ children, params }: {
+    children: React.ReactNode,
+    params: Promise<{ username: string }>
 }) {    
-    const data = await getInfo();
+    
+
+    
+    const [data, param] = await Promise.all([getInfo(), params]);
     const currentUser = data?.currentUser || null;
+    const username = param.username;
+
+    if(!currentUser?.username || username !== currentUser.username) {
+        redirect("/");
+    }
+
+    // const streamData = await getStreamByUserId(currentUser.id);
+
     return (  
         <main className="w-screen h-full">
             <NavbarDashboard />

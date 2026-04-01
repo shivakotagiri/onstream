@@ -3,7 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "./_components/dashboard-sidebar"
 import { getInfo } from "@/lib/get-session";
 import { redirect } from "next/navigation";
-import { getStreamByUserId } from "@/actions/stream";
+// import { getStreamByUserId } from "@/actions/stream";a
 import React from "react";
 
 export default async function Layout({ children, params }: {

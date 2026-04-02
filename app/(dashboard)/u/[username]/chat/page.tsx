@@ -1,20 +1,34 @@
+import { getStreamByUserId } from "@/actions/stream";
 import { getInfo } from "@/lib/get-session";
 import { redirect } from "next/navigation";
+import { ChatEnabled } from "./_components/chat-enabled";
+import { ChatDelayed } from "./_components/chat-delayed";
+import { ChatFollowersOnly } from "./_components/chat-followers-only";
 
 export default async function ChatPage() {
     const data = await getInfo();
-    const currentUser = data?.currentUser || null;
-    if(!currentUser) redirect("/");
+    if(!data) redirect("/");
+
+    const currentUser = data.currentUser;
+    const stream = await getStreamByUserId(currentUser.id);
+    if(!stream) {
+        return (
+            <div className="h-full w-full flex justify-center items-center">
+                Stream not found
+            </div>
+        )
+    }
+
+
     return (
-        <div>
-            Chat Page
+        <div className="flex flex-col gap-10 md:p-10 p-5">
+            <div className="font-semibold text-3xl">
+                Chat Settings
+            </div>
+            
+            <ChatEnabled id={stream.id} isChatEnabled={stream.isChatEnabled} />
+            <ChatDelayed id={stream.id} isChatDelayed={stream.isChatDelayed} />
+            <ChatFollowersOnly id={stream.id} isChatFollowersOnly={stream.isChatFollowersOnly} />
         </div>
     )
 }
-
-
-
-
-
-
-

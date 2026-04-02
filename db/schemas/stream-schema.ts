@@ -6,13 +6,13 @@ export const stream = pgTable("stream", {
     id: uuid("stream_id").defaultRandom().primaryKey(),
     name: text("name").notNull(),
 
-    serverId: text("server_id").default(""),
-    ingressId: text("ingress_id").default(""),
-    secretKey: text("secret_key").default(""),
+    serverId: text("server_id").notNull().default(""),
+    ingressId: text("ingress_id").notNull().default(""),
+    secretKey: text("secret_key").notNull().default(""),
 
-    isChatDelayed: boolean("is_chat_delayed").default(false),
-    isChatEnabled: boolean("is_chat_enabled").default(false),
-    isChatFollowersOnly: boolean("is_chat_followers_only").default(false),
+    isChatDelayed: boolean("is_chat_delayed").notNull().default(false),
+    isChatEnabled: boolean("is_chat_enabled").notNull().default(false),
+    isChatFollowersOnly: boolean("is_chat_followers_only").notNull().default(false),
 
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull(),

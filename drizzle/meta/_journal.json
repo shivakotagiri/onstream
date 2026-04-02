@@ -57,6 +57,20 @@
       "when": 1774632631350,
       "tag": "0007_pretty_psylocke",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1775150645816,
+      "tag": "0008_typical_tinkerer",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1775150816445,
+      "tag": "0009_lame_sunspot",
+      "breakpoints": true
     }
   ]
 }

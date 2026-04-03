@@ -5,6 +5,7 @@ Current TODOs to work with:-
     - add a ban feature
     - here there is cache in profile which is making it an issue after saving the account info from /welcome page
     - ratelimiting, bot identification etc..
+    - make /u/[username]/keys mobile responsive
     
 
 completed:-

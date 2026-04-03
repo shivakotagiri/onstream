@@ -21,11 +21,10 @@ export default async function ChatPage() {
 
 
     return (
-        <div className="flex flex-col gap-10 md:p-10 p-5">
+        <div className="flex flex-col gap-10 md:p-10 p-5 h-screen w-screen md:pt-23 pt-18">
             <div className="font-semibold text-3xl">
                 Chat Settings
             </div>
-            
             <ChatEnabled id={stream.id} isChatEnabled={stream.isChatEnabled} />
             <ChatDelayed id={stream.id} isChatDelayed={stream.isChatDelayed} />
             <ChatFollowersOnly id={stream.id} isChatFollowersOnly={stream.isChatFollowersOnly} />

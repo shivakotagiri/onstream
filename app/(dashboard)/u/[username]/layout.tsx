@@ -27,7 +27,7 @@ export default async function Layout({ children, params }: {
         <main className="w-screen h-full">
             <NavbarDashboard />
             <SidebarProvider className="max-w-screen w-full">
-                <div className="flex w-full h-full mt-13">
+                <div className="flex w-full h-full">
                     <DashboardSidebar currentUser={currentUser} />
                     { children }
                 </div>

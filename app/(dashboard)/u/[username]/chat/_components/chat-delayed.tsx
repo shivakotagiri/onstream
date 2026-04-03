@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function ChatDelayed({id, isChatDelayed }: {id: string, isChatDelayed: boolean }) {
+export function ChatDelayed({id, isChatDelayed }: { id: string, isChatDelayed: boolean }) {
     const [chatDelay, setChatDelay] = useState<boolean>(isChatDelayed);
 
     async function handleChatDelayed() {
@@ -29,7 +29,7 @@ export function ChatDelayed({id, isChatDelayed }: {id: string, isChatDelayed: bo
                     Delay the chat reponse to prevent the stream snipe while gaming.
                 </FieldDescription>
             </FieldContent>
-            <Switch checked={chatDelay}  onCheckedChange={handleChatDelayed} id="switch-focus-mode" className="cursor-pointer" />
+            <Switch checked={chatDelay} onCheckedChange={handleChatDelayed} id="switch-focus-mode" className="cursor-pointer" />
         </Field>
     )
 }

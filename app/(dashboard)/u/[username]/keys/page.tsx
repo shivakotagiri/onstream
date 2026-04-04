@@ -13,8 +13,8 @@ export default async function KeysPage() {
     if(!stream) throw new Error("Stream not found");
     return (
         <div className="md:p-10 p-5 h-screen w-screen md:pt-23 pt-18 flex flex-col gap-10">
-            <div className="w-full flex justify-between">
-                <span className="text-3xl font-semibold">Keys & URLS</span>
+            <div className="w-full flex justify-between items-center">
+                <span className="sm:text-3xl text-xl font-semibold">Keys & URLS</span>
                 <GenerateConnection />
             </div>
             <div className="space-y-5">

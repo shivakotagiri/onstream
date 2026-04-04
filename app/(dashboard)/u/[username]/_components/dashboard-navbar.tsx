@@ -5,11 +5,12 @@ import { Search } from "@/components/search";
 import { Logo } from "@/components/logo"; 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { SquareArrowRight } from "lucide-react";
 
 export function NavbarDashboard() {
     const router = useRouter();
     return (
-        <nav className="h-14 shadow-xl shadow-secondary/10 fixed left-1/2 -translate-x-1/2 bg-background w-full flex items-center gap-3 lg:gap-6 px-4 lg:px-6 z-10 border border-neutral-200 dark:border-neutral-800">
+        <nav className="h-14 w-screen shadow-xl shadow-secondary/10 fixed left-1/2 -translate-x-1/2 bg-background flex items-center gap-3 lg:gap-6 px-4 lg:px-6 z-10 border border-neutral-200 dark:border-neutral-800">
             <div className="shrink-0 flex items-center">
                 <Logo />
             </div>
@@ -21,13 +22,22 @@ export function NavbarDashboard() {
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-                <div className="flex gap-2">
+                <div className="gap-2 sm:flex hidden">
                     <Button 
                         className="px-5 py-2 cursor-pointer"
                         variant={"outline"} 
                         onClick={() => router.push("/")}
                     >
                         Exit
+                    </Button>
+                </div>
+                <div className="gap-2 flex sm:hidden">
+                    <Button 
+                        className="px-5 py-2 cursor-pointer"
+                        variant={"outline"} 
+                        onClick={() => router.push("/")}
+                    >
+                        <SquareArrowRight />
                     </Button>
                 </div>
                 <UserMenu />

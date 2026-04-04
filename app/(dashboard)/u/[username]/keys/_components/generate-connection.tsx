@@ -35,7 +35,7 @@ export default function GenerateConnection() {
                     </SelectContent>
                 </Select>
                 <DialogFooter className="w-full sm:justify-between mt-3">
-                    <Button>
+                    <Button className="cursor-pointer">
                         Generate
                     </Button>
                     <DialogClose asChild>

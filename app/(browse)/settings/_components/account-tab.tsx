@@ -12,6 +12,7 @@ import { currentUserType, deleteProfilePic, updateProfilePic, updateUserDetails 
 import { useState } from "react";
 import { toast } from "sonner";
 import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 
+import { Trash } from "lucide-react";
 
 export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
     const [name, setName] = useState<string>(currentUser.name || "");
@@ -147,15 +148,11 @@ export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
                   </div>
 
                   <div className="flex items-center gap-2 w-full mt-2">
-                    <BetterAuthActionButton action={handleProfilePicSubmit} type="button" variant="outline" className="w-full rounded-full bg-transparent border-input text-foreground hover:bg-accent hover:text-accent-foreground h-9 px-4 text-xs font-normal shadow-none">
+                    <BetterAuthActionButton action={handleProfilePicSubmit} type="button" variant="outline" className="sm:w-full w-[85%] rounded-full bg-transparent border-input text-foreground hover:bg-accent hover:text-accent-foreground h-9 px-4 text-xs font-normal shadow-none">
                       Upload profile pic
                     </BetterAuthActionButton>
                     <BetterAuthActionButton action={handleProfilePicDelete} variant="outline" size="icon" className="rounded-full bg-transparent border-input text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive h-9 w-9 shrink-0 shadow-none transition-colors">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                      </svg>
+                      <Trash />
                     </BetterAuthActionButton>
                   </div>
                 </div>

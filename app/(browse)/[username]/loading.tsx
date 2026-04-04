@@ -1,8 +1,6 @@
-"use client";
-
 import { Skeleton } from "@/components/ui/skeleton"; 
 
-export function ProfileBannerSkeleton() {
+export default function LoadingPage() {
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-full relative">

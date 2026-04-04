@@ -1,6 +1,6 @@
 export default async function DashboardPage() {
     return (
-        <div>
+        <div className="min-h-screen min-w-screen mt-18 sm:mt-13">
             Stream Page
         </div>
     )

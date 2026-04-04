@@ -2,8 +2,6 @@ import { isUserBlocked } from "@/actions/block-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
 import { searchUserByUsername } from "@/actions/user";
 import { ProfileBanner } from "./_components/profile-banner";
-import { Suspense } from "react";
-import { ProfileBannerSkeleton } from "./_components/profile-page-skeleton";
 import { getInfo } from "@/lib/get-session";
 
 export default async function ProfilePage({ params }: { params: { username: string }; }) {
@@ -24,15 +22,13 @@ export default async function ProfilePage({ params }: { params: { username: stri
   return (
     <div className="w-full min-h-screen bg-background pb-20">
       <div className="w-full mx-auto">
-        <Suspense fallback={<ProfileBannerSkeleton />}>
-          <ProfileBanner 
-            currentUser={currentUser}
-            searchedUser={searchedUser} 
-            currentUserFollowing={currentUserFollowing} 
-            isCurrentUserBlocked={isCurrentUserBlocked}
-            isCurrentUserBlockedSearchedUser={isCurrentUserBlockedSearchedUser}
-          />
-        </Suspense>
+        <ProfileBanner 
+          currentUser={currentUser}
+          searchedUser={searchedUser} 
+          currentUserFollowing={currentUserFollowing} 
+          isCurrentUserBlocked={isCurrentUserBlocked}
+          isCurrentUserBlockedSearchedUser={isCurrentUserBlockedSearchedUser}
+        />
       </div>
     </div>
   );

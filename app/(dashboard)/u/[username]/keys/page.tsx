@@ -18,8 +18,8 @@ export default async function KeysPage() {
                 <GenerateConnection />
             </div>
             <div className="space-y-5">
-                <ServerUrl serverUrl={stream.serverId} />
-                <StreamKey streamKey={stream.secretKey} />
+                <ServerUrl serverUrl={stream.serverUrl} />
+                <StreamKey streamKey={stream.streamKey} />
             </div>
         </div>
     )

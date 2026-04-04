@@ -71,6 +71,13 @@
       "when": 1775150816445,
       "tag": "0009_lame_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1775295872487,
+      "tag": "0010_cool_gravity",
+      "breakpoints": true
     }
   ]
 }

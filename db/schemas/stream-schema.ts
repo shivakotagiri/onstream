@@ -5,10 +5,11 @@ import { user } from "./auth-schema";
 export const stream = pgTable("stream", {
     id: uuid("stream_id").defaultRandom().primaryKey(),
     name: text("name").notNull(),
+    thumbnailUrl: text("thumbnail_url"),
 
-    serverId: text("server_id").notNull().default(""),
+    serverUrl: text("server_url").notNull().default(""),
     ingressId: text("ingress_id").notNull().default(""),
-    secretKey: text("secret_key").notNull().default(""),
+    streamKey: text("stream_key").notNull().default(""),
 
     isChatDelayed: boolean("is_chat_delayed").notNull().default(false),
     isChatEnabled: boolean("is_chat_enabled").notNull().default(false),

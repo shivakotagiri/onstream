@@ -15,7 +15,7 @@ export function StreamKey({ streamKey }: { streamKey: string }) {
         <Field className="w-full flex flex-col border border-neutral-500 dark:border-neutral-800 rounded-sm p-5">
             <FieldContent className="w-full flex flex-row justify-center items-center md:gap-10">
                 <div className="w-fit text-nowrap sm:text-base text-sm mr-2 md:mr-0">Stream Key</div>
-                <Input type={hide ? "password": "text"} placeholder="Stream Key" className="w-full" />
+                <Input value={streamKey} readOnly type={hide ? "password": "text"} placeholder="Stream Key" className="w-full" />
                 <CopyButton value={streamKey} />
             </FieldContent>
             <Button 

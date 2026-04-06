@@ -9,7 +9,7 @@ export function ServerUrl({ serverUrl }: { serverUrl: string }) {
                 <div className="w-fit text-nowrap sm:text-base text-sm mr-2 md:mr-0">
                     Server URL
                 </div>
-                <Input placeholder="Server URL" className="w-full" />
+                <Input value={serverUrl} readOnly placeholder="Server URL" className="w-full" />
                 <CopyButton value={serverUrl} />
             </FieldContent>
         </Field>

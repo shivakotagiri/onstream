@@ -14,7 +14,11 @@ export const userFollowers = cache(async (userId: string) => {
         with: {
             follower: {
                 with: {
-                    stream: true,
+                    stream: {
+                        columns: {
+                            isLive: true
+                        }
+                    },
                 }
             }
         },
@@ -29,7 +33,11 @@ export const usersFollowed = cache(async (userId: string) => {
         with: {
             following: {
                 with: {
-                    stream: true
+                    stream: {
+                        columns: {
+                            isLive: true
+                        }
+                    }
                 }
             }
         }

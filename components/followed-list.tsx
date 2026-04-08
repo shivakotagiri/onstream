@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "./ui/live-avatar";
-import { Stream, User } from "@/db/schema";
+import { User } from "@/db/schema";
 
 interface FollowedProps {
     followedByList: {
@@ -20,7 +20,7 @@ interface FollowedProps {
         followerId: string;
         followingId: string;
         following: User & {
-            stream: Stream | null,
+            stream: { isLive: boolean } | null,
         }
     }[]
 }

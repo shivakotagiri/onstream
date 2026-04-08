@@ -1,5 +1,4 @@
 import { recommendedUsers } from "@/actions/recommendation";
-import { Stream } from "@/db/schema";
 import { create } from "zustand";
 
 type RecommendUsersType = {
@@ -18,7 +17,7 @@ type RecommendUsersType = {
     createdAt: Date;
     updatedAt: Date;
     phoneNumberVerified: boolean | null;
-    stream: Stream | null,
+    stream: { isLive: boolean } | null,
 }
 
 type Store = {

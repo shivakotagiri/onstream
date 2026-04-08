@@ -57,7 +57,6 @@ export function ChangePasswordDialog({ currentUser, className, text }: {
                             <UserAvatar 
                                 src={currentUser.image || ""} 
                                 name={currentUser.name}
-                                isLive={false}
                                 className="size-7" 
                             />
                             <div>

@@ -8,16 +8,24 @@ import { getInfo } from "@/lib/get-session";
 import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { cache } from "react";
 
 export const usersData = async () => {
     const res = await db.query.user.findMany({})
     return res;
 }
 
-export const searchUserByUsername = (async (username: string) => {
+export const searchUserByUsername = cache(async (username: string) => {
     const cleanUsername = username.trim();
     const res = await db.query.user.findFirst({
-        where: eq(user.username, cleanUsername)
+        where: eq(user.username, cleanUsername),
+        with: {
+            stream: {
+                columns: {
+                    isLive: true
+                }
+            }
+        }
     });
 
     return res;

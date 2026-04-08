@@ -132,7 +132,6 @@ export function AccountTab({ currentUser }: { currentUser: User }) {
                 <div className="flex flex-col items-center gap-5 shrink-0 w-full lg:w-48 lg:pt-2">
                   <UserAvatar
                     src={imageUrl}
-                    isLive={false}
                     name={name}
                     className="size-32 rounded-full object-cover ring-1 ring-border"
                     avatarFallbackClassname="text-4xl"

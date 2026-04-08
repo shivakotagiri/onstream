@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "@/components/ui/live-avatar";
-import { Stream, User } from "@/db/schema";
+import { User } from "@/db/schema";
 
 type FollowersProps = {
     createdAt: Date,
     followerId: string,
     followingId: string,
     follower: User & {
-        stream: Stream | null,
+        stream: { isLive: boolean } | null,
     },
 }
 

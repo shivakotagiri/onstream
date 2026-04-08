@@ -12,7 +12,11 @@ export const recommendedUsers = async () => {
     if(!currentUser) return await db.query.user.findMany({
         where: eq(user.emailVerified, true),
         with: {
-            stream: true
+            stream: {
+                columns: {
+                    isLive: true
+                }
+            }
         }
     });
 
@@ -39,7 +43,11 @@ export const recommendedUsers = async () => {
             )
         ),
         with: {
-            stream: true
+            stream: {
+                columns: {
+                    isLive: true
+                }
+            }
         }
     });
 

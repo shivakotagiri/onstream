@@ -29,4 +29,4 @@ export const followersRelations = relations(followers, ({ one }) => ({
     fields: [followers.followingId],
     references: [user.id]
   })
-}))
+}));

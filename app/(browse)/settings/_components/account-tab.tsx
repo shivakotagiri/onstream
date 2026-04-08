@@ -8,13 +8,14 @@ import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/ui/live-avatar";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { currentUserType, deleteProfilePic, updateProfilePic, updateUserDetails } from "@/actions/user";
+import { deleteProfilePic, updateProfilePic, updateUserDetails } from "@/actions/user";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 
 import { Trash } from "lucide-react";
+import { Stream, User } from "@/db/schema";
 
-export function AccountTab({ currentUser }: { currentUser: currentUserType }) {
+export function AccountTab({ currentUser }: { currentUser: User }) {
     const [name, setName] = useState<string>(currentUser.name || "");
     const [username, setUsername] = useState<string>(currentUser.username || "");
     const [bio, setBio] = useState<string>(currentUser.bio || "");

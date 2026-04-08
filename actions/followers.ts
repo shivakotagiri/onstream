@@ -12,8 +12,12 @@ export const userFollowers = cache(async (userId: string) => {
     const res = await db.query.followers.findMany({
         where: eq(followers.followingId, userId),
         with: {
-            follower: true,
-        }
+            follower: {
+                with: {
+                    stream: true,
+                }
+            }
+        },
     });
     return res;
 })
@@ -23,7 +27,11 @@ export const usersFollowed = cache(async (userId: string) => {
     const res = await db.query.followers.findMany({
         where: eq(followers.followerId, userId),
         with: {
-            following: true
+            following: {
+                with: {
+                    stream: true
+                }
+            }
         }
     })
 

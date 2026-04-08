@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -99,10 +99,10 @@ export const rateLimit = pgTable("rate_limit", {
   lastRequest: bigint("last_request", { mode: "number" }).notNull(),
 });
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
-  stream: many(stream),
+  stream: one(stream),
   followers: many(followers, {
     relationName: "following"
   }),
@@ -137,4 +137,12 @@ export const streamRelation = relations(stream, ({ one }) => ({
     fields: [stream.userId],
     references: [user.id]
   })
-}))
+}));
+
+export type User = InferSelectModel<typeof user>;
+export type Session = InferSelectModel<typeof session>;
+export type Stream = InferSelectModel<typeof stream>;
+export type Account = InferSelectModel<typeof account>;
+export type Verification = InferSelectModel<typeof verification>;
+export type RateLimit = InferSelectModel<typeof rateLimit>;
+

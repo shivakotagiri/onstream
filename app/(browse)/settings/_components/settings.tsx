@@ -4,31 +4,16 @@ import { TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
 import { AccountTab } from "./account-tab";
 import { PrivacyTab } from "./privacy-tab";
 import { userSettingsTabStore } from "@/store/use-settings-tab";
-import { currentUserType } from "@/actions/user";
+import { User } from "@/db/schema";
 
 interface BlockedUsersProps {
     blockedId: string;
     blockerId: string;
-    blockedUser: {
-        name: string;
-        image: string | null;
-        id: string;
-        email: string;
-        emailVerified: boolean;
-        createdAt: Date;
-        updatedAt: Date;
-        username: string | null;
-        displayUsername: string | null;
-        phoneNumber: string | null;
-        phoneNumberVerified: boolean | null;
-        bio: string | null;
-        bannerImage: string | null;
-        dob: Date | null;
-    }
+    blockedUser: User
 }
 
 
-export function Settings({ currentUser, blockedUsers, isCurrentUserHasPassword }: { currentUser: currentUserType, blockedUsers: BlockedUsersProps[], isCurrentUserHasPassword: boolean}) {
+export function Settings({ currentUser, blockedUsers, isCurrentUserHasPassword }: { currentUser: User, blockedUsers: BlockedUsersProps[], isCurrentUserHasPassword: boolean}) {
     const { tab, setTab } = userSettingsTabStore();
     if(!currentUser || !currentUser.id) return <div>User not found</div>
     return (

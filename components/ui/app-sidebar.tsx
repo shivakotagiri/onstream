@@ -42,10 +42,10 @@ export function AppSidebar({ userId }: { userId: string | null }) {
           <SidebarGroupContent className="flex flex-col gap-5">
             {!loading ? users.map((user, id) => (
               <SidebarUserItem
-                key={user.id}
+                key={id}
                 name={user.name}
                 avatar={user.image || ""}
-                isLive={id % 2 == 0}
+                isLive={user.stream?.isLive || false}
                 username={user.username || user.name}
               />
             )): [1, 2, 3].map((user, id) => (

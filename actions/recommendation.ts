@@ -10,11 +10,15 @@ export const recommendedUsers = async () => {
     const currentUser = data?.currentUser || null;
     
     if(!currentUser) return await db.query.user.findMany({
-        where: eq(user.emailVerified, true)
+        where: eq(user.emailVerified, true),
+        with: {
+            stream: true
+        }
     });
 
-    const res = await db.select().from(user).where(
-        and(
+    
+    const res = await db.query.user.findMany({
+        where: and(
             not(eq(user.id, currentUser.id)),
             eq(user.emailVerified, true),
             not(
@@ -33,8 +37,11 @@ export const recommendedUsers = async () => {
                     )
                 )
             )
-        )
-    );
+        ),
+        with: {
+            stream: true
+        }
+    });
 
     return res;
 }

@@ -12,28 +12,16 @@ import {
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "./ui/live-avatar";
+import { Stream, User } from "@/db/schema";
 
 interface FollowedProps {
     followedByList: {
         createdAt: Date;
         followerId: string;
         followingId: string;
-        following: {
-            image: string | null;
-            name: string;
-            id: string;
-            email: string;
-            emailVerified: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            username: string | null;
-            displayUsername: string | null;
-            phoneNumber: string | null;
-            phoneNumberVerified: boolean | null;
-            bio: string | null;
-            bannerImage: string | null;
-            dob: Date | null;
-        };
+        following: User & {
+            stream: Stream | null,
+        }
     }[]
 }
 
@@ -61,7 +49,7 @@ export function FollowedList({ followedByList }: FollowedProps) {
                                     }
                                     className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
                                 >
-                                    <UserAvatar src={follow.following.image || ""} name={follow.following.name} isLive={false} className="size-5" />
+                                    <UserAvatar src={follow.following.image || ""} name={follow.following.name} isLive={follow.following.stream?.isLive} className="size-5" />
                                     <span className="text-sm font-medium truncate">{follow.following.name}</span>
                                 </div>
                             </div>

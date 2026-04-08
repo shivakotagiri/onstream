@@ -11,6 +11,7 @@ export const stream = pgTable("stream", {
     ingressId: text("ingress_id").notNull().default(""),
     streamKey: text("stream_key").notNull().default(""),
 
+    isLive: boolean("is_live").notNull().default(false),
     isChatDelayed: boolean("is_chat_delayed").notNull().default(false),
     isChatEnabled: boolean("is_chat_enabled").notNull().default(false),
     isChatFollowersOnly: boolean("is_chat_followers_only").notNull().default(false),
@@ -18,7 +19,7 @@ export const stream = pgTable("stream", {
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull(),
 
-    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull().unique().references(() => user.id, { onDelete: "cascade" }),
 },
     (table) => [
         index("stream_userId_idx").on(table.userId)

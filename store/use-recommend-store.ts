@@ -1,5 +1,6 @@
 import { recommendedUsers } from "@/actions/recommendation";
-import { create } from "zustand"
+import { Stream } from "@/db/schema";
+import { create } from "zustand";
 
 type RecommendUsersType = {
     id: string;
@@ -17,6 +18,7 @@ type RecommendUsersType = {
     createdAt: Date;
     updatedAt: Date;
     phoneNumberVerified: boolean | null;
+    stream: Stream | null,
 }
 
 type Store = {

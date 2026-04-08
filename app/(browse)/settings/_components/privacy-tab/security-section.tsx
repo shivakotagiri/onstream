@@ -1,14 +1,15 @@
 "use client";
 
-import { currentUserType, updateSessionVersion } from "@/actions/user";
+import { updateSessionVersion } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import { ChangePasswordDialog } from "@/components/ui/dialogs/change-password-dialog";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { User } from "@/db/schema";
 
-export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { currentUser: currentUserType, isCurrentUserHasPassword: boolean }) {
+export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { currentUser: User, isCurrentUserHasPassword: boolean }) {
     const router = useRouter();
     async function handleSignoutEveryWhere() {
         // https://github.com/better-auth/better-auth/discussions/5526

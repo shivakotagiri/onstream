@@ -1,6 +1,5 @@
 "use client";
 
-import { currentUserType } from "@/actions/user";
 import { DialogContent, DialogTrigger, Dialog, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "./dialog";
 import { UserAvatar } from "../live-avatar";
 import { ChangeEvent, useState } from "react";
@@ -12,9 +11,10 @@ import { cn } from "@/lib/utils";
 import { changePassword } from "@/actions/password";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { toast } from "sonner";
+import { User } from "@/db/schema";
 
 export function ChangePasswordDialog({ currentUser, className, text }: {
-    currentUser: currentUserType,
+    currentUser: User,
     className?: string,
     text: string
 }) {

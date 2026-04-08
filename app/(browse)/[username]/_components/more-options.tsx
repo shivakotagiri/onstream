@@ -6,12 +6,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import {useState } from "react";
 import { blockUser, unBlockUser } from "@/actions/block-service";
 import { toast } from "sonner";
-import { currentUserType } from "@/actions/user";
+import { User } from "@/db/schema";
 
 interface MoreOptionsProps {
     isCurrentUserBlockedSearchedUser: boolean,
     searchedUserId: string,
-    currentUser: currentUserType | null
+    currentUser: User | null
 }
 
 export function MoreOptions({ searchedUserId, currentUser, isCurrentUserBlockedSearchedUser }: MoreOptionsProps) {

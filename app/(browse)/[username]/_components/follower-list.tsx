@@ -12,32 +12,18 @@ import {
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "@/components/ui/live-avatar";
+import { Stream, User } from "@/db/schema";
 
-interface FollowersProps {
-    followersOfFollowing: {
-        createdAt: Date;
-        followerId: string;
-        followingId: string;
-        follower: {
-            id: string;
-            name: string;
-            email: string;
-            emailVerified: boolean;
-            image: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            username: string | null;
-            displayUsername: string | null;
-            phoneNumber: string | null;
-            phoneNumberVerified: boolean | null;
-            bio: string | null;
-            bannerImage: string | null;
-            dob: Date | null;
-        };
-    }[]
+type FollowersProps = {
+    createdAt: Date,
+    followerId: string,
+    followingId: string,
+    follower: User & {
+        stream: Stream | null,
+    },
 }
 
-export function FollowerList({ followersOfFollowing }: FollowersProps) {
+export function FollowerList({ followersOfFollowing }: { followersOfFollowing: FollowersProps[]}) {
     const router = useRouter();
     return (
         <Dialog>
@@ -61,7 +47,7 @@ export function FollowerList({ followersOfFollowing }: FollowersProps) {
                                     }
                                     className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
                                 >
-                                    <UserAvatar src={follow.follower.image || ""} name={follow.follower.name} isLive={false} className="size-5" />
+                                    <UserAvatar src={follow.follower.image || ""} name={follow.follower.name} isLive={follow.follower.stream?.isLive} className="size-5" />
                                     <span className="text-sm font-medium truncate">{follow.follower.name}</span>
                                 </div>
                             </div>

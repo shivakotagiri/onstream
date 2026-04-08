@@ -4,14 +4,15 @@ import FollowButton from "./follow-button";
 import { UserFollowers } from "./user-followers";
 import Image from "next/image";
 import { MoreOptions } from "./more-options";
-import { currentUserType } from "@/actions/user";
+import { User } from "@/db/schema";
 
 interface ProfileBannerProps {
   isCurrentUserBlocked: boolean,
   currentUserFollowing: boolean;
   isCurrentUserBlockedSearchedUser: boolean,
-  currentUser: currentUserType | null
-  searchedUser: currentUserType | null
+  currentUser: User | null
+  searchedUser: User | null,
+  isLive: boolean
 }
 
 export async function ProfileBanner({
@@ -19,7 +20,8 @@ export async function ProfileBanner({
   isCurrentUserBlocked,
   searchedUser,
   currentUserFollowing,
-  currentUser
+  currentUser,
+  isLive
 }: ProfileBannerProps) {
   if (!searchedUser || isCurrentUserBlocked) {
     return (
@@ -67,14 +69,14 @@ export async function ProfileBanner({
         <div className="px-4 sm:px-6 md:px-8 pb-6 flex flex-col w-full">
           <div className="w-full flex justify-between items-end gap-3 -mt-12 sm:-mt-14 md:-mt-16 relative z-10 mb-3 md:mb-4">
             <UserAvatar
-              isLive={false}
+              isLive={isLive}
               name={searchedUser.name}
               src={searchedUser.image ?? ""}
               className="size-20 sm:size-24 md:size-32 rounded-full border-4 border-background bg-card shadow-lg shrink-0"
               avatarFallbackClassname="text-2xl sm:text-3xl md:text-4xl"
             />
 
-            <div className="flex items-center gap-2 pb-1 sm:pb-2 flex-shrink-0">
+            <div className="flex items-center gap-2 pb-1 sm:pb-2 shrink-0">
               {!sameUser && (
                 <FollowButton
                   searchedUser={searchedUser}

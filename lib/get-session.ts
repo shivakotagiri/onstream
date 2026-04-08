@@ -14,7 +14,7 @@ export const getInfo = cache(async () => {
     if(!session || !session.user) return null;
 
     const currentUser = await db.query.user.findFirst({
-        where: eq(user.id, session.user.id)
+        where: eq(user.id, session.user.id),
     });
     
     if(currentUser && session.user.sessionVersion === currentUser.sessionVersion) {

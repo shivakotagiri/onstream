@@ -9,24 +9,6 @@ import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
-export type currentUserType = {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    username: string | null;
-    displayUsername: string | null;
-    phoneNumber: string | null;
-    phoneNumberVerified: boolean | null;
-    bio: string | null;
-    bannerImage: string | null;
-    dob: Date | null;
-    sessionVersion: number | null
-}
-
 export const usersData = async () => {
     const res = await db.query.user.findMany({})
     return res;

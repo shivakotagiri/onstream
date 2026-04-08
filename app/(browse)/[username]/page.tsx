@@ -3,6 +3,7 @@ import { isCurrentUserFollowing } from "@/actions/followers";
 import { searchUserByUsername } from "@/actions/user";
 import { ProfileBanner } from "./_components/profile-banner";
 import { getInfo } from "@/lib/get-session";
+import { getStreamByUserId } from "@/actions/stream";
 
 export default async function ProfilePage({ params }: { params: { username: string }; }) {
   const { username } = await params;
@@ -13,11 +14,12 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
   if(!searchedUser) return <div>User not found</div>
 
-  const[currentUserFollowing, isCurrentUserBlocked, isCurrentUserBlockedSearchedUser] = 
+  const[currentUserFollowing, isCurrentUserBlocked, isCurrentUserBlockedSearchedUser, stream] = 
     await Promise.all([
       isCurrentUserFollowing(searchedUser?.id || ""),
       isUserBlocked(searchedUser?.id || "", currentUser?.id || ""),
-      isUserBlocked(currentUser?.id || "", searchedUser?.id || "")
+      isUserBlocked(currentUser?.id || "", searchedUser?.id || ""),
+      getStreamByUserId(currentUser?.id || "")
     ]);
   return (
     <div className="w-full min-h-screen bg-background pb-20">
@@ -28,6 +30,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
           currentUserFollowing={currentUserFollowing} 
           isCurrentUserBlocked={isCurrentUserBlocked}
           isCurrentUserBlockedSearchedUser={isCurrentUserBlockedSearchedUser}
+          isLive={stream?.isLive || false}
         />
       </div>
     </div>

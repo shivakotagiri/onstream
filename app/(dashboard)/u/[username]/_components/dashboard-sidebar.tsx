@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/sidebar"
 import { SidebarUserItem } from "./sidebar-user-item"; 
 import { Fullscreen, KeyRound, MessageSquare, Users } from "lucide-react";
-import { currentUserType } from "@/actions/user";
 import { usePathname } from "next/navigation";
+import { User } from "@/db/schema";
 
-export function DashboardSidebar({ currentUser }: { currentUser: currentUserType | null}) {
+export function DashboardSidebar({ currentUser }: { currentUser: User | null}) {
     const data = [{
         label: "Stream",
         route: `/u/${currentUser?.username}`,

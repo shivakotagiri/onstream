@@ -1,14 +1,15 @@
 "use client";
 
-import { changeEmail, currentUserType } from "@/actions/user";
+import { changeEmail } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { User } from "@/db/schema";
 import { Edit2Icon, Eye, EyeOff } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { toast } from "sonner";
 
-export function ContactSection({ currentUser }: { currentUser: currentUserType }) {
+export function ContactSection({ currentUser }: { currentUser: User }) {
     const [editEmail, setEditEmail] = useState<boolean>(false);
     const [editPhoneNumber, setEditPhoneNumber] = useState<boolean>(false);
     const [email, setEmail] = useState<string>(currentUser.email);

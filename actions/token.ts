@@ -43,6 +43,8 @@ export const createViewerToken = async (hostIdentity: string) => {
         }
     );
 
+    console.log("this is the identity token " + token.identity);
+
     token.addGrant({
         room: host.id,
         canPublish: false,

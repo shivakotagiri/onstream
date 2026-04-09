@@ -88,7 +88,7 @@ export async function createIngress(ingressType: IngressInput) {
         serverUrl: ingress.url
     }).where(eq(stream.userId, currentUser.id)).returning();
 
-    revalidatePath(`/u/[${currentUser.username}]/keys`);
+    revalidatePath(`/u/${currentUser.username}/keys`);
 
     return res[0];
 }

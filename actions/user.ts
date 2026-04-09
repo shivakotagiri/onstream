@@ -8,28 +8,23 @@ import { getInfo } from "@/lib/get-session";
 import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { cache } from "react";
 
-export const usersData = async () => {
+export const getUsers = async () => {
     const res = await db.query.user.findMany({})
     return res;
 }
 
-export const searchUserByUsername = cache(async (username: string) => {
-    const cleanUsername = username.trim();
+export const getUserByUsername = async (username: string) => {
+    const cleanUsername = username?.trim();
     const res = await db.query.user.findFirst({
         where: eq(user.username, cleanUsername),
         with: {
-            stream: {
-                columns: {
-                    isLive: true
-                }
-            }
+            stream: true
         }
     });
 
     return res;
-});
+};
 
 export const checkUsernameAvailability = async (username: string) => {
     if(!username || username.length < 3) {
@@ -67,6 +62,14 @@ export const getUserAccount = async () => {
     });
 
     return getCurrentUserAccount;
+}
+
+export const getUserById = async (userId: string) => {
+    const res = await db.query.user.findFirst({
+        where: eq(user.id, userId),
+    });
+
+    return res;
 }
 
 export const changeEmail = async (currentEmail: string, newEmail: string) => {
@@ -309,6 +312,7 @@ export const updateSessionVersion = async (id: string) => {
 
     return !!res;
 }
+
 
 
 

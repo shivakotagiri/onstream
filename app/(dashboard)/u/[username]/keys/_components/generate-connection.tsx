@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { createIngress } from "@/actions/ingress";
@@ -28,8 +29,7 @@ export default function GenerateConnection() {
                 .then(() => {
                     toast.success("Ingress created");
                     closeRef.current?.click();
-                })
-                .catch((err) => toast.error("Something went wrong"));
+                }).catch((err) => toast.error("Something went wrong"));
         });
     }
 

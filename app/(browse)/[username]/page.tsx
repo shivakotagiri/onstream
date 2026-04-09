@@ -1,13 +1,13 @@
 import { isUserBlocked } from "@/actions/block-service";
 import { isCurrentUserFollowing } from "@/actions/followers";
-import { searchUserByUsername } from "@/actions/user";
+import { getUserByUsername } from "@/actions/user";
 import { ProfileBanner } from "./_components/profile-banner";
 import { getInfo } from "@/lib/get-session";
 
 export default async function ProfilePage({ params }: { params: { username: string }; }) {
   const { username } = await params;
 
-  const [data, searchedUser] = await Promise.all([getInfo(), searchUserByUsername(username)]);
+  const [data, searchedUser] = await Promise.all([getInfo(), getUserByUsername(username)]);
 
   const currentUser = data?.currentUser || null;
 

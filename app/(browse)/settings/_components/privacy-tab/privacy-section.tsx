@@ -1,5 +1,5 @@
 import { blockUser } from "@/actions/block-service";
-import { searchUserByUsername } from "@/actions/user";
+import { getUserByUsername } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { ShowBlowckedUsersDialog } from "@/components/ui/dialogs/show-blocked-users-dialog";
 import { Input } from "@/components/ui/input";
@@ -44,7 +44,7 @@ export function PrivacySection({ blockedUsers }: BlockedUsersProps) {
             toast.error("Please enter valid username of the user");
             return { error: null }
         } else {
-            const searchedUser = await searchUserByUsername(username.trim());
+            const searchedUser = await getUserByUsername(username.trim());
             if(!searchedUser) {
                 return {
                     error: {

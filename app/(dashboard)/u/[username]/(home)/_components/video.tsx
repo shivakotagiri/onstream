@@ -4,6 +4,7 @@ import { ConnectionState, Track } from "livekit-client";
 import { useRemoteParticipant, useTracks, useConnectionState } from "@livekit/components-react";
 import { VideoOffline } from "./offline-video";
 import { VideoLoading } from "./video-loading";
+import { Streaming } from "./streaming";
 
 
 interface VideoProps {
@@ -13,7 +14,7 @@ interface VideoProps {
 
 export function Video({ hostName, hostIdentity }: VideoProps) {
     const connectionState = useConnectionState();
-    const pariticipant = useRemoteParticipant(hostIdentity);
+    const participant = useRemoteParticipant(hostIdentity);
     const tracks = useTracks([
         Track.Source.Camera,
         Track.Source.Microphone
@@ -21,12 +22,12 @@ export function Video({ hostName, hostIdentity }: VideoProps) {
 
     let content;
 
-    if(!pariticipant && connectionState === ConnectionState.Connected) {
+    if(!participant && connectionState === ConnectionState.Connected) {
         content = <VideoOffline username={hostName} />
-    } else if(!pariticipant || tracks.length === 0) {
+    } else if(!participant || tracks.length === 0) {
         content = <VideoLoading />
     } else {
-        content = <p>host is streaming</p>
+        content = <Streaming participant={participant} />
     }
 
 

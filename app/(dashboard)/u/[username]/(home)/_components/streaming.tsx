@@ -35,7 +35,7 @@ export function Streaming({ participant }: StreamingProps) {
   }, [tracks, participant.identity]);
 
   return (
-    <div className="aspect-video relative border-b">
+    <div className="aspect-video h-full relative border-b w-full">
       {videoTrack && <VideoTrack trackRef={videoTrack} />}
 
       {audioTrack && (

@@ -6,6 +6,7 @@ Current TODOs to work with:-
     - here there is cache in profile which is making it an issue after saving the account info from /welcome page
     - ratelimiting, bot identification etc..
     - make /u/[username]/keys mobile responsive
+    - complete the chat ui
     
 
 completed:-

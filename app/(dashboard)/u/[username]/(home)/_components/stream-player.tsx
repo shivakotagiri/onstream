@@ -7,6 +7,8 @@ import { Video } from "./video";
 import { ChatSidebar } from "./chat-sidebar";
 import { cn } from "@/lib/utils";
 import { useChatSidebarStore } from "@/store/use-chatbar";
+import { ArrowLeftFromLine } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface StreamPlayerProps {
     user: User & { stream: Stream | null },
@@ -16,7 +18,7 @@ interface StreamPlayerProps {
 
 export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
     const { token, name, identity } = useViewerToken(user.id);
-    const { collapsed } = useChatSidebarStore();
+    const { collapsed, onExpand, onCollapse } = useChatSidebarStore();
 
     if(!token || !name || !identity) {
         return <div className="flex justify-center items-center w-full h-[90vh]">
@@ -26,6 +28,9 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
 
     return (
         <div className="flex h-[calc(100vh-56px)] w-full">
+            <Button variant={"ghost"} size={"icon-sm"} className={cn("fixed top-17 right-5 block cursor-pointer z-10", !collapsed && "hidden")} onClick={onExpand}>
+                <ArrowLeftFromLine />
+            </Button>
             <LiveKitRoom 
                 className={cn("lg:gap-y-0 h-full w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-9", collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2")}
                 serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WS_URL!} 

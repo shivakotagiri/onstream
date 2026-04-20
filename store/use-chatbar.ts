@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-enum ChatVariant {
+export enum ChatVariant {
   CHAT,
   COMMUNITY
 }

@@ -12,7 +12,7 @@ interface StreamingProps {
   participant: Participant;
 }
 
-export function Streaming({ participant }: StreamingProps) {
+export function OnlineVideo({ participant }: StreamingProps) {
   const tracks = useTracks([
     Track.Source.Camera,
     Track.Source.Microphone,
@@ -35,7 +35,7 @@ export function Streaming({ participant }: StreamingProps) {
   }, [tracks, participant.identity]);
 
   return (
-    <div className="aspect-video h-full relative border-b w-full">
+    <div className="aspect-video relative border-b w-full">
       {videoTrack && <VideoTrack trackRef={videoTrack} />}
 
       {audioTrack && (

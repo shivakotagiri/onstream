@@ -1,10 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { User, Stream } from "@/db/schema"
 import { useViewerToken } from "@/hooks/use-viewer-token";
 import { LiveKitRoom } from "@livekit/components-react"
 import { Video } from "./video";
+import { ChatSidebar } from "./chat-sidebar";
+import { cn } from "@/lib/utils";
+import { useChatSidebarStore } from "@/store/use-chatbar";
 
 interface StreamPlayerProps {
     user: User & { stream: Stream | null },
@@ -14,6 +16,7 @@ interface StreamPlayerProps {
 
 export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
     const { token, name, identity } = useViewerToken(user.id);
+    const { collapsed } = useChatSidebarStore();
 
     if(!token || !name || !identity) {
         return <div className="flex justify-center items-center w-full h-[90vh]">
@@ -22,9 +25,9 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
     }
 
     return (
-        <div className="flex w-full border-red-500 border sm:max-w-[75%]">
+        <div className="flex h-[calc(100vh-56px)] w-full">
             <LiveKitRoom 
-                className="lg:gap-y-0 h-full w-full"
+                className={cn("lg:gap-y-0 h-full w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-9", collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2")}
                 serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WS_URL!} 
                 token={token}
                 options={{
@@ -32,10 +35,21 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                     adaptiveStream: true
                 }}
             >
-                <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10 w-full">
+                <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 lg:overflow-y-auto hidden-scrollbar pb-10 bg-[#161616]">
                     <Video 
                         hostName={user.username || ""}
                         hostIdentity={user.id}
+                    />
+                </div>
+                <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2", collapsed && "hidden")}>
+                    <ChatSidebar 
+                        viewerName={user.name} 
+                        hostName={user.username} 
+                        isFollowing={isFollowing} 
+                        hostIdentity={user.id}
+                        isChatEnabled={stream.isChatEnabled}
+                        isChatDelayed={stream.isChatDelayed}
+                        isChatFollowersOnly={stream.isChatFollowersOnly}
                     />
                 </div>
             </LiveKitRoom>

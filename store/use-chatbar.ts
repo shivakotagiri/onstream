@@ -1,61 +1,24 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { create } from "zustand";
 
-export type ChatbarProps = {
-  state: "expanded" | "collapsed"
-  open: boolean
-  setOpen: (value: boolean) => void
-
-  openMobile: boolean
-  setOpenMobile: (value: boolean) => void
-
-  isMobile: boolean
-  setIsMobile: (value: boolean) => void
-
-  toggleChatbar: () => void
-
-  hasHydrated: boolean
-  setHasHydrated: (value: boolean) => void
+enum ChatVariant {
+  CHAT,
+  COMMUNITY
 }
 
-export const useChatbar = create<ChatbarProps>()(
-  persist(
-    (set) => ({
-      state: "collapsed",
-      open: false,
+interface useChatSidebarProps {
+  collapsed: boolean;
+  variant: ChatVariant;
+  isLive: boolean;
+  onExpand: () => void;
+  onCollapse: () => void;
+  onChangeVariant: (variant: ChatVariant) => void;
+}
 
-      setOpen: (value: boolean) =>
-        set({ open: value, state: value ? "expanded" : "collapsed" }),
-
-      openMobile: false,
-      setOpenMobile: (value: boolean) => set({ openMobile: value }),
-
-      isMobile: false,
-      setIsMobile: (value: boolean) =>
-        set((prev) => ({
-          isMobile: value,
-          open: value ? false : prev.open,
-          state: value ? "collapsed" : prev.state,
-        })),
-
-      toggleChatbar: () =>
-        set((prev) => {
-          if (prev.isMobile) {
-            return { openMobile: !prev.openMobile }
-          }
-          const next = !prev.open
-          return { open: next, state: next ? "expanded" : "collapsed" }
-        }),
-
-      hasHydrated: false,
-      setHasHydrated: (value: boolean) => set({ hasHydrated: value }),
-    }),
-    {
-      name: "chatbar-storage",
-      partialize: (state) => ({ open: state.open, state: state.state }),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true)
-      },
-    }
-  )
-)
+export const useChatSidebarStore = create<useChatSidebarProps>()((set) => ({
+  collapsed: false,
+  isLive: false,
+  variant: ChatVariant.CHAT,
+  onExpand: () => set(() => ({ collapsed: false })),
+  onCollapse: () => set(() => ({ collapsed: true })),
+  onChangeVariant: (variant: ChatVariant) => set(() => ({ variant })),
+}))

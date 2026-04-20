@@ -1,7 +1,6 @@
 import { getUserByUsername } from "@/actions/user";
 import { getInfo } from "@/lib/get-session"
 import { StreamPlayer } from "./_components/stream-player";
-import { Chatbar } from "./_components/chatbar";
 
 interface CreaterPageProps {
     params: Promise<{
@@ -25,7 +24,6 @@ export default async function CreaterPage({ params }: CreaterPageProps) {
     return (
         <div className="w-screen pt-18 sm:pt-13 flex sm:flex-row flex-col">
             <StreamPlayer user={user} stream={user.stream} isFollowing={true} />
-            <Chatbar />
         </div>
     )
 }

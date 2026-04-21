@@ -6,7 +6,6 @@ import { CommunityMessages } from "./community-messages"
 interface ChatMessagesProps {
     messages: ReceivedChatMessage[],
     isOnline: boolean,
-    isChatEnabled: boolean,
     isChatDelayed: boolean,
     isChatFollowersOnly: boolean,
     hostName: string | null,
@@ -21,12 +20,23 @@ export function ChatList({
     isOnline,
     isFollowing,
     isChatDelayed,
-    isChatEnabled,
-    isChatFollowersOnly
+    isChatFollowersOnly,
+    viewerName,
+    hostName
  }: ChatMessagesProps) {
 
     if(variant === ChatVariant.CHAT) {
-        return <ChatMessages />
+        return (
+            <ChatMessages 
+                messages={messages} 
+                isOnline={isOnline} 
+                viewerName={viewerName}
+                isFollowing={isFollowing} 
+                isChatDelayed={isChatDelayed}
+                isChatFollowersOnly={isChatFollowersOnly}
+                hostName={hostName}
+            />
+        )
     } else {
         return <CommunityMessages />
     }

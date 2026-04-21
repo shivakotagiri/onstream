@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 
 interface ChatFormProps {
     onSubmit: () => void;
@@ -11,9 +11,13 @@ interface ChatFormProps {
 }
 
 export function ChatForm({ onSubmit, value, onChange }: ChatFormProps) {
-
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        e.stopPropagation();
+        onSubmit();
+    }
     return (
-        <form onSubmit={onSubmit} className="flex gap-2 py-5 px-3  border-t">
+        <form onSubmit={handleSubmit} className="flex gap-2 py-5 px-3  border-t">
             <Input value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)} />
             <Button
                 variant={"default"}

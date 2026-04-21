@@ -15,7 +15,6 @@ interface ChatSidebarProps {
     viewerName: string,
     hostName: string | null,
     hostIdentity: string,
-    isChatEnabled: boolean,
     isChatDelayed: boolean,
     isChatFollowersOnly: boolean,
 }
@@ -26,7 +25,6 @@ export function ChatSidebar({
     hostName, 
     hostIdentity, 
     isChatDelayed, 
-    isChatEnabled, 
     isChatFollowersOnly
 }: ChatSidebarProps) {
 
@@ -40,9 +38,9 @@ export function ChatSidebar({
 
     const matches = useMediaQuery("max-width: 1024px");
 
-    function onSubmit () {
-        if(!send) return;
-        send(value);
+    async function onSubmit () {
+        if(!send || !value) return;
+        await send(value);
         setValue("");
     }
 
@@ -57,22 +55,21 @@ export function ChatSidebar({
     }, [matches, onExpand]);
 
     const reversedMessages = useMemo(() => { 
-        return messages.sort((a, b) => b.timestamp - a.timestamp)
+        return messages.sort((a, b) => a.timestamp - b.timestamp)
     }, [messages]);
 
     return (
         <div className="w-full h-full flex flex-col justify-between">
             <ChatHeader />
             <ChatList 
-                messages={reversedMessages} 
+                messages={reversedMessages}
                 isOnline={isOnline || false}
                 variant={variant}
                 isChatDelayed={isChatDelayed}
                 isChatFollowersOnly={isChatFollowersOnly}
-                isChatEnabled={isChatEnabled}
                 isFollowing={isFollowing}
                 hostName={hostName}
-                viewerName={viewerName}
+                viewerName={viewerName}            
             />
             <ChatForm 
                 onSubmit={onSubmit}  

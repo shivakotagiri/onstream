@@ -7,6 +7,8 @@ import { useChat, useConnectionState, useRemoteParticipant } from "@livekit/comp
 import { ConnectionState } from "livekit-client";
 import { useMediaQuery } from "usehooks-ts";
 import { ChatHeader } from "./chat-header";
+import { ChatForm } from "./chat-form";
+import { ChatList } from "./chat-list";
 
 interface ChatSidebarProps {
     isFollowing: boolean;
@@ -44,6 +46,10 @@ export function ChatSidebar({
         setValue("");
     }
 
+    function onChange(value: string) {
+        setValue(value);
+    }
+
     useEffect(() => {
         if(matches) {
             onExpand()
@@ -55,8 +61,24 @@ export function ChatSidebar({
     }, [messages]);
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full flex flex-col justify-between">
             <ChatHeader />
+            <ChatList 
+                messages={reversedMessages} 
+                isOnline={isOnline || false}
+                variant={variant}
+                isChatDelayed={isChatDelayed}
+                isChatFollowersOnly={isChatFollowersOnly}
+                isChatEnabled={isChatEnabled}
+                isFollowing={isFollowing}
+                hostName={hostName}
+                viewerName={viewerName}
+            />
+            <ChatForm 
+                onSubmit={onSubmit}  
+                value={value}
+                onChange={onChange}
+            />
         </div>
     )
 }

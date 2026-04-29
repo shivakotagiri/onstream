@@ -8,7 +8,7 @@ interface ChatMessagesProps {
     isOnline: boolean,
     isChatDelayed: boolean,
     isChatFollowersOnly: boolean,
-    hostName: string | null,
+    hostName: string,
     viewerName: string,
     isFollowing: boolean,
     variant: ChatVariant

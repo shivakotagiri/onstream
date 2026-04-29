@@ -9,14 +9,16 @@ import { useMediaQuery } from "usehooks-ts";
 import { ChatHeader } from "./chat-header";
 import { ChatForm } from "./chat-form";
 import { ChatList } from "./chat-list";
+import { ChatInfo } from "./chat-info";
 
 interface ChatSidebarProps {
     isFollowing: boolean;
     viewerName: string,
-    hostName: string | null,
+    hostName: string,
     hostIdentity: string,
     isChatDelayed: boolean,
     isChatFollowersOnly: boolean,
+    isChatEnabled: boolean
 }
 
 export function ChatSidebar({
@@ -25,13 +27,15 @@ export function ChatSidebar({
     hostName, 
     hostIdentity, 
     isChatDelayed, 
-    isChatFollowersOnly
+    isChatFollowersOnly,
+    isChatEnabled
 }: ChatSidebarProps) {
 
     const { variant, onExpand } = useChatSidebarStore();
     const participant = useRemoteParticipant(hostIdentity);
     const connectionState = useConnectionState();
     const isOnline = participant && connectionState === ConnectionState.Connected;
+    const isHidden = !isChatEnabled || !isOnline;
 
     const [value, setValue] = useState<string>("");
     const {chatMessages: messages, send} = useChat();
@@ -71,10 +75,19 @@ export function ChatSidebar({
                 hostName={hostName}
                 viewerName={viewerName}            
             />
+            <ChatInfo 
+                isChatDelayed={isChatDelayed} 
+                isFollowersOnly={isChatFollowersOnly} 
+            />
             <ChatForm 
                 onSubmit={onSubmit}  
                 value={value}
                 onChange={onChange}
+                isHidden={isHidden}
+                isChatFollowersOnly={isChatFollowersOnly}
+                isChatDelayed={isChatDelayed}
+                isFollowing={isFollowing}
+                isChatEnabled={isChatEnabled}
             />
         </div>
     )

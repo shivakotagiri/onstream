@@ -2,6 +2,7 @@ import { ReceivedChatMessage } from "@livekit/components-react"
 import { ChatInfo } from "./chat-info";
 import { format } from "date-fns";
 import { useEffect, useRef } from "react";
+import { stringToHexColor } from "@/lib/utils";
 
 interface ChatMessagesProps {
     isOnline: boolean,
@@ -10,7 +11,7 @@ interface ChatMessagesProps {
     isChatDelayed: boolean,
     messages: ReceivedChatMessage[],
     viewerName: string,
-    hostName: string | null
+    hostName: string
 }
 
 export function ChatMessages({
@@ -23,6 +24,7 @@ export function ChatMessages({
     hostName
 }: ChatMessagesProps) {
     const bottomRef = useRef<HTMLDivElement>(null);
+    const color = stringToHexColor(hostName);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -32,8 +34,8 @@ export function ChatMessages({
             { messages.map((message) => (
                 <div className="flex gap-2" key={message.timestamp}>
                     <div className="flex gap-1">
-                        <span className="text-primary">{ format(message.timestamp, "HH:MM") }:</span>
-                        <span>{ hostName }</span>
+                        <span className="text-muted-foreground">{ format(message.timestamp, "HH:MM") }:</span>
+                        <span className={`text-[${color}]`}>{ hostName + " " + color} </span>
                     </div>
                     <span>{ message.message }</span>
                 </div>

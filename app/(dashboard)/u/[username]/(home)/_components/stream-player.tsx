@@ -40,13 +40,13 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                     adaptiveStream: true
                 }}
             >
-                <div className={cn("space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 lg:overflow-y-auto hidden-scrollbar pb-10 dark:bg-[#161616]", !stream.isChatEnabled && "lg:col-span-3 xl:col-span-3 2xl:col-span-9")}>
+                <div className={cn("space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 lg:overflow-y-auto hidden-scrollbar pb-10", !stream.isChatEnabled && "lg:col-span-3 xl:col-span-3 2xl:col-span-9")}>
                     <Video 
                         hostName={user.username || ""}
                         hostIdentity={user.id}
                     />
                 </div>
-                <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2", collapsed && "hidden")}>
+                <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 scroll-auto", collapsed && "hidden")}>
                     {stream.isChatEnabled && <ChatSidebar 
                         viewerName={user.name} 
                         hostName={user.username || name} 

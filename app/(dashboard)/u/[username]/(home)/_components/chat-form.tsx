@@ -8,7 +8,6 @@ interface ChatFormProps {
     onSubmit: () => void;
     value: string, 
     onChange: (value: string) => void,
-    isHidden: boolean,
     isChatFollowersOnly: boolean,
     isFollowing: boolean,
     isChatEnabled: boolean,
@@ -22,12 +21,11 @@ export function ChatForm({
     isChatDelayed, 
     isChatFollowersOnly, 
     isFollowing, 
-    isHidden 
 }: ChatFormProps) {
 
     const [isDelayBlocked, setIsDelayBlocked] = useState<boolean>(false);
     const followersOnlyAndNotFollowing = !isFollowing && isChatFollowersOnly;
-    const isDisabled = isHidden || isDelayBlocked || followersOnlyAndNotFollowing
+    const isDisabled =  isDelayBlocked || followersOnlyAndNotFollowing
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -44,9 +42,6 @@ export function ChatForm({
         }
     }
 
-    if(isHidden) {
-        return null;
-    }
     return (
         <form onSubmit={handleSubmit} className="flex gap-2 py-5 px-3  border-t">
             <Input

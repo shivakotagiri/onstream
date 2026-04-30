@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useChatSidebarStore } from "@/store/use-chatbar";
+import { ChatVariant, useChatSidebarStore } from "@/store/use-chatbar";
 import { useChat, useConnectionState, useRemoteParticipant } from "@livekit/components-react";
 import { ConnectionState } from "livekit-client";
 import { useMediaQuery } from "usehooks-ts";
@@ -10,6 +10,7 @@ import { ChatHeader } from "./chat-header";
 import { ChatForm } from "./chat-form";
 import { ChatList } from "./chat-list";
 import { ChatInfo } from "./chat-info";
+import { CommunityList } from "./community-list";
 
 interface ChatSidebarProps {
     isFollowing: boolean;
@@ -34,8 +35,7 @@ export function ChatSidebar({
     const { variant, onExpand } = useChatSidebarStore();
     const participant = useRemoteParticipant(hostIdentity);
     const connectionState = useConnectionState();
-    const isOnline = participant && connectionState === ConnectionState.Connected;
-    const isHidden = !isChatEnabled || !isOnline;
+    const isOnline = (participant && connectionState === ConnectionState.Connected) || false;
 
     const [value, setValue] = useState<string>("");
     const {chatMessages: messages, send} = useChat();
@@ -62,19 +62,22 @@ export function ChatSidebar({
         return messages.sort((a, b) => a.timestamp - b.timestamp)
     }, [messages]);
 
+
     return (
-        <div className="w-full h-full flex flex-col justify-between">
+        <div className="w-full h-full flex flex-col max-h-[calc(60vh-56px)] sm:max-h-[calc(100vh-56px)]">
             <ChatHeader />
-            <ChatList 
-                messages={reversedMessages}
-                isOnline={isOnline || false}
-                variant={variant}
-                isChatDelayed={isChatDelayed}
-                isChatFollowersOnly={isChatFollowersOnly}
-                isFollowing={isFollowing}
-                hostName={hostName}
-                viewerName={viewerName}            
-            />
+            <div className="flex flex-col flex-1 min-h-0">
+                {variant === ChatVariant.CHAT ? <ChatList 
+                    messages={reversedMessages}
+                    isOnline={isOnline || false}
+                    variant={variant}
+                    isChatDelayed={isChatDelayed}
+                    isChatFollowersOnly={isChatFollowersOnly}
+                    isFollowing={isFollowing}
+                    hostName={hostName}
+                    viewerName={viewerName}            
+                /> : <CommunityList />}
+            </div>
             <ChatInfo 
                 isChatDelayed={isChatDelayed} 
                 isFollowersOnly={isChatFollowersOnly} 
@@ -83,7 +86,6 @@ export function ChatSidebar({
                 onSubmit={onSubmit}  
                 value={value}
                 onChange={onChange}
-                isHidden={isHidden}
                 isChatFollowersOnly={isChatFollowersOnly}
                 isChatDelayed={isChatDelayed}
                 isFollowing={isFollowing}

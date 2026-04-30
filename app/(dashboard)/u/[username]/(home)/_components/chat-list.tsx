@@ -1,9 +1,9 @@
 import { ChatVariant } from "@/store/use-chatbar"
 import { ReceivedChatMessage } from "@livekit/components-react"
-import { ChatMessages } from "./chat-messages"
-import { CommunityMessages } from "./community-messages"
+import { useEffect, useRef } from "react"
+import { ChatMessage } from "./chat-message"
 
-interface ChatMessagesProps {
+interface ChatListProps {
     messages: ReceivedChatMessage[],
     isOnline: boolean,
     isChatDelayed: boolean,
@@ -16,28 +16,21 @@ interface ChatMessagesProps {
 
 export function ChatList({ 
     messages,
-    variant,
-    isOnline,
-    isFollowing,
-    isChatDelayed,
-    isChatFollowersOnly,
-    viewerName,
     hostName
- }: ChatMessagesProps) {
+}: ChatListProps) {
 
-    if(variant === ChatVariant.CHAT) {
-        return (
-            <ChatMessages 
-                messages={messages} 
-                isOnline={isOnline} 
-                viewerName={viewerName}
-                isFollowing={isFollowing} 
-                isChatDelayed={isChatDelayed}
-                isChatFollowersOnly={isChatFollowersOnly}
-                hostName={hostName}
-            />
-        )
-    } else {
-        return <CommunityMessages />
-    }
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages]);
+
+  return (
+      <div className="flex-1 overflow-y-auto px-5 py-3">
+          {messages.map((message) => (
+              <ChatMessage key={message.id} message={message} hostName={hostName} />
+          ))}
+          <div ref={bottomRef} />
+      </div>
+  )
 }

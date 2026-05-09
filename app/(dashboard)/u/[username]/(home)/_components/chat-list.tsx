@@ -30,7 +30,7 @@ export function ChatList({
 
     if(isHidden || messages.length === 0 || !messages) {
         return (
-            <div className="w-full lg:h-full h-[60vh] sm:h-[45vh] md:h-[50vh] flex justify-center items-center overflow-y-auto">
+            <div className="flex-1 flex justify-center items-center min-h-0 h-full">
                 <span className="text-sm text-muted-foreground">
                     { isHidden ? "Host disabled the chat": "Welcome to the chat!"}
                 </span>
@@ -39,7 +39,7 @@ export function ChatList({
     }
 
     return (
-        <div className="flex flex-col flex-1  overflow-y-auto px-5 py-3 justify-end">
+        <div className="flex flex-col flex-1 w-full min-h-0 overflow-y-auto px-5 py-3 h-full">
             {messages.map((message) => (
                 <ChatMessage key={message.id} message={message} hostName={hostName} />
             ))}

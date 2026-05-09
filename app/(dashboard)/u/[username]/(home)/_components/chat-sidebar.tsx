@@ -9,7 +9,6 @@ import { useMediaQuery } from "usehooks-ts";
 import { ChatHeader } from "./chat-header";
 import { ChatForm } from "./chat-form";
 import { ChatList } from "./chat-list";
-import { CommunityList } from "./community-list";
 
 interface ChatSidebarProps {
     isFollowing: boolean;
@@ -63,9 +62,9 @@ export function ChatSidebar({
     }, [messages]);
 
     return (
-        <div className="w-full h-full flex flex-col sm:max-h-[calc(100vh-56px)] lg:border-l">
+        <div className="w-full flex flex-col lg:border-l h-full max-h-[calc(100vh-85px)] sm:max-h-[calc(100vh-56px)] overflow-hidden">
             <ChatHeader />
-            <div className="flex flex-col flex-1 w-full h-full">
+            <div className="flex flex-col flex-1 w-full min-h-0">
                 {variant === ChatVariant.CHAT && (
                     <>
                         <ChatList 

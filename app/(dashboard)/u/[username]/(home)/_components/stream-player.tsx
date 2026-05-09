@@ -27,7 +27,7 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
     }
 
     return (
-        <div className="flex sm:h-[calc(100vh-56px)] w-full">
+        <div className="flex h-[calc(100vh-85px)] sm:h-[calc(100vh-56px)] w-full">
             <Button variant={"ghost"} size={"icon-sm"} className={cn("fixed top-17 right-5 block cursor-pointer z-10", !collapsed && "hidden")} onClick={onExpand}>
                 <ArrowLeftFromLine className="dark:text-white text-black" />
             </Button>
@@ -49,7 +49,7 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                         hostIdentity={user.id}
                     />
                 </div>
-                <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 scroll-auto w-full h-full", collapsed && "hidden")}>
+                <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>
                     { <ChatSidebar 
                         viewerName={user.name} 
                         hostName={user.username || name} 

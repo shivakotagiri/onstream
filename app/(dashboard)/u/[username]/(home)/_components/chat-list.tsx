@@ -11,12 +11,15 @@ interface ChatListProps {
     hostName: string,
     viewerName: string,
     isFollowing: boolean,
-    variant: ChatVariant
+    variant: ChatVariant,
+    isChatEnabled: boolean,
+    isHidden: boolean
 }
 
 export function ChatList({ 
     messages,
-    hostName
+    hostName,
+    isHidden
 }: ChatListProps) {
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -25,12 +28,22 @@ export function ChatList({
       bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages]);
 
-  return (
-      <div className="flex-1 overflow-y-auto px-5 py-3">
-          {messages.map((message) => (
-              <ChatMessage key={message.id} message={message} hostName={hostName} />
-          ))}
-          <div ref={bottomRef} />
-      </div>
-  )
+    if(isHidden || messages.length === 0 || !messages) {
+        return (
+            <div className="w-full lg:h-full h-[60vh] sm:h-[45vh] md:h-[50vh] flex justify-center items-center overflow-y-auto">
+                <span className="text-sm text-muted-foreground">
+                    { isHidden ? "Host disabled the chat": "Welcome to the chat!"}
+                </span>
+            </div>
+        )
+    }
+
+    return (
+        <div className="flex flex-col flex-1  overflow-y-auto px-5 py-3 justify-end">
+            {messages.map((message) => (
+                <ChatMessage key={message.id} message={message} hostName={hostName} />
+            ))}
+            <div ref={bottomRef} />
+        </div>
+    )
 }

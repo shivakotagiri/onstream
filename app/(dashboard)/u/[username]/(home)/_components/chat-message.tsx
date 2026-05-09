@@ -3,8 +3,8 @@ import { format } from "date-fns";
 import { stringToHexColor } from "@/lib/utils";
 
 interface ChatMessagesProps {
-    message: ReceivedChatMessage,
-    hostName: string
+  message: ReceivedChatMessage,
+  hostName: string,
 }
 
 export function ChatMessage({

@@ -32,7 +32,7 @@ export function Video({ hostName, hostIdentity }: VideoProps) {
 
 
     return (
-        <div className="aspect-video group relative">
+        <div className="aspect-video group relative border-b">
             { content }
         </div>
     )

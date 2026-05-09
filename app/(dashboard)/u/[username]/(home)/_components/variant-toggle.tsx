@@ -3,7 +3,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { ChatVariant, useChatSidebarStore } from "@/store/use-chatbar";
 import { LucideIcon, MessageSquare, Users } from "lucide-react";
 
-export function CommunityToggle() {
+export function VariantToggle() {
     const { variant, onChangeVariant } = useChatSidebarStore();
     const isChat = variant === ChatVariant.CHAT;
     const label = isChat ? "Community": "Go back to chat";

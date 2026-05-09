@@ -9,7 +9,6 @@ import { useMediaQuery } from "usehooks-ts";
 import { ChatHeader } from "./chat-header";
 import { ChatForm } from "./chat-form";
 import { ChatList } from "./chat-list";
-import { ChatInfo } from "./chat-info";
 import { CommunityList } from "./community-list";
 
 interface ChatSidebarProps {
@@ -33,14 +32,21 @@ export function ChatSidebar({
 }: ChatSidebarProps) {
 
     const { variant, onExpand } = useChatSidebarStore();
-    const participant = useRemoteParticipant(hostIdentity);
     const connectionState = useConnectionState();
+    const participant = useRemoteParticipant(hostIdentity);
     const isOnline = (participant && connectionState === ConnectionState.Connected) || false;
+    const isHidden = !isChatEnabled || !isOnline;
 
     const [value, setValue] = useState<string>("");
     const {chatMessages: messages, send} = useChat();
 
     const matches = useMediaQuery("max-width: 1024px");
+
+    useEffect(() => {
+        if(matches) {
+            onExpand()
+        }
+    }, [matches, onExpand]);
 
     async function onSubmit () {
         if(!send || !value) return;
@@ -52,45 +58,41 @@ export function ChatSidebar({
         setValue(value);
     }
 
-    useEffect(() => {
-        if(matches) {
-            onExpand()
-        }
-    }, [matches, onExpand]);
-
     const reversedMessages = useMemo(() => { 
         return messages.sort((a, b) => a.timestamp - b.timestamp)
     }, [messages]);
 
-
     return (
-        <div className="w-full h-full flex flex-col max-h-[calc(60vh-56px)] sm:max-h-[calc(100vh-56px)]">
+        <div className="w-full h-full flex flex-col sm:max-h-[calc(100vh-56px)] lg:border-l">
             <ChatHeader />
-            <div className="flex flex-col flex-1 min-h-0">
-                {variant === ChatVariant.CHAT ? <ChatList 
-                    messages={reversedMessages}
-                    isOnline={isOnline || false}
-                    variant={variant}
-                    isChatDelayed={isChatDelayed}
-                    isChatFollowersOnly={isChatFollowersOnly}
-                    isFollowing={isFollowing}
-                    hostName={hostName}
-                    viewerName={viewerName}            
-                /> : <CommunityList />}
+            <div className="flex flex-col flex-1 w-full h-full">
+                {variant === ChatVariant.CHAT && (
+                    <>
+                        <ChatList 
+                            messages={reversedMessages}
+                            isOnline={isOnline || false}
+                            variant={variant}
+                            isChatDelayed={isChatDelayed}
+                            isChatFollowersOnly={isChatFollowersOnly}
+                            isFollowing={isFollowing}
+                            hostName={hostName}
+                            viewerName={viewerName}   
+                            isChatEnabled={isChatEnabled}
+                            isHidden={isHidden}         
+                        />
+                        <ChatForm 
+                            onSubmit={onSubmit}  
+                            value={value}
+                            onChange={onChange}
+                            isChatFollowersOnly={isChatFollowersOnly}
+                            isChatDelayed={isChatDelayed}
+                            isFollowing={isFollowing}
+                            isChatEnabled={isChatEnabled}
+                            isHidden={isHidden}
+                        />
+                    </>
+                )}
             </div>
-            <ChatInfo 
-                isChatDelayed={isChatDelayed} 
-                isFollowersOnly={isChatFollowersOnly} 
-            />
-            <ChatForm 
-                onSubmit={onSubmit}  
-                value={value}
-                onChange={onChange}
-                isChatFollowersOnly={isChatFollowersOnly}
-                isChatDelayed={isChatDelayed}
-                isFollowing={isFollowing}
-                isChatEnabled={isChatEnabled}
-            />
         </div>
     )
 }

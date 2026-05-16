@@ -9,6 +9,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { ChatHeader } from "./chat-header";
 import { ChatForm } from "./chat-form";
 import { ChatList } from "./chat-list";
+import { ChatCommunity } from "./community/chat-community";
 
 interface ChatSidebarProps {
     isFollowing: boolean;
@@ -88,6 +89,15 @@ export function ChatSidebar({
                             isFollowing={isFollowing}
                             isChatEnabled={isChatEnabled}
                             isHidden={isHidden}
+                        />
+                    </>
+                )}
+                {variant === ChatVariant.COMMUNITY && (
+                    <>
+                        <ChatCommunity 
+                            viewerName={viewerName}
+                            isHidden={isHidden}
+                            hostName={hostName}
                         />
                     </>
                 )}

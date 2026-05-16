@@ -51,7 +51,7 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                 </div>
                 <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>
                     { <ChatSidebar 
-                        viewerName={user.name} 
+                        viewerName={name} 
                         hostName={user.username || name} 
                         isFollowing={isFollowing} 
                         hostIdentity={user.id}

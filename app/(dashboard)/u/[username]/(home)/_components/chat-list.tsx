@@ -2,6 +2,7 @@ import { ChatVariant } from "@/store/use-chatbar"
 import { ReceivedChatMessage } from "@livekit/components-react"
 import { useEffect, useRef } from "react"
 import { ChatMessage } from "./chat-message"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface ChatListProps {
     messages: ReceivedChatMessage[],
@@ -39,11 +40,13 @@ export function ChatList({
     }
 
     return (
-        <div className="flex flex-col flex-1 w-full min-h-0 overflow-y-auto px-5 py-3 h-full">
-            {messages.map((message) => (
-                <ChatMessage key={message.id} message={message} hostName={hostName} />
-            ))}
-            <div ref={bottomRef} />
+        <div className="flex flex-col flex-1 w-full min-h-0 overflow-y-auto px-5 py-3 h-full justify-end">
+            <ScrollArea>
+                    {messages.map((message) => (
+                    <ChatMessage key={message.id} message={message} hostName={hostName} />
+                ))}
+                <div ref={bottomRef} />
+            </ScrollArea>
         </div>
     )
 }

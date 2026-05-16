@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent, useMemo, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LocalParticipant, RemoteParticipant } from "livekit-client";
+import { useDebounceValue } from "usehooks-ts";
 
 interface ChatCommunityProps {
     hostName: string,
@@ -17,14 +18,25 @@ interface ChatCommunityProps {
 export function ChatCommunity({ hostName, viewerName, isHidden }: ChatCommunityProps) {
     const participants = useParticipants();
     const [value, setValue] = useState<string>("");
+    const debouncedValue = useDebounceValue<string>(value, 500);
 
     function onChange(e: ChangeEvent<HTMLInputElement>) {
         setValue(e.target.value)
     }
 
-    const filteredParticipant = useMemo(() => {
-        
-    }, [] as (RemoteParticipant | LocalParticipant)[])
+    const filteredParticipants = useMemo(() => {
+        const deduped = participants.reduce((acc, participant) => {
+            const hostAsViewer = `host-${participant.identity}`;
+            if(!acc.some((p) => p.identity === hostAsViewer)) {
+                acc.push(participant);
+            }
+            return acc;
+        }, [] as (RemoteParticipant | LocalParticipant)[]);
+
+        return deduped.filter((participant) => {
+            return participant.name?.toLowerCase().includes(debouncedValue[0].toLowerCase());
+        });
+    }, [participants, debouncedValue]);
 
     if(isHidden) {
         return (
@@ -45,7 +57,7 @@ export function ChatCommunity({ hostName, viewerName, isHidden }: ChatCommunityP
                 <span className="last:block hidden text-center text-muted-foreground text-sm">
                     No Results
                 </span>
-                {participants.map((participant) => (
+                {filteredParticipants.map((participant) => (
                     <CommunityItem 
                         key={participant.identity} 
                         hostName={hostName}

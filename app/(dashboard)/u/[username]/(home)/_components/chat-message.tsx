@@ -15,8 +15,8 @@ export function ChatMessage({
   return (
     <div className="flex gap-2" key={message.timestamp}>
       <div className="flex gap-1">
-        <span className="text-muted-foreground">{format(message.timestamp, "HH:MM")}:</span>
-        <span className={`text-[${color}]`}>{ hostName } </span>
+        <span className="text-muted-foreground">{format(message.timestamp, "HH:MM")}</span>
+        <span style={{ color }}>{ hostName }: </span>
       </div>
       <span>{message.message}</span>
     </div>

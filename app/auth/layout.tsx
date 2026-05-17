@@ -2,7 +2,7 @@ import ThemeToggle from "@/components/ui/theme-toggle";
 import AuthProvider from "./_provider";
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
-    return <div>
+    return <div suppressHydrationWarning>
         <AuthProvider>
             { children }
             <ThemeToggle className="cursor-pointer fixed right-2 top-2" />

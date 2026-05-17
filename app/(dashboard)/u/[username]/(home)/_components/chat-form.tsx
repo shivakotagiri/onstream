@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ChatInfo } from "./chat-info";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatFormProps {
     onSubmit: () => void;
@@ -89,5 +90,18 @@ export function ChatForm({
                 </Button>
             </div>
         </form>
+    )
+}
+
+
+export function ChatFormSkeleton() {
+    return (
+        <div className="flex flex-col gap-2 px-3 mt-3 w-full h-25">
+            <Skeleton className="h-12 w-full rounded-xl" />
+            <div className="flex gap-1.5">
+                <Skeleton className="w-full h-full rounded-2xl" />
+                <Skeleton className="w-30 h-10 rounded-2xl" />
+            </div>
+        </div>
     )
 }

@@ -1,6 +1,7 @@
 import { ReceivedChatMessage } from "@livekit/components-react"
 import { format } from "date-fns";
 import { stringToHexColor } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatMessagesProps {
   message: ReceivedChatMessage,
@@ -19,6 +20,15 @@ export function ChatMessage({
         <span style={{ color }}>{ hostName }: </span>
       </div>
       <span>{message.message}</span>
+    </div>
+  )
+}
+
+export function ChatMessageSkeleton() {
+  return (
+    <div className="flex justify-center items-center w-full h-full gap-1.5">
+      <Skeleton className="h-10 w-10 rounded-full"/>
+      <Skeleton className="h-10 w-full rounded-2xl" />
     </div>
   )
 }

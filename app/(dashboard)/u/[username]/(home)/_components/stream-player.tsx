@@ -3,8 +3,8 @@
 import { User, Stream } from "@/db/schema"
 import { useViewerToken } from "@/hooks/use-viewer-token";
 import { LiveKitRoom } from "@livekit/components-react"
-import { Video } from "./video";
-import { ChatSidebar } from "./chat-sidebar";
+import { Video, VideoSkeleton } from "./video";
+import { ChatSidebar, ChatSidebarSkeleton } from "./chat-sidebar";
 import { cn } from "@/lib/utils";
 import { useChatSidebarStore } from "@/store/use-chatbar";
 import { ArrowLeftFromLine } from "lucide-react";
@@ -22,7 +22,7 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
 
     if(!token || !name || !identity) {
         return <div className="flex justify-center items-center w-full h-[90vh]">
-            Cannot watch the stream {token} ------ {name} ---- {identity}
+            Cannot watch the stream
         </div>
     }
 
@@ -61,6 +61,21 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                     />}
                 </div>
             </LiveKitRoom>
+        </div>
+    )
+}
+
+export function StreamPlayerSkeleton() {
+    return (
+        <div className="flex h-[calc(100vh-85px)] sm:h-[calc(100vh-56px)] w-full">
+            <div className="lg:gap-y-0 h-full w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-9">
+                <div className={cn("space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 lg:overflow-y-auto hidden-scrollbar")}>
+                    <VideoSkeleton />
+                </div>
+                <div className="col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden">
+                    <ChatSidebarSkeleton />
+                </div>
+            </div>
         </div>
     )
 }

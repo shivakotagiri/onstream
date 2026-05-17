@@ -5,6 +5,7 @@ import { useRemoteParticipant, useTracks, useConnectionState } from "@livekit/co
 import { VideoOffline } from "./offline-video";
 import { VideoLoading } from "./video-loading";
 import { OnlineVideo } from "./online-video";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 interface VideoProps {
@@ -37,3 +38,9 @@ export function Video({ hostName, hostIdentity }: VideoProps) {
         </div>
     )
 }
+
+export function VideoSkeleton() {
+    return (
+        <Skeleton className="aspect-video group relative" />
+    )
+} 

@@ -1,6 +1,7 @@
 import { getUserByUsername } from "@/actions/user";
 import { getInfo } from "@/lib/get-session"
 import { StreamPlayer } from "./_components/stream-player";
+import Loading from "./loading";
 
 interface CreaterPageProps {
     params: Promise<{

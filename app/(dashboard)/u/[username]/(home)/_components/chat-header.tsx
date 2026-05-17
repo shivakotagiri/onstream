@@ -16,8 +16,8 @@ export function ChatHeader() {
 
 export function ChatHeaderSkeleton() {
     return (
-        <div className="h-14 w-full border flex items-center justify-between">
-            <Skeleton className="w-full h-full" />
+        <div className="h-14 w-full flex items-center justify-between p-1 mt-2 px-3">
+            <Skeleton className="w-full h-full rounded-2xl" />
         </div>
     )
 } 

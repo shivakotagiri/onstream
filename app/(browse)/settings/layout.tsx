@@ -8,7 +8,11 @@ export default async function SettingsLayout({ children }: {
     const data = await getInfo();
     const currentUser = data?.currentUser || null;
     if(!currentUser) redirect("/auth/login");
-    return <>{ children }</>
+    return (
+        <div suppressHydrationWarning>
+            { children }
+        </div>
+    )
 }
 
 

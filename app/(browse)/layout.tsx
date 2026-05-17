@@ -9,7 +9,7 @@ export default async function Layout({ children }: {
     const data = await getInfo();
     const session = data?.session || null;
     return (  
-        <main className="w-screen h-full">
+        <main className="w-screen h-full" suppressHydrationWarning>
             <Navbar session={session} />
             <SidebarProvider className="max-w-screen w-full">
                 <div className="flex w-full h-full">

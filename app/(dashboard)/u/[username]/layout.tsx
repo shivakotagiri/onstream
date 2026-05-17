@@ -24,7 +24,7 @@ export default async function Layout({ children, params }: {
     // const streamData = await getStreamByUserId(currentUser.id);
 
     return (  
-        <main className="max-w-screen h-full w-full">
+        <main className="max-w-screen h-full w-full" suppressHydrationWarning>
             <NavbarDashboard />
             <SidebarProvider className="max-w-screen w-full">
                 <div className="flex w-full h-full">

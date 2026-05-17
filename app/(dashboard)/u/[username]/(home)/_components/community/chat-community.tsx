@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/use-memo */
 "use client";
 
 import { useParticipants } from "@livekit/components-react";

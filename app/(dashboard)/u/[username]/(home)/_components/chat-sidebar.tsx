@@ -6,9 +6,9 @@ import { ChatVariant, useChatSidebarStore } from "@/store/use-chatbar";
 import { useChat, useConnectionState, useRemoteParticipant } from "@livekit/components-react";
 import { ConnectionState } from "livekit-client";
 import { useMediaQuery } from "usehooks-ts";
-import { ChatHeader } from "./chat-header";
-import { ChatForm } from "./chat-form";
-import { ChatList } from "./chat-list";
+import { ChatHeader, ChatHeaderSkeleton } from "./chat-header";
+import { ChatForm, ChatFormSkeleton } from "./chat-form";
+import { ChatList, ChatListSkeleton } from "./chat-list";
 import { ChatCommunity } from "./community/chat-community";
 
 interface ChatSidebarProps {
@@ -105,3 +105,14 @@ export function ChatSidebar({
         </div>
     )
 }
+
+export function ChatSidebarSkeleton() {
+    return (
+        <div className="w-full flex flex-col h-full max-h-[calc(100vh-85px)] sm:max-h-[calc(100vh-56px)] overflow-hidden">
+            <ChatHeaderSkeleton />
+            <ChatListSkeleton />
+            <ChatFormSkeleton />
+        </div>
+    )
+}
+

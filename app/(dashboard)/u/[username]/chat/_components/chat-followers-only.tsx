@@ -11,7 +11,7 @@ export function ChatFollowersOnly({ id, isChatFollowersOnly }: { id: string,  is
     const [chatFollowers, setChatFollowers] = useState<boolean>(isChatFollowersOnly);
 
     async function handleChatFollowersOnly() {
-        const res = await chatFollowersOnly(id);
+        const res = await chatFollowersOnly(id, chatFollowers);
         if(res.status) {
             setChatFollowers(prev => !prev);
             toast.success(res.message);

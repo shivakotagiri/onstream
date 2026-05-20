@@ -3,7 +3,7 @@
 import { UserAvatar } from "@/components/ui/live-avatar";
 import { useParticipants, useRemoteParticipant } from "@livekit/components-react";
 import { Check, Users } from "lucide-react";
-import { Actions, ActionsSkeleton } from "./actoins";
+import { Actions, ActionsSkeleton } from "./actions";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface HeaderProps {

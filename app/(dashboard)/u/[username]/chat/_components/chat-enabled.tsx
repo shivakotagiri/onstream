@@ -10,7 +10,7 @@ export function ChatEnabled({ id, isChatEnabled }: { id: string, isChatEnabled: 
     const [chatEnable, setChatEnable] = useState<boolean>(isChatEnabled);
 
     async function handleChatEnable() {
-        const res = await chatEnabled(id);
+        const res = await chatEnabled(id, chatEnable);
         if(res.status) {
             setChatEnable(prev => !prev);
             toast.success(res.message);

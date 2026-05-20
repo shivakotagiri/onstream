@@ -11,6 +11,7 @@ import { ArrowLeftFromLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Header, HeaderSkeleton } from "./header";
 import { Video, VideoSkeleton } from "./video";
+import { InfoCard } from "./info-card";
 
 interface StreamPlayerProps {
     user: User & { stream: Stream | null },
@@ -57,6 +58,11 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                         name={stream.name}
                         isFollowing={isFollowing}
                         imageUrl={user.image}
+                    />
+                    <InfoCard 
+                        hostIdentity={user.id}
+                        initialThumbnailUrl={stream.thumbnailUrl}
+                        initialName={stream.name}
                     />
                 </div>
                 <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>

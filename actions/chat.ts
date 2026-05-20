@@ -1,25 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
-
-import { revalidate } from "@/app/auth/reset-password/page";
-import { db } from "@/db";
-import { stream } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { updateStream } from "./stream";
 
-export async function chatDelayed(id: string) {
+export async function chatDelayed(id: string, chatDelay: boolean) {
     try {
-        const current = await db.query.stream.findFirst({
-            where: eq(stream.id, id)
-        });
+        const isChatDelayed = chatDelay;
+        const res = await updateStream({ id, isChatDelayed });
 
-        if(!current) {
+        if(!res || res.length <= 0) {
             return { status: false, message: "Stream not found" };
         }
-
-        const res = await db.update(stream).set({
-            isChatDelayed: !current.isChatDelayed 
-        }).where(eq(stream.id, id)).returning();
 
         revalidatePath("/u/[username]/chat");
 
@@ -35,19 +26,11 @@ export async function chatDelayed(id: string) {
     }
 }
 
-export async function chatEnabled(id: string) {
+export async function chatEnabled(id: string, chatEnable: boolean) {
+    const isChatEnabled = chatEnable;
     try {
-        const current = await db.query.stream.findFirst({
-            where: eq(stream.id, id)
-        });
-
-        if(!current) {
-            return { status: false, message: "Stream not found" };
-        }
-        const res = await db.update(stream).set({
-            isChatEnabled: !current.isChatEnabled 
-        }).where(eq(stream.id, id)).returning();
-
+        const res = await updateStream({ id, isChatEnabled })
+        if(!res) return { status: false, message: "Stream not found" };
         revalidatePath("/u/[username]/chat");
         
         return {
@@ -62,19 +45,11 @@ export async function chatEnabled(id: string) {
     }
 }
 
-export async function chatFollowersOnly(id: string) {
+export async function chatFollowersOnly(id: string, chatFollowersOnly: boolean) {
     try {
-        const current = await db.query.stream.findFirst({
-            where: eq(stream.id, id)
-        });
-
-        if(!current) {
-            return { status: false, message: "Stream not found" };
-        }
-        const res = await db.update(stream).set({
-            isChatFollowersOnly: !current.isChatFollowersOnly 
-        }).where(eq(stream.id, id)).returning();
-
+        const isChatFollowersOnly = chatFollowersOnly;
+        const res = await updateStream({ id, isChatFollowersOnly })
+        if(!res) return { status: false, message: "Stream not found" };
         revalidatePath("/u/[username]/chat");
         
         return {

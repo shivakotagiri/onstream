@@ -10,7 +10,7 @@ export function ChatDelayed({id, isChatDelayed }: { id: string, isChatDelayed: b
     const [chatDelay, setChatDelay] = useState<boolean>(isChatDelayed);
 
     async function handleChatDelayed() {
-        const res = await chatDelayed(id);
+        const res = await chatDelayed(id, !chatDelay);
         if(res.status) {
             setChatDelay(prev => !prev);
             toast.success(res.message);

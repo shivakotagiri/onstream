@@ -5,19 +5,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatMessagesProps {
   message: ReceivedChatMessage,
-  hostName: string,
+  viewerName: string,
 }
 
 export function ChatMessage({
   message,
-  hostName
+  viewerName
 }: ChatMessagesProps) {
-  const color = stringToHexColor(hostName);
+  const color = stringToHexColor(viewerName);
   return (
     <div className="flex gap-2" key={message.timestamp}>
       <div className="flex gap-1">
         <span className="text-muted-foreground">{format(message.timestamp, "HH:MM")}</span>
-        <span style={{ color }}>{ hostName }: </span>
+        <span style={{ color }}>{ viewerName }: </span>
       </div>
       <span>{message.message}</span>
     </div>

@@ -9,9 +9,9 @@ export default async function SettingsLayout({ children }: {
     const currentUser = data?.currentUser || null;
     if(!currentUser) redirect("/auth/login");
     return (
-        <div suppressHydrationWarning>
+        <>
             { children }
-        </div>
+        </>
     )
 }
 

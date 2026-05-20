@@ -3,12 +3,14 @@
 import { User, Stream } from "@/db/schema"
 import { useViewerToken } from "@/hooks/use-viewer-token";
 import { LiveKitRoom } from "@livekit/components-react"
-import { Video, VideoSkeleton } from "./video";
-import { ChatSidebar, ChatSidebarSkeleton } from "./chat-sidebar";
+
+import { ChatSidebar, ChatSidebarSkeleton } from "./chat/chat-sidebar";
 import { cn } from "@/lib/utils";
 import { useChatSidebarStore } from "@/store/use-chatbar";
 import { ArrowLeftFromLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Header, HeaderSkeleton } from "./header";
+import { Video, VideoSkeleton } from "./video";
 
 interface StreamPlayerProps {
     user: User & { stream: Stream | null },
@@ -48,6 +50,14 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                         hostName={user.username || ""}
                         hostIdentity={user.id}
                     />
+                    <Header
+                        viewerIdentity={identity}
+                        hostName={user.username}
+                        hostIdentity={user.id}
+                        name={stream.name}
+                        isFollowing={isFollowing}
+                        imageUrl={user.image}
+                    />
                 </div>
                 <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>
                     { <ChatSidebar 
@@ -71,6 +81,7 @@ export function StreamPlayerSkeleton() {
             <div className="lg:gap-y-0 h-full w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-9">
                 <div className={cn("space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 lg:overflow-y-auto hidden-scrollbar")}>
                     <VideoSkeleton />
+                    <HeaderSkeleton />
                 </div>
                 <div className="col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden">
                     <ChatSidebarSkeleton />

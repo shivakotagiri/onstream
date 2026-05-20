@@ -82,7 +82,6 @@ export const followUser = async (followingId: string) => {
         .returning();
     revalidatePath("/user/path:*");
     if(res.length === 0) return null;
-
     return res;
 }
 

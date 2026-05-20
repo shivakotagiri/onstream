@@ -9,7 +9,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { ChatHeader, ChatHeaderSkeleton } from "./chat-header";
 import { ChatForm, ChatFormSkeleton } from "./chat-form";
 import { ChatList, ChatListSkeleton } from "./chat-list";
-import { ChatCommunity } from "./community/chat-community";
+import { ChatCommunity } from "../community/chat-community";
 
 interface ChatSidebarProps {
     isFollowing: boolean;

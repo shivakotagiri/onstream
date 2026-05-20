@@ -19,7 +19,7 @@ export const auth = betterAuth({
                     try {
                         await db.insert(schema.stream).values({
                             userId: user.id,
-                            name: `${user.name}'s Stream`
+                            name: `${user.username}'s Stream`
                         });
                     } catch (err) {
                         if(err instanceof Error) {

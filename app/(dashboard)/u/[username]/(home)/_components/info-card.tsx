@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 "use client";
 
 import { updateStream } from "@/actions/stream";
@@ -6,9 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialogs/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { UploadDropZone } from "@/lib/uploadthing";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ElementRef, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -28,7 +32,7 @@ type InfoCardType = z.infer<typeof InfoCardSchema>;
 
 
 export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: InfoCardProps) {
-    const [open, setOpen] = useState<boolean>(false);
+    const closeRef = useRef<ElementRef<"button">>(null);
     const form = useForm({
         defaultValues: {
             name: initialName,
@@ -37,7 +41,7 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
         resolver: zodResolver(InfoCardSchema)
     });
 
-    const { isSubmitting } = form.formState;
+    const { isSubmitting } = form.formState; 
 
     async function handleStreamInfoUpdate(data: InfoCardType) {
         const res = await updateStream({ userId: hostIdentity, name: data.name, thumbnailUrl: data.thumbnailUrl });
@@ -45,10 +49,13 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
             toast.error("Something went wrong");
         } else {
             toast.success("Stream info updated");
-            setOpen(false);
+            closeRef.current?.click();
         }
         return res;
     }
+
+    const { thumbnailUrl } = form.getValues();
+    const router = useRouter();
 
     return (
         <div className="px-5">
@@ -57,7 +64,7 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                     <CardTitle>
                         Edit your stream info
                     </CardTitle>
-                    <Dialog open={open} onOpenChange={setOpen}>
+                    <Dialog>
                         <DialogTrigger asChild>
                             <Button
                                 variant={"link"}
@@ -93,25 +100,38 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField 
-                                        control={form.control}
-                                        name="thumbnailUrl"
-                                        render={({field}) => (
-                                            <FormItem>
-                                                <FormLabel>Thumbnail URL</FormLabel>
-                                                <FormControl>
-                                                    <Input 
-                                                        type="text"
-                                                        placeholder="Please enter your stream's thumbnail url"
-                                                        {...field}
-                                                        disabled={isSubmitting}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
+                                    <div className="flex flex-col gap-2">
+                                        <span>Thumbnail Url</span>
+                                        <div className="rounded-xl border outline-dashed outline-muted">
+                                            { thumbnailUrl ? <div className="relative w-[200px] aspect-video h-full">
+                                                <Image 
+                                                    src={thumbnailUrl} 
+                                                    fill 
+                                                    alt="Thumbnail URL" 
+                                                    className="absolute object-cover inset-0" 
+                                                />
+                                            </div>: <UploadDropZone 
+                                                endpoint={"thumbnailUploader"} 
+                                                onClientUploadComplete={(res) => {
+                                                    form.setValue("thumbnailUrl", res[0].url, {
+                                                        shouldValidate: true,
+                                                        shouldDirty: true,
+                                                    });
+                                                    router.refresh();
+                                                }}
+                                                appearance={{
+                                                    label: {
+                                                        color: "#FFFFFF"
+                                                    },
+                                                    allowedContent: {
+                                                        color: "FFFFFF"
+                                                    }
+                                                }}
+                                            />}
+                                        </div>
+                                    </div>
                                     <div className="flex justify-between">
-                                        <DialogClose asChild>
+                                        <DialogClose asChild ref={closeRef}>
                                             <Button 
                                                 variant={"outline"} 
                                                 type="button"
@@ -142,9 +162,16 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                             <span className="text-sm text-muted-foreground">Name</span>
                             <span>{ form.getValues().name }</span>
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-2">
                             <span className="text-sm text-muted-foreground">Thumbnail Url</span>
-                            <span>{ form.getValues().thumbnailUrl }</span>
+                            {thumbnailUrl && <div className="relative w-[200px] aspect-video">
+                                <Image 
+                                    src={thumbnailUrl} 
+                                    fill 
+                                    alt="name" 
+                                    className="object-cover object-center w-full h-full aspect-video" 
+                                />
+                            </div>}
                         </div>
                     </div>
                 </CardContent>

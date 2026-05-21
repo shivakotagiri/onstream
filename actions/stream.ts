@@ -5,7 +5,7 @@ import { db } from "@/db"
 import { stream } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Stream } from "@/db/schemas/auth-schema"
-import { toast } from "sonner";
+import { revalidatePath } from "next/cache";
 
 export const getStreamByUserId = async (userId: string) => {
     if(!userId) return null;
@@ -18,10 +18,10 @@ export const getStreamByUserId = async (userId: string) => {
 }
 
 export async function updateStream(data: Partial<Stream>) {
-    if(!data || !data.id) return null;
+    if(!data || !data.userId) return null;
     
     const current = await db.query.stream.findFirst({
-        where: eq(stream.id, data.id),
+        where: eq(stream.userId, data.userId),
     });
 
     if(!current) return null;
@@ -44,8 +44,10 @@ export async function updateStream(data: Partial<Stream>) {
         const res = await db
             .update(stream)
             .set(updateData)
-            .where(eq(stream.id, current.id))
+            .where(eq(stream.userId, current.userId))
             .returning();
+
+        revalidatePath("/u/*");
 
         return res;
     } catch(err) {

@@ -7,6 +7,8 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTr
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -26,6 +28,7 @@ type InfoCardType = z.infer<typeof InfoCardSchema>;
 
 
 export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: InfoCardProps) {
+    const [open, setOpen] = useState<boolean>(false);
     const form = useForm({
         defaultValues: {
             name: initialName,
@@ -34,12 +37,15 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
         resolver: zodResolver(InfoCardSchema)
     });
 
+    const { isSubmitting } = form.formState;
+
     async function handleStreamInfoUpdate(data: InfoCardType) {
-        const res = await updateStream({ id: hostIdentity, name: data.name, thumbnailUrl: data.thumbnailUrl });
+        const res = await updateStream({ userId: hostIdentity, name: data.name, thumbnailUrl: data.thumbnailUrl });
         if(!res || res.length == 0) {
             toast.error("Something went wrong");
         } else {
             toast.success("Stream info updated");
+            setOpen(false);
         }
         return res;
     }
@@ -51,7 +57,7 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                     <CardTitle>
                         Edit your stream info
                     </CardTitle>
-                    <Dialog>
+                    <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
                             <Button
                                 variant={"link"}
@@ -81,6 +87,7 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                                                         type="text"
                                                         placeholder="Please enter the stream name"
                                                         {...field}
+                                                        disabled={isSubmitting}
                                                     />
                                                 </FormControl>
                                             </FormItem>
@@ -97,30 +104,34 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                                                         type="text"
                                                         placeholder="Please enter your stream's thumbnail url"
                                                         {...field}
+                                                        disabled={isSubmitting}
                                                     />
                                                 </FormControl>
                                             </FormItem>
                                         )}
                                     />
-                                </form>
-                                <div className="flex justify-between">
-                                    <DialogClose asChild>
-                                        <Button 
-                                            variant={"outline"} 
-                                            type="button"
-                                            className="cursor-pointer"
+                                    <div className="flex justify-between">
+                                        <DialogClose asChild>
+                                            <Button 
+                                                variant={"outline"} 
+                                                type="button"
+                                                className="cursor-pointer"
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </DialogClose>
+                                        <Button
+                                            variant={"default"}
+                                            type="submit"
+                                            className="cursor-pointer w-20"
+                                            disabled={isSubmitting}
                                         >
-                                            Cancel
+                                            { isSubmitting ? <div className="animate-spin">
+                                                <Loader />
+                                            </div>: "Save"}
                                         </Button>
-                                    </DialogClose>
-                                    <Button
-                                        variant={"default"}
-                                        type="submit"
-                                        className="cursor-pointer"
-                                    >
-                                        Save
-                                    </Button>
-                                </div>
+                                    </div>
+                                </form>
                             </Form>
                         </DialogContent>
                     </Dialog>

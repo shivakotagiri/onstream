@@ -16,14 +16,15 @@ export default async function CreaterPage({ params }: CreaterPageProps) {
     console.log(username);
 
     const currentUser = data.currentUser;
-    const user = await getUserByUsername(username);
+    const info = await getUserByUsername(username);
+    const{ user, stream, followersCount } = info;
 
-    if(!user || user.id !== currentUser.id || !user.stream) {
+    if(!user || user.id !== currentUser.id || !stream) {
         throw new Error("Unauthorized");
     }
     return (
         <div className="w-screen pt-18 sm:pt-13 flex sm:flex-row flex-col">
-            <StreamPlayer user={user} stream={user.stream} isFollowing={true} />
+            <StreamPlayer user={user} stream={stream} isFollowing={true} followersCount={followersCount} />
         </div>
     )
 }

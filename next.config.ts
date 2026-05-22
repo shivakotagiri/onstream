@@ -6,11 +6,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*"
+      },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
       }
     ],
-    domains: [
-      "utfs.io",
-    ]
   }
 };
 

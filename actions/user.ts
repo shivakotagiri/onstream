@@ -2,10 +2,10 @@
 "use server";
 
 import { db } from "@/db"
-import { account, user } from "@/db/schema";
+import { account, followers, user, stream } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getInfo } from "@/lib/get-session";
-import { eq, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -15,15 +15,28 @@ export const getUsers = async () => {
 }
 
 export const getUserByUsername = async (username: string) => {
-    const cleanUsername = username?.trim();
-    const res = await db.query.user.findFirst({
-        where: eq(user.username, cleanUsername),
-        with: {
-            stream: true
-        }
-    });
+    const cleanUsername = username.trim();
+    const res = await db
+        .select({
+            user,
+            stream,
+            followersCount: count(followers.followerId),
+        })
+        .from(user)
+        .leftJoin(stream, eq(stream.userId, user.id))
+        .leftJoin(
+            followers,
+            eq(followers.followingId, user.id)
+        )
+        .where(eq(user.username, cleanUsername))
+        .groupBy(user.id, stream.id);
 
-    return res;
+    const result = {
+        user: res[0].user,
+        stream: res[0].stream,
+        followersCount: res[0].followersCount
+    };
+    return result;
 };
 
 export const checkUsernameAvailability = async (username: string) => {

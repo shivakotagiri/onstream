@@ -11,8 +11,6 @@ export default async function Layout({ children, params }: {
     params: Promise<{ username: string }>
 }) {    
     
-
-    
     const [data, param] = await Promise.all([getInfo(), params]);
     const currentUser = data?.currentUser || null;
     const username = param.username;

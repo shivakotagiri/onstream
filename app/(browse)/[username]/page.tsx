@@ -8,7 +8,6 @@ export default async function ProfilePage({ params }: { params: { username: stri
   const { username } = await params;
 
   const [data, searchedUser] = await Promise.all([getInfo(), getUserByUsername(username)]);
-
   const currentUser = data?.currentUser || null;
 
   if(!searchedUser) return <div>User not found</div>

@@ -30,7 +30,7 @@ export function ActionButton({
 
   function performAction() {
     startTransition(async () => {
-      const data = await action()
+      const data = await action();
       if (data.error) {
         toast.error(data.message ?? "Error")
       } else if (data.message) {

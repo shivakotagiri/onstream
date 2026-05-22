@@ -12,14 +12,16 @@ import { Button } from "@/components/ui/button";
 import { Header, HeaderSkeleton } from "./header";
 import { Video, VideoSkeleton } from "./video";
 import { InfoCard } from "./info-card";
+import { AboutCard } from "./about-card";
 
 interface StreamPlayerProps {
-    user: User & { stream: Stream | null },
+    user: User,
     stream: Stream,
-    isFollowing: boolean
+    isFollowing: boolean,
+    followersCount: number
 }
 
-export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
+export function StreamPlayer({ user, stream, isFollowing, followersCount }: StreamPlayerProps) {
     const { token, name, identity } = useViewerToken(user.id);
     const { collapsed, onExpand } = useChatSidebarStore();
 
@@ -63,6 +65,12 @@ export function StreamPlayer({ user, stream, isFollowing }: StreamPlayerProps) {
                         hostIdentity={user.id}
                         initialThumbnailUrl={stream.thumbnailUrl}
                         initialName={stream.name}
+                    />
+                    <AboutCard 
+                        hostName={user.username || ""}
+                        hostIdentity={user.id}
+                        followersCount={followersCount}
+                        initialBio={user.bio || ""}
                     />
                 </div>
                 <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>

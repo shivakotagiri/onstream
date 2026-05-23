@@ -14,16 +14,16 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
   const[currentUserFollowing, isCurrentUserBlocked, isCurrentUserBlockedSearchedUser] = 
     await Promise.all([
-      isCurrentUserFollowing(searchedUser?.id || ""),
-      isUserBlocked(searchedUser?.id || "", currentUser?.id || ""),
-      isUserBlocked(currentUser?.id || "", searchedUser?.id || ""),
+      isCurrentUserFollowing(searchedUser?.user.id || ""),
+      isUserBlocked(searchedUser?.user.id || "", currentUser?.id || ""),
+      isUserBlocked(currentUser?.id || "", searchedUser?.user.id || ""),
     ]);
   return (
     <div className="w-full min-h-screen bg-background pb-20">
       <div className="w-full mx-auto">
         <ProfileBanner 
           currentUser={currentUser}
-          searchedUser={searchedUser} 
+          searchedUser={searchedUser.user} 
           currentUserFollowing={currentUserFollowing} 
           isCurrentUserBlocked={isCurrentUserBlocked}
           isCurrentUserBlockedSearchedUser={isCurrentUserBlockedSearchedUser}

@@ -27,7 +27,7 @@ export function UserAvatar({
       >
         <AvatarImage src={src} alt={name} className="object-cover rounded-full" />
         <AvatarFallback className={cn("bg-secondary text-secondary-foreground font-medium", avatarFallbackClassname)}>
-          {name.charAt(0).toUpperCase()}
+          {name?.charAt(0).toUpperCase()}
         </AvatarFallback>
         {isLive && (
           <span className={cn(

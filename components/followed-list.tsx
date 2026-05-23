@@ -12,17 +12,10 @@ import {
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "./ui/live-avatar";
-import { User } from "@/db/schema";
+import { FollowedByType } from "@/actions/followers";
 
 interface FollowedProps {
-    followedByList: {
-        createdAt: Date;
-        followerId: string;
-        followingId: string;
-        following: User & {
-            stream: { isLive: boolean } | null,
-        }
-    }[]
+    followedByList: FollowedByType[]
 }
 
 export function FollowedList({ followedByList }: FollowedProps) {
@@ -30,8 +23,10 @@ export function FollowedList({ followedByList }: FollowedProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="p-0 text-muted-foreground flex" variant="link">
-                    <span className="font-semibold text-foreground">{followedByList.length}</span>
+                <Button className="p-0 text-muted-foreground flex gap-1" variant="link">
+                    <span className="font-semibold text-foreground">
+                        {followedByList.length}
+                    </span>
                     <span>Following</span>
                 </Button>
             </DialogTrigger>

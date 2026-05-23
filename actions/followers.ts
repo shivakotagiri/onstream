@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db"
-import { followers } from "@/db/schema"
+import { followers, User } from "@/db/schema"
 import { getInfo } from "@/lib/get-session";
 import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache";
@@ -104,4 +104,22 @@ export const unFollowUser = async (followingId: string) => {
         ).returning();
     revalidatePath("/user/path:*");
     if(res.length === 0) return null;
+}
+
+export type FollowersType = {
+    createdAt: Date,
+    followerId: string,
+    followingId: string,
+    follower: User & {
+        stream: { isLive: boolean } | null,
+    },
+}
+
+export type FollowedByType = {
+    createdAt: Date;
+    followerId: string;
+    followingId: string;
+    following: User & {
+        stream: { isLive: boolean } | null,
+    }
 }

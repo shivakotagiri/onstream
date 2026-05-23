@@ -2,7 +2,7 @@
 "use server";
 
 import { db } from "@/db"
-import { account, followers, user, stream } from "@/db/schema";
+import { account, followers, user, stream, User } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getInfo } from "@/lib/get-session";
 import { count, eq, sql } from "drizzle-orm";
@@ -160,10 +160,10 @@ export const changeEmail = async (currentEmail: string, newEmail: string) => {
     }
 }
 
-export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?: string, username?: string) => {
+export const updateUserDetails = async (data: Partial<User>) => {
 
-    const data = await getInfo();
-    const currentUser = data?.currentUser || null;
+    const info = await getInfo();
+    const currentUser = info?.currentUser || null;
 
     if(!currentUser) {
         return { status: false, message: "User doesn't exists" }
@@ -173,11 +173,9 @@ export const updateUserDetails = async (name?: string, bio?: string, bannerUrl?:
     //     return { status: false, message: checkUsernameAlreadyExists.message}
     // } 
 
-    const updateData: Partial<typeof user.$inferInsert> = {};
-    if(name && name !== currentUser.name) updateData.name = name.trim();
-    if(bio !== currentUser.bio) updateData.bio = bio?.trim();
-    if(username && username !== currentUser.username) updateData.username = username.trim();
-    if(bannerUrl !== currentUser.bannerImage) updateData.bannerImage = bannerUrl?.trim();
+    const updateData = Object.fromEntries(
+        Object.entries(data).filter((_, item) => item !== undefined)
+    )
 
     if(Object.keys(updateData).length === 0) {
         return { status: false, message: "Nothing to update" }

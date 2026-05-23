@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { UploadDropZone } from "@/lib/uploadthing";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Loader, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ElementRef, useRef } from "react";
@@ -57,6 +57,17 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
     const { thumbnailUrl } = form.getValues();
     const router = useRouter();
 
+    async function handleThumbnailRemove() {
+        const res = await updateStream({ thumbnailUrl: "", userId: hostIdentity });
+        if(!res || res.length == 0) {
+            toast.error("Something went wrong");
+        } else {
+            toast.success("Thumbnail removed");
+            closeRef.current?.click();
+            router.refresh();
+        }
+    }
+
     return (
         <div className="px-5">
             <Card className="gap-3">
@@ -68,7 +79,7 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                         <DialogTrigger asChild>
                             <Button
                                 variant={"link"}
-                                size={"lg"}
+                                size={"sm"}
                                 type="button"
                                 className="text-base text-accent-foreground cursor-pointer"
                             >
@@ -101,7 +112,18 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                                         )}
                                     />
                                     <div className="flex flex-col gap-2">
-                                        <span>Thumbnail Url</span>
+                                        <div className="flex justify-between items-center">
+                                            <span>Thumbnail Url</span>
+                                            <Button 
+                                                variant={"ghost"} 
+                                                size={"icon-sm"}
+                                                className="w-4 h-4 hover:cursor-pointer"
+                                                type="button"
+                                                onClick={handleThumbnailRemove}
+                                            >
+                                                <Trash2 />
+                                            </Button>
+                                        </div>
                                         <div className="rounded-xl border outline-dashed outline-muted">
                                             { thumbnailUrl ? <div className="relative w-[200px] aspect-video h-full">
                                                 <Image 
@@ -117,6 +139,7 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                                                         shouldValidate: true,
                                                         shouldDirty: true,
                                                     });
+                                                    closeRef.current?.click();
                                                     router.refresh();
                                                 }}
                                                 appearance={{

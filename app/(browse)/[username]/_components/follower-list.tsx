@@ -12,24 +12,17 @@ import {
 } from "@/components/ui/dialogs/dialog"
 import { useRouter } from "next/navigation";
 import { UserAvatar } from "@/components/ui/live-avatar";
-import { User } from "@/db/schema";
+import { FollowersType } from "@/actions/followers";
 
-type FollowersProps = {
-    createdAt: Date,
-    followerId: string,
-    followingId: string,
-    follower: User & {
-        stream: { isLive: boolean } | null,
-    },
-}
-
-export function FollowerList({ followersOfFollowing }: { followersOfFollowing: FollowersProps[]}) {
+export function FollowerList({ followersOfFollowing }: { followersOfFollowing: FollowersType[]}) {
     const router = useRouter();
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="p-0 text-muted-foreground flex" variant="link">
-                    <span className="text-foreground font-semibold">{ followersOfFollowing.length }</span>
+                <Button className="p-0 text-muted-foreground flex gap-1" variant="link">
+                    <span className="text-foreground font-semibold">
+                        { followersOfFollowing.length }
+                    </span>
                     <span>Followers</span>
                 </Button>
             </DialogTrigger>

@@ -13,15 +13,18 @@ import { Header, HeaderSkeleton } from "./header";
 import { Video, VideoSkeleton } from "./video";
 import { InfoCard } from "./info-card";
 import { AboutCard } from "./about-card";
+import { FollowedByType, FollowersType } from "@/actions/followers";
 
 interface StreamPlayerProps {
     user: User,
     stream: Stream,
     isFollowing: boolean,
-    followersCount: number
+    followersCount: number,
+    followedByList: FollowedByType[],
+    followersOfFollowing: FollowersType[],
 }
 
-export function StreamPlayer({ user, stream, isFollowing, followersCount }: StreamPlayerProps) {
+export function StreamPlayer({ user, stream, isFollowing, followersCount, followedByList, followersOfFollowing }: StreamPlayerProps) {
     const { token, name, identity } = useViewerToken(user.id);
     const { collapsed, onExpand } = useChatSidebarStore();
 
@@ -32,7 +35,7 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount }: Stre
     }
 
     return (
-        <div className="flex h-[calc(100vh-85px)] sm:h-[calc(100vh-56px)] w-full">
+        <div className="flex min-h-[calc(100vh-85px)] sm:h-[calc(100vh-56px)] w-full">
             <Button variant={"ghost"} size={"icon-sm"} className={cn("fixed top-17 right-5 block cursor-pointer z-10", !collapsed && "hidden")} onClick={onExpand}>
                 <ArrowLeftFromLine className="dark:text-white text-black" />
             </Button>
@@ -70,7 +73,10 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount }: Stre
                         hostName={user.username || ""}
                         hostIdentity={user.id}
                         followersCount={followersCount}
-                        initialBio={user.bio || ""}
+                        bio={user.bio || ""}
+                        viewerIdentity={identity}
+                        followedByList={followedByList}
+                        followersOfFollowing={followersOfFollowing}
                     />
                 </div>
                 <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>

@@ -1,6 +1,7 @@
 import { getUserByUsername } from "@/actions/user";
 import { getInfo } from "@/lib/get-session"
 import { StreamPlayer } from "./_components/stream-player";
+import { userFollowers, usersFollowed } from "@/actions/followers";
 
 interface CreaterPageProps {
     params: Promise<{
@@ -22,9 +23,21 @@ export default async function CreaterPage({ params }: CreaterPageProps) {
     if(!user || user.id !== currentUser.id || !stream) {
         throw new Error("Unauthorized");
     }
+
+    const [followersOfFollowing, followedByList] = await Promise.all([
+        userFollowers(user.id),
+        usersFollowed(user.id)
+    ]);
     return (
         <div className="w-screen pt-18 sm:pt-13 flex sm:flex-row flex-col">
-            <StreamPlayer user={user} stream={stream} isFollowing={true} followersCount={followersCount} />
+            <StreamPlayer 
+                user={user} 
+                stream={stream} 
+                isFollowing={true} 
+                followersCount={followersCount} 
+                followersOfFollowing={followersOfFollowing}
+                followedByList={followedByList}
+            />
         </div>
     )
 }

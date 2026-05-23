@@ -23,7 +23,7 @@ export function AccountTab({ currentUser }: { currentUser: User }) {
     const [imageUrl, setImageUrl] = useState<string>(currentUser.image || "");
 
     async function handleSubmit() {
-      const res = await updateUserDetails(name, bio, bannerUrl)
+      const res = await updateUserDetails({name, bio, bannerImage: bannerUrl})
       if(!res.status) {
           return {
               error: {

@@ -1,50 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { updateUserDetails } from "@/actions/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChangeEvent, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { EditDailog } from "./edit-dialog";
+import { FollowedByType, FollowersType } from "@/actions/followers";
+import { UserFollowersClient } from "@/app/(browse)/[username]/_components/user-followers-client";
 
 interface AboutCardProps {
     hostName: string,
     hostIdentity: string,
-    initialBio: string,
-    followersCount: number
+    bio: string,
+    followersCount: number,
+    viewerIdentity: string,
+    followedByList: FollowedByType[],
+    followersOfFollowing: FollowersType[],
 }
 
-export function AboutCard({ hostName, hostIdentity, initialBio, followersCount}: AboutCardProps) {
-    const [bio, setBio] = useState<string>(initialBio);
-    const[isPending, startTransition] = useTransition();
-    function onChange(e: ChangeEvent<HTMLInputElement>) {
-        setBio(e.target.value);
-    }
+export function AboutCard({ 
+    hostName, 
+    hostIdentity, 
+    bio,  
+    viewerIdentity,
+    followedByList,
+    followersOfFollowing
+}: AboutCardProps) {
 
-    function onSubmit() {
-        startTransition(() => {
-            updateUserDetails(bio)
-                .then(() => toast.success("Bio updated"))
-                .catch(() => toast.error("Something went wrong"));
-        });
-    }
+    const isHost = viewerIdentity === `host-${hostIdentity}`;
 
     return (
-        <Card className="flex flex-col gap-2">
-            <CardHeader className="flex justify-between items-center">
-                <CardTitle>
-                    About { hostName }
-                </CardTitle>
-                <span>Edit</span>
-            </CardHeader>
-            <CardContent className="space-y-2">
-                <div className="text-muted-foreground text-sm">
-                    <span className="text-accent-foreground font-semibold">{ String(followersCount) }</span>
-                    <span>&nbsp;followers</span>
-                </div>
-                <div>
-                    { bio || "This user prefers to keep an air of mistery about them."}
-                </div>
-            </CardContent>
-        </Card>
+        <div className="px-5">
+            <Card className="flex flex-col gap-1">
+                <CardHeader className="flex justify-between items-center">
+                    <CardTitle>
+                        About { hostName }
+                    </CardTitle>
+                    { isHost && <EditDailog initialBio={bio} />}
+                </CardHeader>
+                <CardContent className="space-y-0">
+                    <UserFollowersClient 
+                        followedByList={followedByList} 
+                        followersOfFollowing={followersOfFollowing} 
+                    />
+                    <div>
+                        { bio || "This user prefers to keep an air of mistery about them."}
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
     )
 }

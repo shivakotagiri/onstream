@@ -50,9 +50,9 @@ getCurrentUser
 
 isCurrentUserFollowing
 
-isUserBlocked
+blockedByUser
 
-isUserBlocked
+blockedByUser
 
 userFollowers
 

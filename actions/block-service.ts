@@ -23,19 +23,25 @@ export const blockedUsersList = async () => {
 }
 
 
-export const isUserBlocked = async (blockerId: string, blockedId: string) => {
-    if(!blockerId || !blockedId) return false;
+export const blockedByUser = async (blockerId: string) => {
+    const data = await getInfo();
 
-    if(blockerId === blockedId) return false;
+    if(!data) return;
 
-    const isUserBlocked = await db.query.blocklist.findFirst({
+    const currentUser = data.currentUser;
+
+    if(!blockerId) return false;
+
+    if(blockerId === currentUser.id) return false;
+
+    const blockedByUser = await db.query.blocklist.findFirst({
         where: and(
             eq(blocklist.blockerId, blockerId),
-            eq(blocklist.blockedId, blockedId),
+            eq(blocklist.blockedId, currentUser.id),
         )
     });
 
-    return !!isUserBlocked;
+    return !!blockedByUser;
 }
 
 export const blockUser = async (blockedId: string) => {

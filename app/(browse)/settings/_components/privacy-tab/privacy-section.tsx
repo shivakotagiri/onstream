@@ -33,8 +33,6 @@ interface BlockedUsersProps {
 export function PrivacySection({ blockedUsers }: BlockedUsersProps) {
     const [username, setUsername] = useState<string>("");
 
-    
-
     function handleUsernameChange(e: ChangeEvent<HTMLInputElement>) {
         setUsername(e.target.value)
     }
@@ -52,7 +50,7 @@ export function PrivacySection({ blockedUsers }: BlockedUsersProps) {
                     }
                 }
             } else {
-                const res = await blockUser(searchedUser.id);
+                const res = await blockUser(searchedUser.user.id);
                 if(!res.status) {
                     return { error: {message: res.message || "Failed to block the user" }};
                 } else {

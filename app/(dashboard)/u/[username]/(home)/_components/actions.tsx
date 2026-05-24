@@ -42,7 +42,7 @@ export function Actions({
     }
 
     function toggleFollow() {
-        if(!session || !session.session.userId) return router.push("/login");
+        if(!session || !session.session.userId) return router.push("/auth/login");
         if(isHost) return;
 
         if(isFollowing) {

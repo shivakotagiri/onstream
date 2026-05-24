@@ -17,25 +17,30 @@ import { FollowedByType, FollowersType } from "@/actions/followers";
 
 interface StreamPlayerProps {
     user: User,
-    stream: Stream,
+    stream: Stream | null,
     isFollowing: boolean,
     followersCount: number,
-    followedByList: FollowedByType[],
-    followersOfFollowing: FollowersType[],
+    followedByList?: FollowedByType[],
+    followersOfFollowing?: FollowersType[],
 }
 
 export function StreamPlayer({ user, stream, isFollowing, followersCount, followedByList, followersOfFollowing }: StreamPlayerProps) {
     const { token, name, identity } = useViewerToken(user.id);
     const { collapsed, onExpand } = useChatSidebarStore();
 
-    if(!token || !name || !identity) {
-        return <div className="flex justify-center items-center w-full h-[90vh]">
-            Cannot watch the stream
+    if(!token || !name || !identity || !stream) {
+        return <div className="flex flex-col justify-center items-center w-full h-[90vh]">
+            Cannot watch the stream 
+            <div className="flex flex-col flex-wrap max-w-2xl border overflow-auto">
+                <span>name:{name}</span>
+                <span>token:{token}</span>
+                <span>identity:{identity}</span>
+            </div>
         </div>
     }
-
+    const isHost = identity === `host-${user.id}`
     return (
-        <div className="flex min-h-[calc(100vh-85px)] sm:h-[calc(100vh-56px)] w-full">
+        <div className="flex min-h-[calc(100vh-85px)] sm:min-h-[calc(100vh-56px)] w-full">
             <Button variant={"ghost"} size={"icon-sm"} className={cn("fixed top-17 right-5 block cursor-pointer z-10", !collapsed && "hidden")} onClick={onExpand}>
                 <ArrowLeftFromLine className="dark:text-white text-black" />
             </Button>
@@ -64,25 +69,25 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
                         isFollowing={isFollowing}
                         imageUrl={user.image}
                     />
-                    <InfoCard 
+                    { isHost && <InfoCard 
                         hostIdentity={user.id}
                         initialThumbnailUrl={stream.thumbnailUrl}
                         initialName={stream.name}
-                    />
+                    />}
                     <AboutCard 
                         hostName={user.username || ""}
                         hostIdentity={user.id}
                         followersCount={followersCount}
                         bio={user.bio || ""}
                         viewerIdentity={identity}
-                        followedByList={followedByList}
-                        followersOfFollowing={followersOfFollowing}
+                        followedByList={followedByList || []}
+                        followersOfFollowing={followersOfFollowing || []}
                     />
                 </div>
                 <div className={cn("col-span-1 lg:col-span-1 2xl:col-span-2 w-full h-full overflow-hidden", collapsed && "hidden")}>
                     { <ChatSidebar 
                         viewerName={name} 
-                        hostName={user.username || name} 
+                        hostName={user.username || ""} 
                         isFollowing={isFollowing} 
                         hostIdentity={user.id}
                         isChatDelayed={stream.isChatDelayed}

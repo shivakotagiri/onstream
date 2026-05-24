@@ -11,8 +11,8 @@ interface AboutCardProps {
     bio: string,
     followersCount: number,
     viewerIdentity: string,
-    followedByList: FollowedByType[],
-    followersOfFollowing: FollowersType[],
+    followedByList?: FollowedByType[],
+    followersOfFollowing?: FollowersType[],
 }
 
 export function AboutCard({ 

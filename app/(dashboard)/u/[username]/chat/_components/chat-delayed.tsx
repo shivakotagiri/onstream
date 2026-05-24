@@ -6,11 +6,11 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function ChatDelayed({id, isChatDelayed }: { id: string, isChatDelayed: boolean }) {
+export function ChatDelayed({ userId, isChatDelayed }: { userId: string, isChatDelayed: boolean }) {
     const [chatDelay, setChatDelay] = useState<boolean>(isChatDelayed);
 
     async function handleChatDelayed() {
-        const res = await chatDelayed(id, !chatDelay);
+        const res = await chatDelayed(userId, !chatDelay);
         if(res.status) {
             setChatDelay(prev => !prev);
             toast.success(res.message);

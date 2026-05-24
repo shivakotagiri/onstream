@@ -6,11 +6,11 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function ChatEnabled({ id, isChatEnabled }: { id: string, isChatEnabled: boolean }) {
+export function ChatEnabled({ userId, isChatEnabled }: { userId: string, isChatEnabled: boolean }) {
     const [chatEnable, setChatEnable] = useState<boolean>(isChatEnabled);
 
     async function handleChatEnable() {
-        const res = await chatEnabled(id, chatEnable);
+        const res = await chatEnabled(userId, !chatEnable);
         if(res.status) {
             setChatEnable(prev => !prev);
             toast.success(res.message);

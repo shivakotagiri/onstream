@@ -6,12 +6,12 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function ChatFollowersOnly({ id, isChatFollowersOnly }: { id: string,  isChatFollowersOnly: boolean }) {
+export function ChatFollowersOnly({ userId, isChatFollowersOnly }: { userId: string,  isChatFollowersOnly: boolean }) {
 
     const [chatFollowers, setChatFollowers] = useState<boolean>(isChatFollowersOnly);
 
     async function handleChatFollowersOnly() {
-        const res = await chatFollowersOnly(id, chatFollowers);
+        const res = await chatFollowersOnly(userId, !chatFollowers);
         if(res.status) {
             setChatFollowers(prev => !prev);
             toast.success(res.message);

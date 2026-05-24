@@ -14,13 +14,14 @@ interface ChatListProps {
     isFollowing: boolean,
     variant: ChatVariant,
     isChatEnabled: boolean,
-    isHidden: boolean
+    isHidden: boolean,
 }
 
 export function ChatList({ 
     messages,
     viewerName,
-    isHidden
+    isHidden,
+    hostName
 }: ChatListProps) {
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ export function ChatList({
         <div className="flex flex-col flex-1 w-full min-h-0 overflow-y-auto px-5 py-3 h-full justify-end">
             <ScrollArea>
                     {messages.map((message) => (
-                    <ChatMessage key={message.id} message={message} viewerName={viewerName} />
+                    <ChatMessage key={message.id} message={message} viewerName={viewerName} hostName={hostName} />
                 ))}
                 <div ref={bottomRef} />
             </ScrollArea>

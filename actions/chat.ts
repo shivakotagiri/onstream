@@ -3,10 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { updateStream } from "./stream";
 
-export async function chatDelayed(id: string, chatDelay: boolean) {
+export async function chatDelayed(userId: string, chatDelay: boolean) {
     try {
         const isChatDelayed = chatDelay;
-        const res = await updateStream({ id, isChatDelayed });
+        const res = await updateStream({ userId, isChatDelayed });
 
         if(!res || res.length <= 0) {
             return { status: false, message: "Stream not found" };
@@ -26,10 +26,10 @@ export async function chatDelayed(id: string, chatDelay: boolean) {
     }
 }
 
-export async function chatEnabled(id: string, chatEnable: boolean) {
+export async function chatEnabled(userId: string, chatEnable: boolean) {
     const isChatEnabled = chatEnable;
     try {
-        const res = await updateStream({ id, isChatEnabled })
+        const res = await updateStream({ userId, isChatEnabled })
         if(!res) return { status: false, message: "Stream not found" };
         revalidatePath("/u/[username]/chat");
         
@@ -45,10 +45,10 @@ export async function chatEnabled(id: string, chatEnable: boolean) {
     }
 }
 
-export async function chatFollowersOnly(id: string, chatFollowersOnly: boolean) {
+export async function chatFollowersOnly(userId: string, chatFollowersOnly: boolean) {
     try {
         const isChatFollowersOnly = chatFollowersOnly;
-        const res = await updateStream({ id, isChatFollowersOnly })
+        const res = await updateStream({ userId, isChatFollowersOnly })
         if(!res) return { status: false, message: "Stream not found" };
         revalidatePath("/u/[username]/chat");
         

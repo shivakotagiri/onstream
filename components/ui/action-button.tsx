@@ -29,13 +29,24 @@ export function ActionButton({
   const [isLoading, startTransition] = useTransition()
 
   function performAction() {
-    startTransition(async () => {
-      const data = await action();
-      if (data.error) {
-        toast.error(data.message ?? "Error")
-      } else if (data.message) {
-        toast.success(data.message)
-      }
+    startTransition(() => {
+      // const data = await action();
+      // if (data.error) {
+      //   toast.error(data.message ?? "Error")
+      // } else if (data.message) {
+      //   toast.success(data.message)
+      // }
+      action()
+        .then((data) => {
+          if (data.error) {
+            toast.error(data.message ?? "Error")
+          } else {
+            toast.success(data.message ?? "Success")
+          }
+        })
+        .catch((err) => {
+          toast.error(err?.message ?? "Something went wrong")
+        })
     })
   }
 

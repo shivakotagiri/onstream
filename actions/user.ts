@@ -30,6 +30,10 @@ export const getUserByUsername = async (username: string) => {
         )
         .where(eq(user.username, cleanUsername))
         .groupBy(user.id, stream.id);
+    
+    if (!res.length || !res[0]?.user) {
+        return null;
+    }
 
     const result = {
         user: res[0].user,

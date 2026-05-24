@@ -58,6 +58,10 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
     const router = useRouter();
 
     async function handleThumbnailRemove() {
+        if(!thumbnailUrl) {
+            toast.error("Invalid");
+            return;
+        }
         const res = await updateStream({ thumbnailUrl: "", userId: hostIdentity });
         if(!res || res.length == 0) {
             toast.error("Something went wrong");

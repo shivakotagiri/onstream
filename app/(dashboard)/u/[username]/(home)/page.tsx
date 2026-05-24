@@ -18,7 +18,11 @@ export default async function CreaterPage({ params }: CreaterPageProps) {
 
     const currentUser = data.currentUser;
     const info = await getUserByUsername(username);
-    const{ user, stream, followersCount } = info;
+    if(!info) {
+        throw new Error("User not found");
+    }
+
+    const { user, stream, followersCount } = info;
 
     if(!user || user.id !== currentUser.id || !stream) {
         throw new Error("Unauthorized");

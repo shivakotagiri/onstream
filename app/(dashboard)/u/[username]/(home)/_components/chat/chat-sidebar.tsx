@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-
 import { ChatVariant, useChatSidebarStore } from "@/store/use-chatbar";
 import { useChat, useConnectionState, useRemoteParticipant } from "@livekit/components-react";
 import { ConnectionState } from "livekit-client";
@@ -22,15 +21,14 @@ interface ChatSidebarProps {
 }
 
 export function ChatSidebar({
-    isFollowing, 
-    viewerName, 
-    hostName, 
-    hostIdentity, 
-    isChatDelayed, 
+    isFollowing,
+    viewerName,
+    hostName,
+    hostIdentity,
+    isChatDelayed,
     isChatFollowersOnly,
     isChatEnabled
 }: ChatSidebarProps) {
-
     const { variant, onExpand } = useChatSidebarStore();
     const connectionState = useConnectionState();
     const participant = useRemoteParticipant(hostIdentity);
@@ -38,17 +36,15 @@ export function ChatSidebar({
     const isHidden = !isChatEnabled || !isOnline;
 
     const [value, setValue] = useState<string>("");
-    const {chatMessages: messages, send} = useChat();
+    const { chatMessages: messages, send } = useChat();
 
     const matches = useMediaQuery("max-width: 1024px");
 
     useEffect(() => {
-        if(matches) {
-            onExpand()
-        }
+        if(matches) onExpand();
     }, [matches, onExpand]);
 
-    async function onSubmit () {
+    async function onSubmit() {
         if(!send || !value) return;
         await send(value);
         setValue("");
@@ -58,17 +54,17 @@ export function ChatSidebar({
         setValue(value);
     }
 
-    const reversedMessages = useMemo(() => { 
+    const reversedMessages = useMemo(() => {
         return messages.sort((a, b) => a.timestamp - b.timestamp)
     }, [messages]);
 
     return (
-        <div className="w-full flex flex-col lg:border-l h-[calc(50vh-85px)] sm:h-[calc(100vh-56px)] overflow-hidden">
+        <div className="w-full flex flex-col lg:border-l h-full overflow-hidden">
             <ChatHeader />
             <div className="flex flex-col flex-1 w-full min-h-0">
                 {variant === ChatVariant.CHAT && (
                     <>
-                        <ChatList 
+                        <ChatList
                             messages={reversedMessages}
                             isOnline={isOnline || false}
                             variant={variant}
@@ -76,12 +72,12 @@ export function ChatSidebar({
                             isChatFollowersOnly={isChatFollowersOnly}
                             isFollowing={isFollowing}
                             hostName={hostName}
-                            viewerName={viewerName}   
+                            viewerName={viewerName}
                             isChatEnabled={isChatEnabled}
-                            isHidden={isHidden}         
+                            isHidden={isHidden}
                         />
-                        <ChatForm 
-                            onSubmit={onSubmit}  
+                        <ChatForm
+                            onSubmit={onSubmit}
                             value={value}
                             onChange={onChange}
                             isChatFollowersOnly={isChatFollowersOnly}
@@ -93,13 +89,11 @@ export function ChatSidebar({
                     </>
                 )}
                 {variant === ChatVariant.COMMUNITY && (
-                    <>
-                        <ChatCommunity 
-                            viewerName={viewerName}
-                            isHidden={isHidden}
-                            hostName={hostName}
-                        />
-                    </>
+                    <ChatCommunity
+                        viewerName={viewerName}
+                        isHidden={isHidden}
+                        hostName={hostName}
+                    />
                 )}
             </div>
         </div>
@@ -108,11 +102,10 @@ export function ChatSidebar({
 
 export function ChatSidebarSkeleton() {
     return (
-        <div className="w-full flex flex-col h-full max-h-[calc(100vh-85px)] sm:max-h-[calc(100vh-56px)] overflow-hidden">
+        <div className="w-full flex flex-col h-full overflow-hidden">
             <ChatHeaderSkeleton />
             <ChatListSkeleton />
             <ChatFormSkeleton />
         </div>
     )
 }
-

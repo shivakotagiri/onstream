@@ -6,6 +6,9 @@ import { VideoOffline } from "./offline-video";
 import { VideoLoading } from "./video-loading";
 import { OnlineVideo } from "./online-video";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useChatSidebarStore } from "@/store/use-chatbar";
+import { useSidebar } from "@/store/use-sidebar";
+import { cn } from "@/lib/utils";
 
 
 interface VideoProps {
@@ -31,9 +34,12 @@ export function Video({ hostName, hostIdentity }: VideoProps) {
         content = <OnlineVideo participant={participant} />
     }
 
+    const { collapsed } = useChatSidebarStore();
+    const { open } = useSidebar();
+
 
     return (
-        <div className="aspect-video group relative border-b">
+        <div className={cn("aspect-video group relative border-b", collapsed === true && open === false && "aspect-auto w-full h-[75%]")}>
             { content }
         </div>
     )

@@ -15,7 +15,7 @@ interface HeaderProps {
     isFollowing: boolean,
 }
 
-export function Header({
+export function     Header({
     hostIdentity,
     hostName,
     viewerIdentity,
@@ -28,7 +28,7 @@ export function Header({
     const participant = useRemoteParticipant(hostIdentity);
 
     const isLive = !!participant;
-    const participantCount = participants.length - 2;
+    const participantCount = participants.length - 1;
     const isHost = viewerIdentity === `host-${hostIdentity}`;
 
     return (

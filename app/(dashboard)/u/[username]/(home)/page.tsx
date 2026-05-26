@@ -14,13 +14,10 @@ export default async function CreaterPage({ params }: CreaterPageProps) {
     if(!data) return <div>No User</div>;
 
     const username = (await params).username;
-    console.log(username);
 
     const currentUser = data.currentUser;
     const info = await getUserByUsername(username);
-    if(!info) {
-        throw new Error("User not found");
-    }
+    if(!info) throw new Error("User not found");
 
     const { user, stream, followersCount } = info;
 
@@ -32,8 +29,9 @@ export default async function CreaterPage({ params }: CreaterPageProps) {
         userFollowers(user.id),
         usersFollowed(user.id)
     ]);
+
     return (
-        <div className="w-screen pt-18 sm:pt-13 flex sm:flex-row flex-col">
+        <div className="w-full pt-14">
             <StreamPlayer 
                 user={user} 
                 stream={stream} 

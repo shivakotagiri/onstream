@@ -5,40 +5,42 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ChatInfo } from "./chat-info";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SendHorizonal } from "lucide-react";
 
 interface ChatFormProps {
     onSubmit: () => void;
-    value: string, 
-    onChange: (value: string) => void,
-    isChatFollowersOnly: boolean,
-    isFollowing: boolean,
-    isChatEnabled: boolean,
-    isChatDelayed: boolean,
-    isHidden: boolean
+    value: string;
+    onChange: (value: string) => void;
+    isChatFollowersOnly: boolean;
+    isFollowing: boolean;
+    isChatEnabled: boolean;
+    isChatDelayed: boolean;
+    isHidden: boolean;
 }
 
-export function ChatForm({ 
-    onSubmit, 
-    value, 
-    onChange, 
-    isChatDelayed, 
-    isChatFollowersOnly, 
-    isFollowing, 
+export function ChatForm({
+    onSubmit,
+    value,
+    onChange,
+    isChatDelayed,
+    isChatFollowersOnly,
+    isFollowing,
     isChatEnabled,
-    isHidden
+    isHidden,
 }: ChatFormProps) {
+    const [isDelayBlocked, setIsDelayBlocked] = useState(false);
+    const [disable, setDisable] = useState(false);
+    const [time, setTime] = useState(0);
 
-    const [isDelayBlocked, setIsDelayBlocked] = useState<boolean>(false);
     const followersOnlyAndNotFollowing = !isFollowing && isChatFollowersOnly;
-    const isDisabled =  isDelayBlocked || followersOnlyAndNotFollowing || !isChatEnabled;
-    const [disable, setDisable] = useState<boolean>(false);
-    const [time, setTime] = useState<number>(0);
+    const isDisabled = isDelayBlocked || followersOnlyAndNotFollowing || !isChatEnabled;
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         e.stopPropagation();
-        if(!Boolean(value) || isDisabled) return;
-        if(isChatDelayed && !isDelayBlocked) {
+        if (!value || isDisabled) return;
+
+        if (isChatDelayed && !isDelayBlocked) {
             setIsDelayBlocked(true);
             setTimeout(() => {
                 setIsDelayBlocked(false);
@@ -47,16 +49,12 @@ export function ChatForm({
         } else {
             onSubmit();
             setDisable(true);
-            
             let countdown = 2;
             setTime(countdown);
-
             const interval = setInterval(() => {
                 countdown--;
-
                 setTime(countdown);
-
-                if(countdown <= 0) {
+                if (countdown <= 0) {
                     clearInterval(interval);
                     setDisable(false);
                 }
@@ -64,44 +62,50 @@ export function ChatForm({
         }
     }
 
-    if(isHidden) return null;
+    if (isHidden) return null;
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col">
-            <ChatInfo
-                isChatDelayed={isChatDelayed} 
-                isFollowersOnly={isChatFollowersOnly} 
-            />
-            <div className="flex gap-2 py-5 px-3  border-t">
+        <form onSubmit={handleSubmit} className="shrink-0 border-t">
+            <ChatInfo isChatDelayed={isChatDelayed} isFollowersOnly={isChatFollowersOnly} />
+            <div className="flex items-center gap-2 px-3 py-3">
                 <Input
-                    placeholder="Send a message" 
-                    value={value} 
+                    placeholder="Send a message…"
+                    value={value}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
-                    disabled={false}
-
+                    disabled={isDisabled}
+                    maxLength={200}
+                    className="h-9 flex-1 rounded-lg bg-muted/50 border-border/40 text-sm
+                               placeholder:text-muted-foreground/50
+                               focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:border-primary/40
+                               disabled:opacity-40"
                 />
                 <Button
-                    variant={"default"}
-                    className="cursor-pointer"
                     type="submit"
-                    disabled={isDisabled}
+                    size="icon"
+                    variant="ghost"
+                    disabled={isDisabled || !value}
+                    className="size-9 shrink-0 cursor-pointer rounded-lg
+                               hover:bg-primary/10 hover:text-primary
+                               disabled:opacity-30 transition-colors"
                 >
-                    {disable ? `send (${time})`: "send"}
+                    {disable ? (
+                        <span className="text-[11px] font-bold tabular-nums text-muted-foreground">
+                            {time}s
+                        </span>
+                    ) : (
+                        <SendHorizonal className="size-4" />
+                    )}
                 </Button>
             </div>
         </form>
-    )
+    );
 }
-
 
 export function ChatFormSkeleton() {
     return (
-        <div className="flex flex-col gap-2 px-3 mt-3 w-full h-25">
-            <Skeleton className="h-12 w-full rounded-xl" />
-            <div className="flex gap-1.5">
-                <Skeleton className="w-full h-full rounded-2xl" />
-                <Skeleton className="w-30 h-10 rounded-2xl" />
-            </div>
+        <div className="shrink-0 border-t px-3 py-3 flex items-center gap-2">
+            <Skeleton className="flex-1 h-9 rounded-lg" />
+            <Skeleton className="size-9 rounded-lg shrink-0" />
         </div>
-    )
+    );
 }

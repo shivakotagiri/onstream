@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { UploadDropZone } from "@/lib/uploadthing";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Trash2, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ElementRef, useRef } from "react";
@@ -18,52 +18,47 @@ import { toast } from "sonner";
 import z from "zod";
 
 interface InfoCardProps {
-    hostIdentity: string,
-    initialThumbnailUrl: string | null,
-    initialName: string
-}  
+    hostIdentity: string;
+    initialThumbnailUrl: string | null;
+    initialName: string;
+}
 
 const InfoCardSchema = z.object({
-    name: z.string(),
-    thumbnailUrl: z.string()
-})
+    name: z.string().min(1),
+    thumbnailUrl: z.string(),
+});
 
 type InfoCardType = z.infer<typeof InfoCardSchema>;
 
-
 export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: InfoCardProps) {
     const closeRef = useRef<ElementRef<"button">>(null);
+    const router = useRouter();
+
     const form = useForm({
         defaultValues: {
             name: initialName,
-            thumbnailUrl: initialThumbnailUrl || ""
+            thumbnailUrl: initialThumbnailUrl || "",
         },
-        resolver: zodResolver(InfoCardSchema)
+        resolver: zodResolver(InfoCardSchema),
     });
 
-    const { isSubmitting } = form.formState; 
+    const { isSubmitting } = form.formState;
+    const { thumbnailUrl } = form.getValues();
 
     async function handleStreamInfoUpdate(data: InfoCardType) {
         const res = await updateStream({ userId: hostIdentity, name: data.name, thumbnailUrl: data.thumbnailUrl });
-        if(!res || res.length == 0) {
+        if (!res || res.length === 0) {
             toast.error("Something went wrong");
         } else {
             toast.success("Stream info updated");
             closeRef.current?.click();
         }
-        return res;
     }
 
-    const { thumbnailUrl } = form.getValues();
-    const router = useRouter();
-
     async function handleThumbnailRemove() {
-        if(!thumbnailUrl) {
-            toast.error("Invalid");
-            return;
-        }
+        if (!thumbnailUrl) return toast.error("No thumbnail to remove");
         const res = await updateStream({ thumbnailUrl: "", userId: hostIdentity });
-        if(!res || res.length == 0) {
+        if (!res || res.length === 0) {
             toast.error("Something went wrong");
         } else {
             toast.success("Thumbnail removed");
@@ -74,108 +69,102 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
 
     return (
         <div className="px-5">
-            <Card className="gap-3">
-                <CardHeader className="flex justify-between items-center">
-                    <CardTitle>
-                        Edit your stream info
-                    </CardTitle>
+            <Card className="">
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle className="text-base font-semibold">Stream info</CardTitle>
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button
-                                variant={"link"}
-                                size={"sm"}
-                                type="button"
-                                className="text-base text-accent-foreground cursor-pointer"
-                            >
+                            <Button variant="ghost" size="sm" className="gap-1.5 text-xs cursor-pointer h-8">
+                                <Pencil className="size-3" />
                                 Edit
                             </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="max-w-md">
                             <DialogHeader>
-                                <DialogTitle>
-                                    Edit your stream info
-                                </DialogTitle>
+                                <DialogTitle>Edit stream info</DialogTitle>
                             </DialogHeader>
                             <Form {...form}>
-                                <form onSubmit={form.handleSubmit(handleStreamInfoUpdate)} className="space-y-5">
-                                    <FormField 
+                                <form onSubmit={form.handleSubmit(handleStreamInfoUpdate)} className="space-y-5 pt-2">
+                                    <FormField
                                         control={form.control}
                                         name="name"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Name</FormLabel>
+                                                <FormLabel className="text-sm font-medium">Stream title</FormLabel>
                                                 <FormControl>
                                                     <Input
-                                                        type="text"
-                                                        placeholder="Please enter the stream name"
+                                                        placeholder="Enter a stream title"
                                                         {...field}
                                                         disabled={isSubmitting}
+                                                        className="h-9"
                                                     />
                                                 </FormControl>
                                             </FormItem>
                                         )}
                                     />
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex justify-between items-center">
-                                            <span>Thumbnail Url</span>
-                                            <Button 
-                                                variant={"ghost"} 
-                                                size={"icon-sm"}
-                                                className="w-4 h-4 hover:cursor-pointer"
-                                                type="button"
-                                                onClick={handleThumbnailRemove}
-                                            >
-                                                <Trash2 />
-                                            </Button>
+
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium">Thumbnail</span>
+                                            {thumbnailUrl && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    type="button"
+                                                    onClick={handleThumbnailRemove}
+                                                    className="h-7 gap-1.5 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+                                                >
+                                                    <Trash2 className="size-3" />
+                                                    Remove
+                                                </Button>
+                                            )}
                                         </div>
-                                        <div className="rounded-xl border outline-dashed outline-muted">
-                                            { thumbnailUrl ? <div className="relative w-[200px] aspect-video h-full">
-                                                <Image 
-                                                    src={thumbnailUrl} 
-                                                    fill 
-                                                    alt="Thumbnail URL" 
-                                                    className="absolute object-cover inset-0" 
+                                        <div className="rounded-lg border border-dashed overflow-hidden">
+                                            {thumbnailUrl ? (
+                                                <div className="relative w-full aspect-video">
+                                                    <Image
+                                                        src={thumbnailUrl}
+                                                        fill
+                                                        alt="Stream thumbnail"
+                                                        className="object-cover"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <UploadDropZone
+                                                    endpoint="thumbnailUploader"
+                                                    onClientUploadComplete={(res) => {
+                                                        form.setValue("thumbnailUrl", res[0].url, {
+                                                            shouldValidate: true,
+                                                            shouldDirty: true,
+                                                        });
+                                                        closeRef.current?.click();
+                                                        router.refresh();
+                                                    }}
+                                                    appearance={{
+                                                        label: { color: "#FFFFFF" },
+                                                        allowedContent: { color: "#FFFFFF" },
+                                                    }}
                                                 />
-                                            </div>: <UploadDropZone 
-                                                endpoint={"thumbnailUploader"} 
-                                                onClientUploadComplete={(res) => {
-                                                    form.setValue("thumbnailUrl", res[0].url, {
-                                                        shouldValidate: true,
-                                                        shouldDirty: true,
-                                                    });
-                                                    closeRef.current?.click();
-                                                    router.refresh();
-                                                }}
-                                                appearance={{
-                                                    label: {
-                                                        color: "#FFFFFF"
-                                                    },
-                                                    allowedContent: {
-                                                        color: "FFFFFF"
-                                                    }
-                                                }}
-                                            />}
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="flex justify-between">
+
+                                    <div className="flex justify-end gap-2 pt-1">
                                         <DialogClose asChild ref={closeRef}>
-                                            <Button 
-                                                variant={"outline"} 
-                                                type="button"
-                                                className="cursor-pointer"
-                                            >
+                                            <Button variant="outline" type="button" className="cursor-pointer">
                                                 Cancel
                                             </Button>
                                         </DialogClose>
                                         <Button
-                                            variant={"default"}
                                             type="submit"
-                                            className="cursor-pointer w-20"
                                             disabled={isSubmitting}
+                                            className="cursor-pointer min-w-16"
                                         >
-                                            { isSubmitting ? <div className="animate-spin">
-                                                <Loader />
-                                            </div>: "Save"}
+                                            {isSubmitting ? (
+                                                <Loader2 className="size-4 animate-spin" />
+                                            ) : (
+                                                "Save"
+                                            )}
                                         </Button>
                                     </div>
                                 </form>
@@ -183,26 +172,31 @@ export function InfoCard({ initialName, initialThumbnailUrl, hostIdentity }: Inf
                         </DialogContent>
                     </Dialog>
                 </CardHeader>
-                <CardContent>
-                    <div className="space-y-3">
-                        <div className="flex flex-col">
-                            <span className="text-sm text-muted-foreground">Name</span>
-                            <span>{ form.getValues().name }</span>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <span className="text-sm text-muted-foreground">Thumbnail Url</span>
-                            {thumbnailUrl && <div className="relative w-[200px] aspect-video">
-                                <Image 
-                                    src={thumbnailUrl} 
-                                    fill 
-                                    alt="name" 
-                                    className="object-cover object-center w-full h-full aspect-video" 
+
+                <CardContent className="space-y-3 pt-0 -translate-y-5">
+                    <div className="space-y-0.5">
+                        <span className="text-xs text-muted-foreground/70 uppercase tracking-wider font-medium">Title</span>
+                        <p className="text-sm">{form.getValues().name}</p>
+                    </div>
+                    <div className="space-y-1.5">
+                        <span className="text-xs text-muted-foreground/70 uppercase tracking-wider font-medium">Thumbnail</span>
+                        {thumbnailUrl ? (
+                            <div className="relative w-40 aspect-video rounded-md overflow-hidden border">
+                                <Image
+                                    src={thumbnailUrl}
+                                    fill
+                                    alt="Thumbnail"
+                                    className="object-cover"
                                 />
-                            </div>}
-                        </div>
+                            </div>
+                        ) : (
+                            <div className="w-40 aspect-video rounded-md border border-dashed flex items-center justify-center">
+                                <ImageIcon className="size-4 text-muted-foreground/30" />
+                            </div>
+                        )}
                     </div>
                 </CardContent>
             </Card>
         </div>
-    )
+    );
 }

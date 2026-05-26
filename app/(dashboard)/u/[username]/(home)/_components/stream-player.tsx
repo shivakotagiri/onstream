@@ -13,6 +13,12 @@ import { Video, VideoSkeleton } from "./video";
 import { InfoCard } from "./info-card";
 import { AboutCard } from "./about-card";
 import { FollowedByType, FollowersType } from "@/actions/followers";
+import { useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
+
+const MIN_CHAT_WIDTH = 280;
+const MAX_CHAT_WIDTH = 600;
+const DEFAULT_CHAT_WIDTH = 340;
 
 interface StreamPlayerProps {
     user: User,
@@ -26,8 +32,46 @@ interface StreamPlayerProps {
 export function StreamPlayer({ user, stream, isFollowing, followersCount, followedByList, followersOfFollowing }: StreamPlayerProps) {
     const { token, name, identity } = useViewerToken(user.id);
     const { collapsed, onExpand } = useChatSidebarStore();
+    const isDesktop = useMediaQuery("(min-width: 1024px)");
 
-    if(!token || !name || !identity || !stream) {
+    const [chatWidth, setChatWidth] = useState(DEFAULT_CHAT_WIDTH);
+    const isResizing = useRef(false);
+    const startX = useRef(0);
+    const startWidth = useRef(0);
+
+    useEffect(() => {
+        function onMouseMove(e: MouseEvent) {
+            if (!isResizing.current) return;
+            const delta = startX.current - e.clientX;
+            const next = Math.min(Math.max(startWidth.current + delta, MIN_CHAT_WIDTH), MAX_CHAT_WIDTH);
+            setChatWidth(next);
+        }
+
+        function onMouseUp() {
+            if (!isResizing.current) return;
+            isResizing.current = false;
+            document.body.style.cursor = "";
+            document.body.style.userSelect = "";
+        }
+
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
+        return () => {
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("mouseup", onMouseUp);
+        };
+    }, []);
+
+    function onResizeStart(e: React.MouseEvent) {
+        e.preventDefault();
+        isResizing.current = true;
+        startX.current = e.clientX;
+        startWidth.current = chatWidth;
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+    }
+
+    if (!token || !name || !identity || !stream) {
         return (
             <div className="flex flex-col justify-center items-center w-full h-[calc(100vh-56px)]">
                 Cannot watch the stream
@@ -35,10 +79,10 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
         )
     }
 
-    const isHost = identity === `host-${user.id}`
+    const isHost = identity === `host-${user.id}`;
 
     return (
-        <div className="flex h-[calc(100vh-56px)] w-full">
+        <div className="flex h-[calc(100vh-65px)] w-full">
             <Button
                 variant="ghost"
                 size="icon-sm"
@@ -47,16 +91,14 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
             >
                 <ArrowLeftFromLine className="dark:text-white text-black" />
             </Button>
+
             <LiveKitRoom
-                className={cn(
-                    "h-full w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-9",
-                    collapsed && "lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1"
-                )}
+                className="h-full w-full flex flex-col lg:flex-row"
                 serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WS_URL!}
                 token={token}
                 options={{ dynacast: true, adaptiveStream: true }}
             >
-                <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 overflow-y-auto hidden-scrollbar space-y-4">
+                <div className="flex-1 min-w-0 overflow-y-auto hidden-scrollbar space-y-4">
                     <Video
                         hostName={user.username || ""}
                         hostIdentity={user.id}
@@ -86,10 +128,20 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
                         followersOfFollowing={followersOfFollowing || []}
                     />
                 </div>
-                <div className={cn(
-                    "col-span-1 2xl:col-span-2 w-full h-[50vh] lg:h-full overflow-hidden",
-                    collapsed && "hidden"
-                )}>
+
+                <div
+                    className={cn(
+                        "relative shrink-0 overflow-hidden",
+                        "h-[50vh] w-full lg:h-full",
+                        collapsed && "hidden"
+                    )}
+                    style={isDesktop ? { width: chatWidth } : undefined}
+                >
+                    <div
+                        onMouseDown={onResizeStart}
+                        className="hidden lg:block absolute left-0 top-0 w-1.5 h-full z-10 cursor-col-resize
+                                   bg-transparent hover:bg-primary/20 active:bg-primary/40 transition-colors duration-150"
+                    />
                     <ChatSidebar
                         viewerName={name}
                         hostName={user.username || ""}
@@ -107,15 +159,13 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
 
 export function StreamPlayerSkeleton() {
     return (
-        <div className="flex h-[calc(100vh-56px)] w-full">
-            <div className="h-full w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-9">
-                <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-7 overflow-y-auto hidden-scrollbar space-y-4">
-                    <VideoSkeleton />
-                    <HeaderSkeleton />
-                </div>
-                <div className="col-span-1 2xl:col-span-2 w-full h-[50vh] lg:h-full overflow-hidden">
-                    <ChatSidebarSkeleton />
-                </div>
+        <div className="flex h-[calc(100vh-56px)] w-full flex-col lg:flex-row">
+            <div className="flex-1 min-w-0 overflow-y-auto hidden-scrollbar space-y-4">
+                <VideoSkeleton />
+                <HeaderSkeleton />
+            </div>
+            <div className="h-[50vh] w-full lg:h-full lg:w-80 shrink-0 overflow-hidden">
+                <ChatSidebarSkeleton />
             </div>
         </div>
     )

@@ -1,34 +1,9 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { StreamPlayerSkeleton } from "@/app/(dashboard)/u/[username]/(home)/_components/stream-player" 
 
-export default function LoadingPage() {
-  return (
-    <div className="w-full min-h-screen bg-background pb-20">
-      <div className="w-full mx-auto">
-        <div className="w-full flex flex-col items-center">
-          <div className="w-full relative">
-            <div className="relative w-full h-[200px] md:h-[420px] overflow-hidden border-b border-border">
-              <Skeleton className="w-full h-full" />
-            </div>
-            <div className="px-6 md:px-8 pb-8 flex flex-col w-full">
-              <div className="w-full flex justify-between items-center gap-4 -mt-16 relative z-10 mb-4">
-                <Skeleton className="md:size-32 size-24 rounded-full border-4 border-background" />
-                <div className="flex items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0 pb-2">
-                  <Skeleton className="h-10 w-28 rounded-full" />
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                </div>
-              </div>
-              <div className="max-w-2xl space-y-2">
-                <Skeleton className="h-6 w-[200px]" />
-                <Skeleton className="h-4 w-[250px]" />
-              </div>
-              <div className="flex gap-4 mt-3">
-                <Skeleton className="h-4 w-[100px]" />
-                <Skeleton className="h-4 w-[100px]" />
-              </div>
-            </div>
-          </div>
+export default function Loading() {
+    return (
+        <div className="w-screen pt-18 sm:pt-13 flex sm:flex-row flex-col">
+            <StreamPlayerSkeleton />
         </div>
-      </div>
-    </div>
-  );
+    )
 }

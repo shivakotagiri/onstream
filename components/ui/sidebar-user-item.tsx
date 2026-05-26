@@ -29,12 +29,12 @@ export function SidebarUserItem({
           className="flex items-center gap-5 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
         >
           <UserAvatar src={avatar} name={name} isLive={isLive} className="size-5" />
-          <span className="text-sm font-medium truncate">{name}</span>
+          <span className="text-sm font-medium truncate">{username}</span>
         </div>
       </TooltipTrigger>
 
       <TooltipContent hidden={state !== "collapsed" || isMobile} side="right" align="center" sideOffset={8}>
-        {name}
+        {username}
       </TooltipContent>
     </Tooltip>
   )

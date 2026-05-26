@@ -1,6 +1,6 @@
 "use client";
 
-import { blockUser } from "@/actions/block-service";
+import { onBlock } from "@/actions/block-service";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { cn, stringToHexColor } from "@/lib/utils";
@@ -30,7 +30,7 @@ export function CommunityItem({
     function handleBlock() {
         if(!participantIdentity || isSelf || !isHost) return;
         startTransition(() => {
-            blockUser(participantIdentity)
+            onBlock(participantIdentity)
                 .then(() => toast.success(`Blocked ${participantName}`))
                 .catch(() => toast.error("Something went wrong"));
         })

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import { db } from "@/db";
@@ -5,6 +6,7 @@ import { blocklist } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getInfo } from "@/lib/get-session";
+import { RoomServiceClient } from "livekit-server-sdk";
 
 
 export const blockedUsersList = async () => {
@@ -66,7 +68,7 @@ export const blockUser = async (blockedId: string) => {
         .onConflictDoNothing()
         .returning();
 
-    revalidatePath("/user/path:*");
+    revalidatePath("/u/path:*");
 
     if(res.length === 0) {
         return { 
@@ -116,5 +118,39 @@ export const unBlockUser = async (blockerId: string, blockedId: string) => {
         res
     }
 }
+
+const roomService = new RoomServiceClient(
+    process.env.LIVEKIT_API_URL!,
+    process.env.LIVEKIT_API_KEY!,
+    process.env.LIVEKIT_API_SECRET!,
+);
+
+
+export async function onBlock(id: string) {
+    const data = await getInfo();
+    const currentUser = data?.currentUser;
+
+    if(!currentUser?.id) return null;
+
+    let blockedUser;
+
+    try {
+        blockedUser = await blockUser(id);
+    } catch (err) {
+
+    }
+    
+    try {
+        await roomService.removeParticipant(currentUser?.id, id);
+    } catch(err) {
+        
+    }
+
+    revalidatePath(`/u/${currentUser.username}/community`);
+    revalidatePath("/u/path:*");
+    revalidatePath("/*");
+
+    return blockedUser;
+};
 
 

@@ -30,27 +30,31 @@ export function ChatList({
       bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages]);
 
-    if(isHidden || messages.length === 0 || !messages) {
+    if(isHidden || !messages || messages.length === 0) {
         return (
-            <div className="flex-1 flex justify-center items-center min-h-0 h-full">
+            <div className="flex-1 flex justify-center items-center">
                 <span className="text-sm text-muted-foreground">
-                    { isHidden ? "Host disabled the chat": "Welcome to the chat!"}
+                    { isHidden ? "Host disabled the chat" : "Welcome to the chat!"}
                 </span>
             </div>
         )
     }
 
     return (
-        <div className="flex flex-col flex-1 w-full min-h-0 overflow-y-auto px-5 py-3 h-full justify-end">
-            <ScrollArea>
-                    {messages.map((message) => (
-                    <ChatMessage key={message.id} message={message} viewerName={viewerName} hostName={hostName} />
-                ))}
-                <div ref={bottomRef} />
-            </ScrollArea>
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 py-3">
+            <div className="flex-1" />
+            {messages.map((message) => (
+                <ChatMessage
+                    key={message.id}
+                    message={message}
+                    viewerName={viewerName}
+                    hostName={hostName}
+                />
+            ))}
+            <div ref={bottomRef} />
         </div>
     )
-};
+}
 
 export function ChatListSkeleton() {
     return (

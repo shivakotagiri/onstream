@@ -30,17 +30,12 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
 
     if(!token || !name || !identity || !stream) {
         return <div className="flex flex-col justify-center items-center w-full h-[90vh]">
-            Cannot watch the stream 
-            <div className="flex flex-col flex-wrap max-w-2xl border overflow-auto">
-                <span>name:{name}</span>
-                <span>token:{token}</span>
-                <span>identity:{identity}</span>
-            </div>
+            Cannot watch the stream
         </div>
     }
     const isHost = identity === `host-${user.id}`
     return (
-        <div className="flex min-h-[calc(100vh-85px)] sm:min-h-[calc(100vh-56px)] w-full">
+        <div className="flex min-h-[calc(100vh-85px)] sm:h-[calc(100vh-56px)] w-full">
             <Button variant={"ghost"} size={"icon-sm"} className={cn("fixed top-17 right-5 block cursor-pointer z-10", !collapsed && "hidden")} onClick={onExpand}>
                 <ArrowLeftFromLine className="dark:text-white text-black" />
             </Button>

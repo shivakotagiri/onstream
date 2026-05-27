@@ -39,7 +39,7 @@ export function Video({ hostName, hostIdentity }: VideoProps) {
 
 
     return (
-        <div className={cn("aspect-video group relative border-b", collapsed === true && open === false && "aspect-auto w-full h-[75%]")}>
+        <div className={cn("aspect-video group relative border-b", collapsed === true && open === false && "aspect-auto w-full h-[80%]")}>
             { content }
         </div>
     )

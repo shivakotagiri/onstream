@@ -89,7 +89,7 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
                 className={cn("fixed top-16 right-5 z-10 cursor-pointer", !collapsed && "hidden")}
                 onClick={onExpand}
             >
-                <ArrowLeftFromLine className="dark:text-white text-black" />
+                <ArrowLeftFromLine className="dark:text-white text-white/80" />
             </Button>
 
             <LiveKitRoom

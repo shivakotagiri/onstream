@@ -31,12 +31,12 @@ export function Settings({ currentUser, blockedUsers, isCurrentUserHasPassword }
             >
               Privacy and Security
             </TabsTrigger>
-            <TabsTrigger 
+            {/* <TabsTrigger 
               value="billings" 
               className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-foreground data-[state=active]:text-background bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-all border-none shadow-none"
             >
               Billings
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
           <AccountTab currentUser={currentUser} />
           <PrivacyTab currentUser={currentUser} blockedUsers={blockedUsers} isCurrentUserHasPassword={isCurrentUserHasPassword} />

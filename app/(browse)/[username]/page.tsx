@@ -2,6 +2,7 @@ import { blockedByUser } from "@/actions/block-service";
 import { isCurrentUserFollowing, userFollowers, usersFollowed } from "@/actions/followers";
 import { getUserByUsername } from "@/actions/user";
 import { StreamPlayer } from "@/app/(dashboard)/u/[username]/(home)/_components/stream-player";
+import { notFound } from "next/navigation";
 
 export default async function ProfilePage({ params }: { params: { username: string }; }) {
   const { username } = await params;
@@ -9,11 +10,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
   const searchedUser = await getUserByUsername(username);
 
   if(!searchedUser || !searchedUser.user) {
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        Page not found
-      </div>
-    )
+    notFound();
   }
 
   const[isFollowing, isBlocked] = 
@@ -23,11 +20,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
   ]);
 
   if(isBlocked) {
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        Page not found
-      </div>
-    )
+    notFound();
   };
 
   const [followersOfFollowing, followedByList] = await Promise.all([

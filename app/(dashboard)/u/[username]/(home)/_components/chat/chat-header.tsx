@@ -6,7 +6,7 @@ export function ChatHeader() {
     return (
         <div className="h-12 shrink-0 w-full border-b px-3 flex items-center justify-between gap-2">
             <ChatToggle />
-            <span className="text-xs font-semibold tracking-widest uppercase text-muted-foreground/70">
+            <span className="text-xs font-semibold tracking-widest text-muted-foreground/70">
                 Live Chat
             </span>
             <VariantToggle />

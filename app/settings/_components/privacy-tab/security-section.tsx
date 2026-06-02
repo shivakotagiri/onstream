@@ -43,7 +43,7 @@ export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { cur
 
     return (
         <div className="flex md:flex-row w-full h-full justify-between mt-10 flex-col gap-5 border-b pb-10">
-            <div className="flex flex-col w-full md:max-w-2/5 gap-1 md:border-0 border-b">
+            <div className="flex flex-col w-full md:max-w-1/3 gap-1 md:border-0 border-b">
                 <div className="text-base font-semibold">
                     Security
                 </div>

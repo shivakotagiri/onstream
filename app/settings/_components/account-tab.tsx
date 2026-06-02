@@ -68,13 +68,13 @@ export function AccountTab({ currentUser }: { currentUser: User }) {
 
     return (
         <TabsContent value="account" className="space-y-0">
-            <div className="flex flex-col md:flex-row gap-8 py-10 mt-10 sm:mt-0 border-t border-border">
-              <div className="w-full md:w-72 shrink-0">
+            <div className="flex flex-col md:flex-row py-10 mt-10 sm:mt-0 border-t border-border">
+              <div className="w-full md:w-52 shrink-0">
                 <h2 className="text-base font-semibold text-foreground mb-1">Profile</h2>
                 <p className="text-sm text-muted-foreground">Set your account details</p>
               </div>
-              <div className="flex-1 flex flex-col-reverse lg:flex-row gap-10 lg:gap-16">
-                <div className="flex-1 space-y-6">
+              <div className="flex-1 flex flex-col-reverse lg:flex-row gap-10 lg:gap-8">
+                <div className="flex flex-col space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-1.5">
                       <Label className="text-xs font-normal text-muted-foreground">Name</Label>

@@ -64,7 +64,7 @@ export function PrivacySection({ blockedUsers }: BlockedUsersProps) {
 
     return (
         <div className="flex md:flex-row w-full h-full justify-between mt-10 flex-col gap-5">
-            <div className="flex flex-col w-full md:max-w-2/5 gap-1 md:border-0">
+            <div className="flex flex-col w-full md:max-w-1/3 gap-1 md:border-0">
                 <div className="text-base font-semibold">
                     Privacy
                 </div>

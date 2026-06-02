@@ -1,5 +1,5 @@
 import { ChatVariant } from "@/store/use-chatbar"
-import { ReceivedChatMessage } from "@livekit/components-react"
+import { ChatIcon, ReceivedChatMessage } from "@livekit/components-react"
 import { useEffect, useRef } from "react"
 import { ChatMessage, ChatMessageSkeleton } from "./chat-message"
 
@@ -26,8 +26,8 @@ export function ChatList({ messages, viewerName, isHidden, hostName }: ChatListP
     if (isHidden || !messages || messages.length === 0) {
         return (
             <div className="flex-1 flex flex-col justify-center items-center gap-2">
-                <div className="size-8 rounded-full bg-muted/60 flex items-center justify-center">
-                    <span className="text-base">💬</span>
+                <div className="size-5 rounded-full bg-muted/60 flex items-center justify-center">
+                    <span className="text-base"><ChatIcon /></span>
                 </div>
                 <p className="text-xs text-muted-foreground/60">
                     {isHidden ? "Chat is disabled" : "Be the first to chat!"}

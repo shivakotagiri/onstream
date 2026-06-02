@@ -54,12 +54,12 @@ export function ContactSection({ currentUser }: { currentUser: User }) {
     
     return (
         <div className="flex md:flex-row w-full h-full justify-between mt-10 flex-col gap-5 border-b pb-5">
-            <div className="flex flex-col w-full md:max-w-2/5 gap-1 md:border-0 border-b">
+            <div className="flex flex-col w-full md:max-w-1/3 gap-1 md:border-0 border-b">
                 <div className="text-base font-semibold">
                     Contact
                 </div>
-                <span className="text-muted-foreground text-sm mb-5">
-                    Keep your contact information up to date so we can reach you for account updates, notifications, and support.
+                <span className="text-muted-foreground text-sm mb-5 text-wrap">
+                    Keep your contact info up to date so we can reach you for account updates, notifications, and support.
                 </span>
             </div>
             <div className="flex flex-col gap-5 w-full">

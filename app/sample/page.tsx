@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Check, ArrowRight } from "lucide-react";
 
 /* -------------------------------------------------------------------------- */
@@ -47,12 +48,12 @@ function useTypewriter(
 /*                                   HERO                                     */
 /* -------------------------------------------------------------------------- */
 
-export default function Hero() {
+export default function Sample() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [services, setServices] = useState<string[]>([]);
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const { displayed, done } = useTypewriter(
     "we'd love to\nhear from you!"
@@ -66,56 +67,76 @@ export default function Hero() {
     );
   };
 
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const framesRef = useRef<ImageBitmap[]>([]);
+
   /* ------------------------------------------------------------------------ */
   /*                          DESKTOP VIDEO SCRUBBING                         */
   /* ------------------------------------------------------------------------ */
 
   useEffect(() => {
-    const video = videoRef.current;
+  const video: HTMLVideoElement = videoRef.current!;
+const canvas: HTMLCanvasElement = canvasRef.current!;
+  if (!video || !canvas || window.innerWidth < 1024) return;
 
-    if (!video) return;
+  const FRAMES = 80;
+  let targetIdx = 0;
+  let currentIdx = 0;
+  let lastDrawn = -1;
+  let rafId: number;
+  const ctx = canvas.getContext("2d")!;
 
-    let previousX = window.innerWidth / 2;
-    let targetTime = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerWidth < 1024) return;
-
-      if (!video.duration) return;
-
-      const currentX = e.clientX;
-      const delta = currentX - previousX;
-
-      previousX = currentX;
-
-      targetTime +=
-        (delta / window.innerWidth) *
-        0.8 *
-        video.duration;
-
-      targetTime = Math.max(
-        0,
-        Math.min(video.duration, targetTime)
+  async function extractFrames() {
+    if (video.readyState < 1) {
+      await new Promise<void>(res =>
+        video.addEventListener("loadedmetadata", () => res(), { once: true })
       );
+    }
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-      video.currentTime = targetTime;
-    };
-
-    const handleSeeked = () => {
-      targetTime = video.currentTime;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    video.addEventListener("seeked", handleSeeked);
-
-    return () => {
-      window.removeEventListener(
-        "mousemove",
-        handleMouseMove
+    for (let i = 0; i < FRAMES; i++) {
+      video.currentTime = (i / (FRAMES - 1)) * video.duration;
+      await new Promise(res =>
+        video.addEventListener("seeked", res, { once: true })
       );
-      video.removeEventListener("seeked", handleSeeked);
-    };
-  }, []);
+      framesRef.current.push(await createImageBitmap(video));
+    }
+
+    // swap: hide video, show canvas
+    video.style.display = "none";
+    canvas.style.display = "block";
+    ctx.drawImage(framesRef.current[0], 0, 0, canvas.width, canvas.height);
+  }
+
+  function tick() {
+    if (framesRef.current.length === FRAMES) {
+      const diff = targetIdx - currentIdx;
+      if (Math.abs(diff) > 0.3) currentIdx += diff * 0.12;
+      const idx = Math.round(Math.max(0, Math.min(FRAMES - 1, currentIdx)));
+      if (idx !== lastDrawn) {
+        ctx.drawImage(framesRef.current[idx], 0, 0, canvas.width, canvas.height);
+        lastDrawn = idx;
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function handleMouseMove(e: MouseEvent) {
+    targetIdx += (e.movementX / window.innerWidth) * 0.8 * FRAMES;
+    targetIdx = Math.max(0, Math.min(FRAMES - 1, targetIdx));
+  }
+
+  extractFrames();
+  rafId = requestAnimationFrame(tick);
+  window.addEventListener("mousemove", handleMouseMove);
+
+  return () => {
+    window.removeEventListener("mousemove", handleMouseMove);
+    cancelAnimationFrame(rafId);
+    framesRef.current.forEach(f => f.close()); // free GPU memory
+  };
+}, []);
 
   /* ------------------------------------------------------------------------ */
   /*                              MOBILE AUTOPLAY                             */
@@ -159,6 +180,11 @@ export default function Hero() {
             type="video/mp4"
           />
         </video>
+        <canvas
+          ref={canvasRef}
+          style={{ display: "none" }}
+          className="w-full h-full object-cover object-right lg:object-bottom-right"
+        />
       </div>
 
       {/* ------------------------------------------------------------------- */}
@@ -170,7 +196,7 @@ export default function Hero() {
 
         <div className="flex items-center gap-3">
           <span className="text-[21px] sm:text-[26px] tracking-tight text-black font-medium select-none">
-            Mainframe®
+            ONSTREAM®
           </span>
 
           <span className="text-[25px] sm:text-[30px] text-black select-none tracking-[-0.02em] font-medium leading-none mb-1">

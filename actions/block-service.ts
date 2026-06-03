@@ -5,13 +5,12 @@ import { db } from "@/db";
 import { blocklist } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { getInfo } from "@/lib/get-session";
 import { RoomServiceClient } from "livekit-server-sdk";
+import { getCurrentUser } from "./user";
 
 
 export const blockedUsersList = async () => {
-    const data = await getInfo();
-    const currentUser = data?.currentUser || null;
+    const currentUser = await getCurrentUser();
     if(!currentUser) return [];
 
     const blockedUsers = await db.query.blocklist.findMany({
@@ -26,12 +25,9 @@ export const blockedUsersList = async () => {
 
 
 export const blockedByUser = async (blockerId: string) => {
-    const data = await getInfo();
 
-    if(!data) return;
-
-    const currentUser = data.currentUser;
-
+    const currentUser = await getCurrentUser();
+    if(!currentUser) return;
     if(!blockerId) return false;
 
     if(blockerId === currentUser.id) return false;
@@ -47,8 +43,7 @@ export const blockedByUser = async (blockerId: string) => {
 }
 
 export const blockUser = async (blockedId: string) => {
-    const data = await getInfo();
-    const currentUser = data?.currentUser || null;
+    const currentUser = await getCurrentUser();
     if(!currentUser) return {
         status: false,
         message: "Login first",
@@ -127,8 +122,7 @@ const roomService = new RoomServiceClient(
 
 
 export async function onBlock(id: string) {
-    const data = await getInfo();
-    const currentUser = data?.currentUser;
+    const currentUser = await getCurrentUser();
 
     if(!currentUser?.id) return null;
 

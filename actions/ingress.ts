@@ -13,10 +13,10 @@ import {
 } from "livekit-server-sdk";
 
 import { db } from "@/db";
-import { getInfo } from "@/lib/get-session";
 import { stream } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "./user";
 
 const roomService = new RoomServiceClient(
     process.env.LIVEKIT_API_URL!,
@@ -45,9 +45,8 @@ export async function resetIngress(hostIdentity: string) {
 }
 
 export async function createIngress(ingressType: IngressInput) {
-    const data = await getInfo();
-    if(!data) throw new Error("User not found");
-    const currentUser = data.currentUser;
+    const currentUser = await getCurrentUser();
+    if(!currentUser) throw new Error("User not found");
 
     await resetIngress(currentUser.id);
     

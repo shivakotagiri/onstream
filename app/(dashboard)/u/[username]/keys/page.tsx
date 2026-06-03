@@ -1,14 +1,13 @@
 import { getStreamByUserId } from "@/actions/stream";
 import { ServerUrl } from "./_components/server-url";
 import { StreamKey } from "./_components/stream-key";
-import { getInfo } from "@/lib/get-session";
 import { redirect } from "next/navigation";
 import GenerateConnection from "./_components/generate-connection";
+import { getCurrentUser } from "@/actions/user";
 
 export default async function KeysPage() {
-    const data = await getInfo();
-    if(!data) redirect("/");
-    const currentUser = data.currentUser;
+    const currentUser = await getCurrentUser();
+    if(!currentUser) redirect("/");
     const stream = await getStreamByUserId(currentUser.id);
     if(!stream) throw new Error("Stream not found");
     return (

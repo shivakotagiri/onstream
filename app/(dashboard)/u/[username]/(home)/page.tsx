@@ -1,5 +1,4 @@
-import { getUserByUsername } from "@/actions/user";
-import { getInfo } from "@/lib/get-session"
+import { getCurrentUser, getUserByUsername } from "@/actions/user";
 import { StreamPlayer } from "./_components/stream-player";
 import { userFollowers, usersFollowed } from "@/actions/followers";
 
@@ -10,12 +9,11 @@ interface CreaterPageProps {
 }
 
 export default async function CreaterPage({ params }: CreaterPageProps) {
-    const data = await getInfo();
-    if(!data) return <div>No User</div>;
+    const currentUser = await getCurrentUser();
+    if(!currentUser) return <div>No User</div>;
 
     const username = (await params).username;
 
-    const currentUser = data.currentUser;
     const info = await getUserByUsername(username);
     if(!info) throw new Error("User not found");
 

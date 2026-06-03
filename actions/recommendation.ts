@@ -3,11 +3,10 @@
 import { db } from "@/db";
 import { and, eq, exists, not } from "drizzle-orm";
 import { blocklist, user } from "@/db/schema";
-import { getInfo } from "@/lib/get-session";
+import { getCurrentUser } from "./user";
 
 export const recommendedUsers = async () => {
-    const data = await getInfo();
-    const currentUser = data?.currentUser || null;
+    const currentUser = await getCurrentUser();
     
     if(!currentUser) return await db.query.user.findMany({
         where: eq(user.emailVerified, true),

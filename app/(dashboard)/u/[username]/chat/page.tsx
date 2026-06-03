@@ -1,15 +1,14 @@
 import { getStreamByUserId } from "@/actions/stream";
-import { getInfo } from "@/lib/get-session";
 import { redirect } from "next/navigation";
 import { ChatEnabled } from "./_components/chat-enabled";
 import { ChatDelayed } from "./_components/chat-delayed";
 import { ChatFollowersOnly } from "./_components/chat-followers-only";
+import { getCurrentUser } from "@/actions/user";
 
 export default async function ChatPage() {
-    const data = await getInfo();
-    if(!data) redirect("/");
+    const currentUser = await getCurrentUser();
+    if(!currentUser) redirect("/");
 
-    const currentUser = data.currentUser;
     const stream = await getStreamByUserId(currentUser.id);
     if(!stream) {
         return (

@@ -1,6 +1,5 @@
 "use client";
 
-import { updateSessionVersion } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
 import { Button } from "@/components/ui/button";
 import { ChangePasswordDialog } from "@/components/ui/dialogs/change-password-dialog";
@@ -25,18 +24,12 @@ export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { cur
             -> SOLUTION:- https://chatgpt.com/c/6999e60a-8d8c-8320-ad74-151157ec9c21
                 Session Version Pattern (try to search about it in google)
         */
-        const updateSessionVersionRes = await updateSessionVersion(currentUser.id);
-        if(updateSessionVersionRes) {
-            const res = await authClient.revokeSessions();
-            if(!res) {
-                return { error: { message: "Unable to signout from all the devices" } }
-            } else {
-                router.refresh();
-                toast.success("Signed out from all devices");
-                return { error: null }
-            }
+        const res = await authClient.revokeSessions();
+        if(!res) {
+            return { error: { message: "Unable to signout from all the devices" } }
         } else {
-            toast.success("Something went wrong");
+            router.refresh();
+            toast.success("Signed out from all devices");
             return { error: null }
         }
     }

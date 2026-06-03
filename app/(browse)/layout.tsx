@@ -1,13 +1,12 @@
 import { Navbar } from "@/components/navbar"
 import { AppSidebar } from "@/components/ui/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { getInfo } from "@/lib/get-session"
+import { getSession } from "@/lib/get-session"
 
 export default async function Layout({ children }: {
     children: React.ReactNode
 }) {
-    const data = await getInfo();
-    const session = data?.session || null;
+    const session = await getSession();
     return (  
         <main className="w-screen min-h-screen overflow-hidden" suppressHydrationWarning>
             <Navbar session={session} />

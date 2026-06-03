@@ -1,5 +1,5 @@
 import { updateStream } from "@/actions/stream";
-import { getInfo } from "@/lib/get-session";
+import { getCurrentUser } from "@/actions/user";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
@@ -11,8 +11,8 @@ export const ourFileRouter = {
             maxFileCount: 1
         }
     }).middleware(async () => {
-        const data = await getInfo();
-        return { user: data?.currentUser }
+        const currentUser = await getCurrentUser();
+        return { user: currentUser }
     }).onUploadComplete(async ({ metadata, file }) => {
         await updateStream({ userId: metadata.user?.id, thumbnailUrl: file.url });
         return { fileUrl: file.url }

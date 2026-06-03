@@ -1,25 +1,24 @@
 "use server";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { getInfo } from "@/lib/get-session";
 import { AccessToken } from "livekit-server-sdk";
 import { v4 } from "uuid";
-import { getUserById } from "@/actions/user"
+import { getCurrentUser, getUserById } from "@/actions/user"
 import { blockedByUser } from "./block-service";
 
 export const createViewerToken = async (hostIdentity: string) => {
 
     let self;
     try {
-        const data = await getInfo();
+        const currentUser = await getCurrentUser();
 
-        if (!data || !data.currentUser || !data.currentUser.username) {
+        if (!currentUser || !currentUser.username) {
             throw new Error("Unauthorized");
         }
 
         self = {
-            id: data.currentUser.id,
-            username: data.currentUser.username,
+            id: currentUser.id,
+            username: currentUser.username,
         };
     } catch (err) {
         const id = v4();

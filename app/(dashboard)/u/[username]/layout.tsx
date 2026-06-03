@@ -1,18 +1,17 @@
 import { NavbarDashboard } from "./_components/dashboard-navbar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "./_components/dashboard-sidebar"
-import { getInfo } from "@/lib/get-session";
 import { redirect } from "next/navigation";
 // import { getStreamByUserId } from "@/actions/stream";a
 import React from "react";
+import { getCurrentUser } from "@/actions/user";
 
 export default async function Layout({ children, params }: {
     children: React.ReactNode,
     params: Promise<{ username: string }>
 }) {    
     
-    const [data, param] = await Promise.all([getInfo(), params]);
-    const currentUser = data?.currentUser || null;
+    const [currentUser, param] = await Promise.all([getCurrentUser(), params]);
     const username = param.username;
 
     if(!currentUser?.username || username !== currentUser.username) {

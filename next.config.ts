@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
         hostname: "utfs.io",
       }
     ],
-  }
+  },
+  cacheComponents: true,
 };
 
 export default nextConfig;

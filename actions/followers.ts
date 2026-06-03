@@ -2,7 +2,7 @@
 
 import { db } from "@/db"
 import { followers, User } from "@/db/schema"
-import { getInfo } from "@/lib/get-session";
+import { getSession } from "@/lib/get-session";
 import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
@@ -49,8 +49,7 @@ export const usersFollowed = cache(async (userId: string) => {
 export const isCurrentUserFollowing = async (followingId: string) => {
     if(!followingId) return false;
 
-    const data = await getInfo();
-    const session = data?.session || null;
+    const session = await getSession();
     if(!session || !session.user) return false;
 
     const followerId = session.user.id;
@@ -67,8 +66,7 @@ export const isCurrentUserFollowing = async (followingId: string) => {
 }
 
 export const followUser = async (followingId: string) => {
-    const data = await getInfo();
-    const session = data?.session || null;
+    const session = await getSession();
     if(!session || !session.user) return false;
 
     const followerId = session.user.id;
@@ -86,8 +84,7 @@ export const followUser = async (followingId: string) => {
 }
 
 export const unFollowUser = async (followingId: string) => {
-    const data = await getInfo();
-    const session = data?.session || null;
+    const session = await getSession();
     if(!session || !session.user) return false;
 
     const followerId = session.user.id;

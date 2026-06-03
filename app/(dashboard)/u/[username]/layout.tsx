@@ -1,34 +1,61 @@
+import { Suspense } from "react"
 import { NavbarDashboard } from "./_components/dashboard-navbar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "./_components/dashboard-sidebar"
-import { redirect } from "next/navigation";
-// import { getStreamByUserId } from "@/actions/stream";a
-import React from "react";
-import { getCurrentUser } from "@/actions/user";
+import { redirect } from "next/navigation"
+import { getCurrentUser } from "@/actions/user"
 
-export default async function Layout({ children, params }: {
-    children: React.ReactNode,
-    params: Promise<{ username: string }>
-}) {    
-    
-    const [currentUser, param] = await Promise.all([getCurrentUser(), params]);
-    const username = param.username;
+function DashboardLayoutFallback({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="max-w-screen h-full w-full" suppressHydrationWarning>
+      <NavbarDashboard />
+      <SidebarProvider className="max-w-screen w-full">
+        <div className="flex w-full h-full">
+          <DashboardSidebar currentUser={null} />
+          {children}
+        </div>
+      </SidebarProvider>
+    </main>
+  )
+}
 
-    if(!currentUser?.username || username !== currentUser.username) {
-        redirect("/");
-    }
+async function DashboardLayoutContent({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ username: string }>
+}) {
+  const [currentUser, param] = await Promise.all([getCurrentUser(), params])
+  const username = param.username
 
-    // const streamData = await getStreamByUserId(currentUser.id);
+  if (!currentUser?.username || username !== currentUser.username) {
+    redirect("/")
+  }
 
-    return (  
-        <main className="max-w-screen h-full w-full" suppressHydrationWarning>
-            <NavbarDashboard />
-            <SidebarProvider className="max-w-screen w-full">
-                <div className="flex w-full h-full">
-                    <DashboardSidebar currentUser={currentUser} />
-                    { children }
-                </div>
-            </SidebarProvider>
-        </main>
-    )
+  return (
+    <main className="max-w-screen h-full w-full" suppressHydrationWarning>
+      <NavbarDashboard />
+      <SidebarProvider className="max-w-screen w-full">
+        <div className="flex w-full h-full">
+          <DashboardSidebar currentUser={currentUser} />
+          {children}
+        </div>
+      </SidebarProvider>
+    </main>
+  )
+}
+
+export default function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ username: string }>
+}) {
+  return (
+    <Suspense fallback={<DashboardLayoutFallback>{children}</DashboardLayoutFallback>}>
+      <DashboardLayoutContent params={params}>{children}</DashboardLayoutContent>
+    </Suspense>
+  )
 }

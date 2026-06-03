@@ -1,7 +1,7 @@
 import ThemeToggle from "@/components/ui/theme-toggle";
 import AuthProvider from "./_provider";
 
-export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return <div suppressHydrationWarning>
         <AuthProvider>
             { children }

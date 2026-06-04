@@ -41,7 +41,7 @@ export default function TwoFactorAuthForm() {
     const trimmed = code.trim();
     if (!trimmed) return;
 
-    const trustDevice = true;
+    const trustDevice = false;
 
     const { data, error } = useBackupCode
       ? await authClient.twoFactor.verifyBackupCode({

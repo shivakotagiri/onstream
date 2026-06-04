@@ -12,7 +12,7 @@ export function SignInWithGoogle() {
                     provider: "google",
                     callbackURL: "/",
                     newUserCallbackURL: "/welcome",
-                });
+                },);
 
                 if(!res) return { error: { message: "Something went wrong" } }
                 else { return { error: null } }

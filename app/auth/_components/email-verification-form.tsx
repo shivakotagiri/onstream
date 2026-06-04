@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 "use client";
 
 import { checkUserForPasswordRequest } from "@/actions/password"; 
@@ -8,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import TextSeparator from "@/components/ui/text-separator";
 import { authClient } from "@/lib/auth-client";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
 
 const emailZod = z.email();
@@ -16,6 +17,10 @@ export function EmailVerificationForm() {
     const [email, setEmail] = useState<string>("");
     const [timeToNextResend, setTimeToNextResend] = useState<number>(0);
     const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+
+    useEffect(() => {
+        startResendCooldown(30);
+    }, []);
 
     function startResendCooldown(duration = 30) {
         clearInterval(interval.current);

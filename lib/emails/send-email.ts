@@ -11,7 +11,7 @@ interface sendEmailProps {
 
 export async function sendEmail({ to, subject, html, text }: sendEmailProps) {
     const res = await resend.emails.send({
-        from: 'onStream <onboarding@resend.dev>',
+        from: 'onStream <contact@onstream.shivakotagiri.in>',
         to,
         subject,
         html,

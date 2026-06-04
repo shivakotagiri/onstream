@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { phoneNumber, username } from "better-auth/plugins";
+import { phoneNumber, twoFactor, username } from "better-auth/plugins";
 import { sendPasswordResetEmail } from "./emails/send-password-reset-email";
 import { sendEmailVerification } from "./emails/send-email-verification";
 import { sendChangeEmailConfirmationRequest } from "./emails/send-change-email-confirmation";
@@ -10,6 +10,7 @@ import * as schema from "@/db/schema";
 import { APIError } from "better-auth/api";
 
 export const auth = betterAuth({
+    appName: "onStream",
     secret: process.env.BETTER_AUTH_SECRET,
 
     databaseHooks: {
@@ -128,7 +129,7 @@ export const auth = betterAuth({
         }
     },
 
-    plugins: [nextCookies(), username(), phoneNumber()],
+    plugins: [nextCookies(), username(), phoneNumber(), twoFactor()],
 
     database: drizzleAdapter(db, {
         provider: "pg",
@@ -138,6 +139,7 @@ export const auth = betterAuth({
             account: schema.account,
             verification: schema.verification,
             rateLimit: schema.rateLimit,
+            twoFactor: schema.twoFactor,
         },
     })
 });

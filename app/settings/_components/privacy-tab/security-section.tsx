@@ -1,7 +1,6 @@
 "use client";
 
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
-import { Button } from "@/components/ui/button";
 import { ChangePasswordDialog } from "@/components/ui/dialogs/change-password-dialog";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
@@ -36,7 +35,7 @@ export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { cur
 
     return (
         <div className="flex md:flex-row w-full h-full justify-between mt-10 flex-col gap-5 border-b pb-10">
-            <div className="flex flex-col w-full md:max-w-1/3 gap-1 md:border-0 border-b">
+            <div className="flex flex-col w-full md:max-w-1/2 gap-1 md:border-0 border-b">
                 <div className="text-base font-semibold">
                     Security
                 </div>
@@ -53,16 +52,6 @@ export function SecuritySection({ currentUser, isCurrentUserHasPassword }: { cur
                         </span>
                     </div>
                     { isCurrentUserHasPassword ? <ChangePasswordDialog currentUser={currentUser} text="Change Password" /> : <span className="text-red-500 text-sm hover:underline underline-offset-4 cursor-pointer">Add Password</span>}
-                </div>
-                <hr />
-                <div className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-1">
-                        <div>Two Factor Authentication</div>
-                        <span className="text-sm text-muted-foreground">
-                            Add an extra layer of security to your Onstream account by using your password and a security code on your mobile phone to log in.
-                        </span>
-                    </div>
-                    <Button className="max-w-xs">Set up Two-Factor Authentication</Button>
                 </div>
                 <hr />
                 <div className="flex flex-col gap-5">

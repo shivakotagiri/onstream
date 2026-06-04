@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/ui/live-avatar";
@@ -13,7 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 
 import { Trash } from "lucide-react";
-import { Stream, User } from "@/db/schema";
+import { User } from "@/db/schema";
 
 export function AccountTab({ currentUser }: { currentUser: User }) {
     const [name, setName] = useState<string>(currentUser.name || "");

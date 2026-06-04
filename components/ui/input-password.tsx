@@ -17,7 +17,7 @@ const InputPassword = ({value, onChange, placeholder, className}: PasswordProps)
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className={cn("w-full max-w-sm space-y-2", className)}>
+    <div className={cn("w-full space-y-2", className)}>
       <div className="relative">
         <Input
           className="bg-background w-full"

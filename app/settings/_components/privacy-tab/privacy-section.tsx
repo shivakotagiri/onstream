@@ -1,3 +1,5 @@
+"use client";
+
 import { blockUser } from "@/actions/block-service";
 import { getUserByUsername } from "@/actions/user";
 import { BetterAuthActionButton } from "@/components/better-auth-action-button";
@@ -64,7 +66,7 @@ export function PrivacySection({ blockedUsers }: BlockedUsersProps) {
 
     return (
         <div className="flex md:flex-row w-full h-full justify-between mt-10 flex-col gap-5">
-            <div className="flex flex-col w-full md:max-w-1/3 gap-1 md:border-0">
+            <div className="flex flex-col w-full md:max-w-1/2 gap-1 md:border-0">
                 <div className="text-base font-semibold">
                     Privacy
                 </div>

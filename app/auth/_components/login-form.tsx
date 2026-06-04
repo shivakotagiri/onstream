@@ -56,7 +56,11 @@ export default function LoginForm() {
                 callbackURL: "/"
             },
             {
-                onSuccess: () => {
+                onSuccess: (context) => {
+                    if (context.data.twoFactorRedirect) {
+                        router.push("/auth/two-factor-auth");
+                        return;
+                    }
                     toast.success("Login successful!");
                     router.push("/");
                 },

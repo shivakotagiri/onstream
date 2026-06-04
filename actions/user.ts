@@ -5,7 +5,7 @@ import { db } from "@/db"
 import { account, followers, user, stream, User } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getSession } from "@/lib/get-session";
-import { count, eq, sql } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -73,7 +73,10 @@ export const getUserAccount = async () => {
     if(!session || !session.user) return null;
 
     const getCurrentUserAccount = await db.query.account.findMany({
-        where: eq(account.userId, session.user.id)
+        where: and(
+            eq(account.userId, session.user.id),
+            eq(account.providerId, "credential")
+        )
     });
 
     return getCurrentUserAccount;

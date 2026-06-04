@@ -11,7 +11,7 @@ export function SignInWithGoogle() {
                 const res = await signIn.social({
                     provider: "google",
                     callbackURL: "/",
-                    newUserCallbackURL: "/welcome"
+                    newUserCallbackURL: "/welcome",
                 });
 
                 if(!res) return { error: { message: "Something went wrong" } }

@@ -1,9 +1,13 @@
 import { createAuthClient } from "better-auth/react";
-import { inferAdditionalFields, phoneNumberClient, usernameClient } from "better-auth/client/plugins";
+import { inferAdditionalFields, phoneNumberClient, twoFactorClient, usernameClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
     baseURL: process.env.BETTER_AUTH_URL,
-    plugins: [usernameClient(), phoneNumberClient(), inferAdditionalFields({
+    plugins: [usernameClient(), phoneNumberClient(), twoFactorClient({
+        onTwoFactorRedirect: () => {
+            window.location.href = "/auth/two-factor-auth"
+        }
+    }) ,inferAdditionalFields({
         user: {
             phoneNumber: {
                 type: 'string',

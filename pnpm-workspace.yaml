@@ -7,8 +7,8 @@ allowBuilds:
   esbuild: true
   msgpackr-extract: true
   protobufjs: true
-  sharp: true
-  unrs-resolver: true
+  sharp: false
+  unrs-resolver: false
 
 ignoredBuiltDependencies:
   - sharp

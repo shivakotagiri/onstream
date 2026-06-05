@@ -23,6 +23,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 type TwoFactorForm = {
   code: string;
@@ -44,14 +50,8 @@ export default function TwoFactorAuthForm() {
     const trustDevice = false;
 
     const { data, error } = useBackupCode
-      ? await authClient.twoFactor.verifyBackupCode({
-          code: trimmed,
-          trustDevice,
-        })
-      : await authClient.twoFactor.verifyTotp({
-          code: trimmed,
-          trustDevice,
-        });
+      ? await authClient.twoFactor.verifyBackupCode({ code: trimmed, trustDevice })
+      : await authClient.twoFactor.verifyTotp({ code: trimmed, trustDevice });
 
     if (error) {
       toast.error(error.message || "Invalid verification code");
@@ -81,17 +81,44 @@ export default function TwoFactorAuthForm() {
             <FormField
               control={form.control}
               name="code"
+              rules={{ required: "A code is required" }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{useBackupCode ? "Backup code" : "Authentication code"}</FormLabel>
+                  <FormLabel>
+                    {useBackupCode ? "Backup code" : "Authentication code"}
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="text"
-                      inputMode={useBackupCode ? "text" : "numeric"}
-                      autoComplete="one-time-code"
-                      placeholder={useBackupCode ? "Enter backup code" : "000000"}
-                    />
+                    {useBackupCode ? (
+                      <Input
+                        {...field}
+                        autoComplete="one-time-code"
+                        placeholder="Enter backup code"
+                      />
+                    ) : (
+                      <InputOTP
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                        maxLength={6}
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        id="otp-verification"
+                      >
+                        <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                        </InputOTPGroup>
+                        <InputOTPSeparator className="mx-2" />
+                        <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +139,9 @@ export default function TwoFactorAuthForm() {
             form.reset({ code: "" });
           }}
         >
-          {useBackupCode ? "Use authenticator app instead" : "Use a backup code instead"}
+          {useBackupCode
+            ? "Use authenticator app instead"
+            : "Use a backup code instead"}
         </Button>
       </CardContent>
     </Card>

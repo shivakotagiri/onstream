@@ -16,6 +16,15 @@ export const auth = betterAuth({
     databaseHooks: {
         user: {
             create: {
+                // before: async (userData) => {
+                //     const data = await db.query.user.findFirst({
+                //         where: eq(schema.user.id, userData.id),
+                //     });
+
+                //     if(data && data.twoFactorEnabled) {
+                //         redirect("/auth/two-factor-auth");
+                //     }
+                // },
                 after: async (user) => {
                     try {
                         await db.insert(schema.stream).values({
@@ -46,7 +55,15 @@ export const auth = betterAuth({
                 console.log("[auth] sendChangeEmailConfirmation triggered for:", newEmail);
                 await sendChangeEmailConfirmationRequest({ email, url, user });
             },
-            sendChangeEmailVerification: async ({ newEmail, url, user }) => {
+            sendChangeEmailVerification: async (newEmail: string, url:string, user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined;
+            }) => {
                 const email = newEmail;
                 console.log("[auth] sendChangeEmailVerification triggered for:", newEmail);
                 await sendChangeEmailConfirmationRequest({ email, url, user });
@@ -126,10 +143,12 @@ export const auth = betterAuth({
             prompt: "select_account", 
             clientId: process.env.GOOGLE_CLIENT_ID as string, 
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
-        }
+        },
     },
 
-    plugins: [nextCookies(), username(), phoneNumber(), twoFactor()],
+    plugins: [nextCookies(), username(), phoneNumber(), twoFactor({
+        allowPasswordless: true,
+    })],
 
     database: drizzleAdapter(db, {
         provider: "pg",

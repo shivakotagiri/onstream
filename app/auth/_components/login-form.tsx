@@ -53,6 +53,7 @@ export default function LoginForm() {
             {
                 username: data.username.trim(),
                 password: data.password.trim(),
+                callbackURL: "/",
             },
             {
                 onSuccess: (context) => {

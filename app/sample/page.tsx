@@ -276,7 +276,7 @@ const canvas: HTMLCanvasElement = canvasRef.current!;
           <span
             className={`w-6 h-[2px] bg-black transition-all duration-300 ${
               isMobileMenuOpen
-                ? "-rotate-45 -translate-y-[7px]"
+                ? "-rotate-45 translate-y-[-7px]"
                 : ""
             }`}
           />

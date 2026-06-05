@@ -1,24 +1,21 @@
+"use client";
+
 import { GoogleIcon } from "./icons";
-import { BetterAuthActionButton } from "./better-auth-action-button";
 import { signIn } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
 
 export function SignInWithGoogle() {
+    async function handleSignInWithGoogle() {
+        await signIn.social({
+            provider: "google",
+            newUserCallbackURL: "/welcome",
+            callbackURL: "/",
+        })
+    }
     return (
-        <BetterAuthActionButton 
-            className="w-full" 
-            type="button"
-            action={async () => {
-                const res = await signIn.social({
-                    provider: "google",
-                    callbackURL: "/",
-                    newUserCallbackURL: "/welcome",
-                },);
-
-                if(!res) return { error: { message: "Something went wrong" } }
-                else { return { error: null } }
-            }}
-        >
-        Continue with Google <GoogleIcon />
-        </BetterAuthActionButton>
+        <Button onClick={handleSignInWithGoogle} className="w-full" type="button">
+            <span>Continue with Google </span>
+            <GoogleIcon />
+        </Button>
     )
 }

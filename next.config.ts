@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
     ],
   },
   cacheComponents: true,
+  turbopack: {
+    resolveAlias: {
+      "@better-auth/kysely-adapter": "./lib/empty.ts"
+    },
+  },
 };
 
 export default nextConfig;

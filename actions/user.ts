@@ -19,7 +19,16 @@ export const getUserByUsername = async (username: string) => {
     const res = await db
         .select({
             user,
-            stream,
+            stream: {
+                id: stream.id,
+                thumbnailUrl: stream.thumbnailUrl,
+                name: stream.name,
+                isChatDelayed: stream.isChatDelayed,
+                isChatFollowersOnly: stream.isChatFollowersOnly,
+                isChatEnabled: stream.isChatEnabled,
+                userId: stream.userId,
+                isLive: stream.isLive,
+            },
             followersCount: count(followers.followerId),
         })
         .from(user)

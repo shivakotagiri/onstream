@@ -22,7 +22,16 @@ const DEFAULT_CHAT_WIDTH = 340;
 
 interface StreamPlayerProps {
     user: User,
-    stream: Stream | null,
+    stream: {
+        id: string
+        thumbnailUrl: string | null,
+        name: string,
+        isChatDelayed: boolean,
+        isChatFollowersOnly: boolean,
+        isChatEnabled: boolean,
+        userId: string,
+        isLive: boolean,
+    } | null,
     isFollowing: boolean,
     followersCount: number,
     followedByList?: FollowedByType[],

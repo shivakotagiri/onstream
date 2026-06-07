@@ -78,6 +78,13 @@ export const getStreams = async () => {
                 ),
             ),
             orderBy: (stream, { desc, asc }) => [desc(stream.isLive), asc(stream.updatedAt)],
+            columns: {
+                id: true,
+                isLive: true,
+                userId: true,
+                name: true,
+                thumbnailUrl: true,
+            }
         })
     } else {
         stream = await db.query.stream.findMany({
@@ -85,6 +92,13 @@ export const getStreams = async () => {
                 user: true,
             },
             orderBy: (stream, { desc, asc }) => [desc(stream.isLive), asc(stream.updatedAt)],
+            columns: {
+                id: true,
+                isLive: true,
+                userId: true,
+                name: true,
+                thumbnailUrl: true,
+            }
         });
     }
 

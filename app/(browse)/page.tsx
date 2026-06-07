@@ -18,9 +18,9 @@ export default async function Home() {
                   src={stream.thumbnailUrl}
                   className="object-cover object-center absolute inset-0" 
                 />
-                <div className="text-white bg-red-600 absolute top-5 left-5 text-sm px-3 rounded-md">
+                {stream.thumbnailUrl && stream.isLive && <div className="text-white bg-red-600 absolute top-5 left-5 text-sm px-3 rounded-md">
                   Live
-                </div>
+                </div>}
               </div>
             ) : (
               <div className="w-full h-full flex justify-center items-center">

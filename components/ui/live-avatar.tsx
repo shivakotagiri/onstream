@@ -21,7 +21,7 @@ export function UserAvatar({
       <Avatar
         className={cn(
           "size-10 relative rounded-full",
-          isLive && "ring-2 ring-destructive ring-offset-2 ring-offset-background overflow-visible border-0",
+          isLive && "ring-2 ring-red-600 ring-offset-2 ring-offset-background overflow-visible border-0",
           className
         )}
       >
@@ -31,7 +31,7 @@ export function UserAvatar({
         </AvatarFallback>
         {isLive && (
           <span className={cn(
-            "absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wider text-destructive-foreground bg-destructive shadow-sm uppercase z-10", 
+            "absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wider text-destructive-foreground bg-red-600 shadow-sm uppercase z-10", 
             badgeClassname
           )}>
             Live

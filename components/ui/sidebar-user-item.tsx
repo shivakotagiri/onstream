@@ -28,7 +28,7 @@ export function SidebarUserItem({
           }
           className="flex items-center gap-5 rounded-md px-2 py-2 hover:bg-sidebar-accent cursor-pointer"
         >
-          <UserAvatar src={avatar} name={name} isLive={isLive} className="size-5" />
+          <UserAvatar src={avatar} name={name} isLive={isLive} className="size-5" badgeClassname="text-[5px] font-semibold" />
           <span className="text-sm font-medium truncate">{username}</span>
         </div>
       </TooltipTrigger>

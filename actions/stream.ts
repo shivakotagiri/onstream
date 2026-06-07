@@ -2,10 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { db } from "@/db"
-import { stream } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { blocklist, stream } from "@/db/schema";
+import { and, eq, ne, notExists } from "drizzle-orm";
 import { Stream } from "@/db/schemas/auth-schema"
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "@/actions/user";
 
 export const getStreamByUserId = async (userId: string) => {
     if(!userId) return null;
@@ -55,3 +56,39 @@ export async function updateStream(data: Partial<Stream>) {
         return null;
     }
 }
+
+
+export const getStreams = async () => {
+    const currentUser = await getCurrentUser();
+    const userId = currentUser?.id || null;
+
+    let stream = [];
+
+    if(userId) {
+        stream = await db.query.stream.findMany({
+            with: {
+                user: true
+            },
+            where: (stream) => and(
+                ne(stream.userId, userId),
+                notExists(
+                    db.select().from(blocklist).where(
+                        and(eq(blocklist.blockerId, stream.userId), eq(blocklist.blockedId, userId))
+                    ),
+                ),
+            ),
+            orderBy: (stream, { desc, asc }) => [desc(stream.isLive), asc(stream.updatedAt)],
+        })
+    } else {
+        stream = await db.query.stream.findMany({
+            with: {
+                user: true,
+            },
+            orderBy: (stream, { desc, asc }) => [desc(stream.isLive), asc(stream.updatedAt)],
+        });
+    }
+
+    return stream;
+}
+
+

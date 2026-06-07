@@ -16,15 +16,6 @@ export const auth = betterAuth({
     databaseHooks: {
         user: {
             create: {
-                // before: async (userData) => {
-                //     const data = await db.query.user.findFirst({
-                //         where: eq(schema.user.id, userData.id),
-                //     });
-
-                //     if(data && data.twoFactorEnabled) {
-                //         redirect("/auth/two-factor-auth");
-                //     }
-                // },
                 after: async (user) => {
                     try {
                         await db.insert(schema.stream).values({

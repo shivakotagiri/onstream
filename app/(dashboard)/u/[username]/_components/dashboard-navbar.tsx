@@ -6,9 +6,11 @@ import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { SquareArrowRight } from "lucide-react";
+import { useState } from "react";
 
 export function NavbarDashboard() {
     const router = useRouter();
+    const [value, setValue] = useState<string>("");
     return (
         <nav className="h-14 w-screen shadow-xl shadow-secondary/10 fixed left-1/2 -translate-x-1/2 bg-background flex items-center gap-3 lg:gap-6 px-4 lg:px-6 z-10 border border-neutral-200 dark:border-neutral-800">
             <div className="shrink-0 flex items-center">
@@ -17,7 +19,7 @@ export function NavbarDashboard() {
 
             <div className="flex-1 flex h-8 justify-center items-center">
                 <div className="w-full h-full max-w-2xl lg:max-w-3xl xl:max-w-4xl">
-                    <Search />
+                    <Search value={value} setValue={setValue} />
                 </div>
             </div>
 

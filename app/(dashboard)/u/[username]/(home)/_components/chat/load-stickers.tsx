@@ -1,43 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, ReactEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
 import { IGif } from "@giphy/js-types";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 const gf = new GiphyFetch(process.env.NEXT_PUBLIC_GIPHY_API_KEY!);
 
-export function LoadStickers() {
-  const [stickers, setStickers] = useState<IGif[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+interface LoadStickersProps {
+    onSubmit: (data: string) => void;
+    isDisabled: boolean,
+    isChatDelayed: boolean,
+    isDelayBlocked: boolean,
+    setIsDelayBlocked: Dispatch<SetStateAction<boolean>>
+    setOpen: Dispatch<SetStateAction<boolean>>
+}
 
-  const loadMore = async () => {
-    if (loading) return;
-    setLoading(true);
+export function LoadStickers({ onSubmit, isChatDelayed, isDelayBlocked, setOpen, setIsDelayBlocked, isDisabled }: LoadStickersProps) {
+    const [stickers, setStickers] = useState<IGif[]>([]);
+    const [offset, setOffset] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    try {
-        const { data } = await gf.trending({
-            type: "stickers",
-            offset,
-            limit: 25,
-            rating: "pg-13",
-        });
+    const loadMore = async () => {
+        if (loading) return;
+        setLoading(true);
 
-        setStickers((prev) => {
-            const existingIds = new Set(prev.map((gif) => gif.id));
-            const newStickers = data.filter(
-                (gif) => !existingIds.has(gif.id)
-            );
-            return [...prev, ...newStickers];
-        });
+        try {
+            const { data } = await gf.trending({
+                type: "stickers",
+                offset,
+                limit: 25,
+                rating: "y",
+            });
 
-        setOffset((prev) => prev + 25);
-    } catch (err) {
-        console.error(err);
-    } finally {
-        setLoading(false);
-    }};
+            setStickers((prev) => {
+                const existingIds = new Set(prev.map((gif) => gif.id));
+                const newStickers = data.filter(
+                    (gif) => !existingIds.has(gif.id)
+                );
+                return [...prev, ...newStickers];
+            });
+
+            setOffset((prev) => prev + 25);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         loadMore();
@@ -55,6 +65,27 @@ export function LoadStickers() {
         }
     };
 
+    function handleSubmit(value: string) {
+        if (!value || isDisabled) return;
+
+        if (isChatDelayed && !isDelayBlocked) {
+            setIsDelayBlocked(true);
+            setTimeout(() => {
+                setIsDelayBlocked(false);
+                onSubmit(JSON.stringify({
+                    value,
+                    type: "sticker"
+                }));
+            }, 3000);
+        } else {
+            onSubmit(JSON.stringify({
+                value,
+                type: "sticker"
+            }));
+        }
+        setOpen(false);
+    }
+
     return (
         <div
             ref={containerRef}
@@ -68,6 +99,7 @@ export function LoadStickers() {
                 alt={sticker.title}
                 className="w-full aspect-square rounded-lg overflow-hidden"
                 loading="lazy"
+                onClick={() => handleSubmit(sticker.images.fixed_width.url)}
             />
         ))}
         </div>

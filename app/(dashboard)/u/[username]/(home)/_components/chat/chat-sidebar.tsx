@@ -44,9 +44,9 @@ export function ChatSidebar({
         if(matches) onExpand();
     }, [matches, onExpand]);
 
-    async function onSubmit() {
-        if(!send || !value) return;
-        await send(value);
+    async function onSubmit(data: string) {
+        if(!send || !data) return;
+        await send(data);
         setValue("");
     }
 

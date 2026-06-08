@@ -24,3 +24,22 @@ completed:-
             -> do some optimisation on getSession & getCurrentUser
 
 -----------------------------------------------------------------------------------------------
+
+No, the  or  functions in LiveKit cannot submit a full React/component object (like an  component) directly. LiveKit transmits data as raw bytes or text payloads through WebRTC, not as serialized UI components or React nodes. [1, 2, 3]  
+However, you can easily achieve the desired functionality by breaking it down into a data layer and a UI layer: 
+1. Send the Data Payload (Backend/Agent) 
+Instead of sending a React component, you send the JSON metadata for the GIF. [1, 4, 5]  
+2. Render the Component (Frontend/Client) 
+On the receiving end in your UI (e.g., in React or React Native), listen for this data packet, parse the JSON, and use the URL to render your  component dynamically. [3, 6, 7]  
+To learn more about handling, formatting, and exchanging data packets in a session, review the official LiveKit Data Packets Guide. 
+If you can share:Are you sending this from a LiveKit AI Agent (Python/Node.js) or a Client app (React/JS/Swift)?What specific GIF library/component are you rendering (e.g., , Giphy SDK)?I can provide the exact code implementation for your specific setup. 
+AI responses may include mistakes.
+
+[1] https://docs.livekit.io/transport/data/packets/
+[2] https://docs.livekit.io/transport/data/
+[3] https://docs.livekit.io/frontends/build/media-data/
+[4] https://docs.livekit.io/transport/data/text-streams/
+[5] https://github.com/git-lfs/git-lfs/blob/main/docs/custom-transfers.md
+[6] https://docs.livekit.io/reference/
+[7] https://reactnative.dev/
+

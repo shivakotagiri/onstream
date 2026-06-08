@@ -2,6 +2,7 @@
 import { ReceivedChatMessage } from "@livekit/components-react";
 import { stringToHexColor } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 interface ChatMessageProps {
     message: ReceivedChatMessage;
@@ -9,10 +10,18 @@ interface ChatMessageProps {
     hostName: string;
 }
 
+export type MessageContent = {
+    value: string,
+    type: "string" | "sticker"
+}
+
 export function ChatMessage({ message, viewerName, hostName }: ChatMessageProps) {
     const color = stringToHexColor(message.from?.name || "");
     const isHost = message.from?.name === hostName;
     const isViewer = message.from?.name === viewerName;
+
+    const data: MessageContent = JSON.parse(message.message);
+
 
     return (
         <div className="group flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 px-2 py-1 rounded-md hover:bg-muted/40 transition-colors duration-100">
@@ -34,9 +43,22 @@ export function ChatMessage({ message, viewerName, hostName }: ChatMessageProps)
                     {message.from?.name}
                 </span>
             </span>
-            <span className="text-[13px] leading-5 text-foreground/80 break-all">
-                {message.message}
-            </span>
+            {data.type === "string" ? (
+                <span className="text-[13px] leading-5 text-foreground/80 break-all">
+                    {data.value}
+                </span>
+                ) : (
+                <div className="basis-full pl-1 pt-1">
+                    <Image
+                    src={data.value}
+                    alt="sticker"
+                    width={96}
+                    height={96}
+                    unoptimized
+                    className="rounded-lg"
+                    />
+                </div>
+            )}
         </div>
     );
 }

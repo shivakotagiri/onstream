@@ -9,7 +9,7 @@ import { SendHorizonal } from "lucide-react";
 import { EmoButton } from "./emo-button";
 
 interface ChatFormProps {
-    onSubmit: () => void;
+    onSubmit: (data: string) => void;
     value: string;
     onChange: (value: string) => void;
     isChatFollowersOnly: boolean;
@@ -45,21 +45,17 @@ export function ChatForm({
             setIsDelayBlocked(true);
             setTimeout(() => {
                 setIsDelayBlocked(false);
-                onSubmit();
+                onSubmit(JSON.stringify({
+                    value,
+                    type: "string"
+                }));
             }, 3000);
         } else {
-            onSubmit();
+            onSubmit(JSON.stringify({
+                value,
+                type: "string"
+            }));
             setDisable(true);
-            let countdown = 2;
-            setTime(countdown);
-            const interval = setInterval(() => {
-                countdown--;
-                setTime(countdown);
-                if (countdown <= 0) {
-                    clearInterval(interval);
-                    setDisable(false);
-                }
-            }, 1000);
         }
     }
 
@@ -81,7 +77,13 @@ export function ChatForm({
                                disabled:opacity-40"
                 />
                 <div className="flex">
-                    <EmoButton />
+                    <EmoButton 
+                        onSubmit={onSubmit}
+                        isDisabled={isDisabled}
+                        isChatDelayed={isChatDelayed}
+                        isDelayBlocked={isDelayBlocked}
+                        setIsDelayBlocked={setIsDelayBlocked}
+                    />
                     <Button
                         type="submit"
                         size="icon-sm"

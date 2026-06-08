@@ -6,13 +6,22 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GiftIcon, StickerIcon } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { LoadStickers } from "./load-stickers";
+import StickerSearch from "./sticker-search";
 
-export function EmoButton() {
-    const [sticker, setSticker] = useState<string>("");
+export interface EmoButtonProps {
+    onSubmit: (data: string) => void,
+    isDisabled: boolean,
+    isChatDelayed: boolean,
+    isDelayBlocked: boolean,
+    setIsDelayBlocked: Dispatch<SetStateAction<boolean>>
+}
+
+export function EmoButton({ onSubmit, isChatDelayed, isDelayBlocked, isDisabled, setIsDelayBlocked }: EmoButtonProps) {
+    const [open, setOpen] = useState<boolean>(false);
     return (
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button 
                     variant={"ghost"} 
@@ -41,8 +50,15 @@ export function EmoButton() {
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="sticker" className="space-y-3 px-5">
-                        <Search placeholder="Search stickers" value={sticker} setValue={setSticker} />
-                        <LoadStickers />
+                        <StickerSearch />
+                        <LoadStickers 
+                            onSubmit={onSubmit} 
+                            isDisabled={isDisabled}
+                            isChatDelayed={isChatDelayed}
+                            isDelayBlocked={isDelayBlocked}
+                            setIsDelayBlocked={setIsDelayBlocked}
+                            setOpen={setOpen}
+                        />
                     </TabsContent>
                 </Tabs>
             </PopoverContent>

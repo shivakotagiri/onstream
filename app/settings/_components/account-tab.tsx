@@ -12,34 +12,19 @@ import { toast } from "sonner";
 import { DeleteUserDialog } from "@/components/ui/dialogs/delete-user-dialog"; 
 import { Trash } from "lucide-react";
 import { User } from "@/db/schema";
+import { PfpDropboxDialog } from "./privacy-tab/pfp-dropbox-dialog";
 
 export function AccountTab({ currentUser }: { currentUser: User }) {
     const [name, setName] = useState<string>(currentUser.name || "");
     const [username, setUsername] = useState<string>(currentUser.username || "");
     const [bio, setBio] = useState<string>(currentUser.bio || "");
-    const [bannerUrl, setBannerUrl] = useState<string>(currentUser.bannerImage || "");
-    const [imageUrl, setImageUrl] = useState<string>(currentUser.image || "");
 
     async function handleSubmit() {
-      const res = await updateUserDetails({name, bio, bannerImage: bannerUrl})
+      const res = await updateUserDetails({name, bio})
       if(!res.status) {
           return {
               error: {
                   message: res.message,
-              }
-          }
-      } else {
-        toast.success(res.message);
-        return { error: null };
-      }
-    }
-
-    async function handleProfilePicSubmit() {
-      const res = await updateProfilePic(imageUrl);
-      if(!res.status) {
-          return {
-              error: {
-                  message: res.message
               }
           }
       } else {
@@ -59,8 +44,7 @@ export function AccountTab({ currentUser }: { currentUser: User }) {
           }
       }
       else {
-        toast.success(res.message);
-        return { error: null };
+        return { error: null, message: res.message };
       }
     }
 
@@ -111,16 +95,6 @@ export function AccountTab({ currentUser }: { currentUser: User }) {
                       className="bg-transparent border-input focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring text-foreground min-h-[100px] rounded-lg resize-y" 
                     />
                   </div>
-
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-normal text-muted-foreground">Profile Banner URL</Label>
-                    <Input 
-                      value={bannerUrl}
-                      onChange={(e) => setBannerUrl(e.target.value)}
-                      placeholder="https://example.com/banner.jpg"
-                      className="bg-transparent border-input focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring text-foreground h-11 rounded-lg" 
-                    />
-                  </div>
                   
                   <div className="pt-2">
                     <BetterAuthActionButton action={(handleSubmit)} type="button" className="rounded-full shadow-none bg-foreground dark:text-black text-white hover:dark:bg-neutral-300 hover:bg-neutral-900">Save Changes</BetterAuthActionButton>
@@ -129,26 +103,14 @@ export function AccountTab({ currentUser }: { currentUser: User }) {
 
                 <div className="flex flex-col items-center gap-5 shrink-0 w-full lg:w-48 lg:pt-2">
                   <UserAvatar
-                    src={imageUrl}
+                    src={currentUser.image || ""}
                     name={name}
                     className="size-32 rounded-full object-cover ring-1 ring-border"
                     avatarFallbackClassname="text-4xl"
                   />
-                  
-                  <div className="w-full space-y-2">
-                    <Label className="text-xs font-normal text-muted-foreground text-center block">Profile Picture URL</Label>
-                    <Input 
-                      value={imageUrl}
-                      onChange={(e) => setImageUrl(e.target.value)}
-                      placeholder="https://example.com/avatar.jpg"
-                      className="bg-transparent border-input focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring text-foreground h-10 text-xs rounded-lg text-center" 
-                    />
-                  </div>
 
                   <div className="flex items-center gap-2 w-full mt-2">
-                    <BetterAuthActionButton action={handleProfilePicSubmit} type="button" variant="outline" className="sm:w-full w-[85%] rounded-full bg-transparent border-input text-foreground hover:bg-accent hover:text-accent-foreground h-9 px-4 text-xs font-normal shadow-none">
-                      Upload profile pic
-                    </BetterAuthActionButton>
+                    <PfpDropboxDialog />
                     <BetterAuthActionButton action={handleProfilePicDelete} variant="outline" size="icon" className="rounded-full bg-transparent border-input text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive h-9 w-9 shrink-0 shadow-none transition-colors">
                       <Trash />
                     </BetterAuthActionButton>

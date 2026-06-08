@@ -23,6 +23,7 @@ import {
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { UserAvatar } from "./ui/live-avatar";
 
 // type User = {
 //     id: string;
@@ -76,12 +77,10 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full focus-visible:outline-0 focus-visible:ring-0">
-          <Avatar key={user?.id ?? "guest"} className="focus:outline-0 ring-0">
-            {user?.image && <AvatarImage src={user.image} />}
-            <AvatarFallback>
-              {firstLetter ?? <User2Icon size={18} />}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar 
+            name={user?.name || "guest"}
+            src={user?.image || ""}
+          />
         </Button>
       </DropdownMenuTrigger>
 

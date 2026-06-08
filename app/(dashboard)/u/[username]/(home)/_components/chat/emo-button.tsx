@@ -7,6 +7,7 @@ import { Popover, PopoverTrigger, PopoverContent, PopoverHeader } from "@/compon
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GiftIcon, StickerIcon } from "lucide-react";
 import { useState } from "react";
+import { LoadStickers } from "./load-stickers";
 
 export function EmoButton() {
     const [sticker, setSticker] = useState<string>("");
@@ -41,6 +42,7 @@ export function EmoButton() {
                     </TabsList>
                     <TabsContent value="sticker" className="space-y-3 px-5">
                         <Search placeholder="Search stickers" value={sticker} setValue={setSticker} />
+                        <LoadStickers />
                     </TabsContent>
                 </Tabs>
             </PopoverContent>

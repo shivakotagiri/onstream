@@ -6,6 +6,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { ChatInfo } from "./chat-info";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SendHorizonal } from "lucide-react";
+import { EmoButton } from "./emo-button";
 
 interface ChatFormProps {
     onSubmit: () => void;
@@ -79,23 +80,26 @@ export function ChatForm({
                                focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:border-primary/40
                                disabled:opacity-40"
                 />
-                <Button
-                    type="submit"
-                    size="icon"
-                    variant="ghost"
-                    disabled={isDisabled || !value}
-                    className="size-9 shrink-0 cursor-pointer rounded-lg
-                               hover:bg-primary/10 hover:text-primary
-                               disabled:opacity-30 transition-colors"
-                >
-                    {disable ? (
-                        <span className="text-[11px] font-bold tabular-nums text-muted-foreground">
-                            {time}s
-                        </span>
-                    ) : (
-                        <SendHorizonal className="size-4" />
-                    )}
-                </Button>
+                <div className="flex">
+                    <EmoButton />
+                    <Button
+                        type="submit"
+                        size="icon-sm"
+                        variant="ghost"
+                        disabled={isDisabled || !value}
+                        className="size-9 shrink-0 cursor-pointer rounded-lg
+                                hover:bg-primary/10 hover:text-primary
+                                disabled:opacity-30 transition-colors"
+                    >
+                        {disable ? (
+                            <span className="text-[11px] font-bold tabular-nums text-muted-foreground">
+                                {time}s
+                            </span>
+                        ) : (
+                            <SendHorizonal className="size-4" />
+                        )}
+                    </Button>
+                </div>
             </div>
         </form>
     );

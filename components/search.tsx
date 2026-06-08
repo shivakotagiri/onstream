@@ -1,24 +1,28 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { ChangeEvent } from "react";
+import { cn } from "@/lib/utils";
 
-export function Search() {
-    return (
-        <div className="w-full h-full flex justify-center items-center">
-            <Input 
-                type="text"
-                className="h-full rounded-r-none w-full max-w-[75%] border border-secondary border-r-0 bg-neutral-100 lg:text-base"
-                placeholder="search..."
-            />
-            <Button 
-                type="button" 
-                className="border border-secondary h-full hover:text-foreground hover:bg-none rounded-none rounded-r-2xl border-l-0 cursor-pointer bg-neutral-100 dark:bg-[#222326]" 
-                variant={"ghost"}
-            >
-                <SearchIcon />
-            </Button>
-        </div>
-    )
+interface SearchProps {
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
+  className?: string;
+}
+
+export function Search({ placeholder, value, setValue, className }: SearchProps) {
+  return (
+    <div className="relative w-full">
+      <SearchIcon className={cn("absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground", className)} />
+      <Input
+        type="search"
+        value={value}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+        placeholder={placeholder}
+        className="h-8 rounded-full border-border/60 bg-background pl-10 pr-4 text-sm shadow-sm transition-all focus-visible:ring-0"
+      />
+    </div>
+  );
 }

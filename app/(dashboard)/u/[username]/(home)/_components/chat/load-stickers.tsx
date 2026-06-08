@@ -1,12 +1,13 @@
 "use client";
 
-import { Dispatch, ReactEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IGif } from "@giphy/js-types";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 const gf = new GiphyFetch(process.env.NEXT_PUBLIC_GIPHY_API_KEY!);
 
 interface LoadStickersProps {
+    searchedQuery: string,
     onSubmit: (data: string) => void;
     isDisabled: boolean,
     isChatDelayed: boolean,
@@ -15,30 +16,37 @@ interface LoadStickersProps {
     setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export function LoadStickers({ onSubmit, isChatDelayed, isDelayBlocked, setOpen, setIsDelayBlocked, isDisabled }: LoadStickersProps) {
+export function LoadStickers({ searchedQuery, onSubmit, isChatDelayed, isDelayBlocked, setOpen, setIsDelayBlocked, isDisabled }: LoadStickersProps) {
     const [stickers, setStickers] = useState<IGif[]>([]);
-    const [offset, setOffset] = useState(0);
+    const [offset, setOffset] = useState<number>(0);
     const [loading, setLoading] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const loadMore = async () => {
+    const loadMore = async (currentOffesetNumber: number, isNewSearch: boolean = false) => {
         if (loading) return;
         setLoading(true);
 
         try {
-            const { data } = await gf.trending({
+            const res = searchedQuery.trim() !== "" ? 
+            await gf.search(searchedQuery, {
                 type: "stickers",
-                offset,
+                offset: currentOffesetNumber,
                 limit: 25,
-                rating: "y",
+            }):
+            await gf.trending({
+                type: "stickers",
+                offset: currentOffesetNumber,
+                limit: 25,
             });
 
+            const data = res.data;
+
             setStickers((prev) => {
-                const existingIds = new Set(prev.map((gif) => gif.id));
-                const newStickers = data.filter(
-                    (gif) => !existingIds.has(gif.id)
-                );
-                return [...prev, ...newStickers];
+                if(isNewSearch) return data;
+
+                const existingIds = new Set(prev.map((gif) => gif.id)); // i am creating a new set from all the gifs in the prev array of setState.
+                const newStickers = data.filter((gif) => !existingIds.has(gif.id)); //storing new stickers of only non-duplicate ones.
+                return [...prev, ...newStickers]; // now storing new + existing in stickers state.
             });
 
             setOffset((prev) => prev + 25);
@@ -50,18 +58,18 @@ export function LoadStickers({ onSubmit, isChatDelayed, isDelayBlocked, setOpen,
     };
 
     useEffect(() => {
-        loadMore();
-    }, []);
+        setOffset(0);
+        loadMore(0, true);
+    }, [searchedQuery]);
 
     const handleScroll = () => {
         const el = containerRef.current;
         if (!el || loading) return;
 
-        const reachedBottom =
-        el.scrollTop + el.clientHeight >= el.scrollHeight - 100;
+        const reachedBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 100;
 
         if (reachedBottom) {
-            loadMore();
+            loadMore(offset);
         }
     };
 

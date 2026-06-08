@@ -30,8 +30,6 @@ export function ChatForm({
     isHidden,
 }: ChatFormProps) {
     const [isDelayBlocked, setIsDelayBlocked] = useState(false);
-    const [disable, setDisable] = useState(false);
-    const [time, setTime] = useState(0);
 
     const followersOnlyAndNotFollowing = !isFollowing && isChatFollowersOnly;
     const isDisabled = isDelayBlocked || followersOnlyAndNotFollowing || !isChatEnabled;
@@ -55,7 +53,7 @@ export function ChatForm({
                 value,
                 type: "string"
             }));
-            setDisable(true);
+            
         }
     }
 
@@ -71,10 +69,7 @@ export function ChatForm({
                     onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
                     disabled={isDisabled}
                     maxLength={200}
-                    className="h-9 flex-1 rounded-lg bg-muted/50 border-border/40 text-sm
-                               placeholder:text-muted-foreground/50
-                               focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:border-primary/40
-                               disabled:opacity-40"
+                    className="h-9 flex-1 rounded-lg bg-muted/50 border-border/40 text-sm placeholder:text-muted-foreground/50 disabled:opacity-40"
                 />
                 <div className="flex">
                     <EmoButton 
@@ -93,13 +88,7 @@ export function ChatForm({
                                 hover:bg-primary/10 hover:text-primary
                                 disabled:opacity-30 transition-colors"
                     >
-                        {disable ? (
-                            <span className="text-[11px] font-bold tabular-nums text-muted-foreground">
-                                {time}s
-                            </span>
-                        ) : (
-                            <SendHorizonal className="size-4" />
-                        )}
+                        <SendHorizonal className="size-4" />
                     </Button>
                 </div>
             </div>

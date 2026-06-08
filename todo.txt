@@ -5,9 +5,22 @@ Current TODOs to work with:-
     - add a ban feature
     - here there is cache in profile which is making it an issue after saving the account info from /welcome page
     - ratelimiting, bot identification etc..
-    - make /u/[username]/keys mobile responsive
-    - complete the chat ui
-    
+    - persist the chat messages (atleast for authenticated users)
+    - i got this error in terminal, once check it out later
+        [browser] could not playback audio {
+                error: '[object DOMException]',
+                participant: 'd144643b-4dc7-42a1-8410-6695a587a450',
+                participantID: 'PA_LeYkgJ4Ukurr',
+                room: 'VXf9uv85ewh9TwB7whWwOP31gjD7uRZn',
+                roomID: 'RM_s9TBm6m6KR3Z'
+            }
+            [browser] could not playback audio {
+                error: '[object DOMException]',
+                participant: 'd144643b-4dc7-42a1-8410-6695a587a450',
+                participantID: 'PA_LeYkgJ4Ukurr',
+                room: 'VXf9uv85ewh9TwB7whWwOP31gjD7uRZn',
+                roomID: 'RM_s9TBm6m6KR3Z'
+            }
 
 completed:-
 - issue:- fix delay in signout from all the devices

@@ -9,6 +9,7 @@ import { GiftIcon, StickerIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { LoadStickers } from "./load-stickers";
 import StickerSearch from "./sticker-search";
+import { useDebounceValue } from "usehooks-ts";
 
 export interface EmoButtonProps {
     onSubmit: (data: string) => void,
@@ -20,6 +21,8 @@ export interface EmoButtonProps {
 
 export function EmoButton({ onSubmit, isChatDelayed, isDelayBlocked, isDisabled, setIsDelayBlocked }: EmoButtonProps) {
     const [open, setOpen] = useState<boolean>(false);
+    const [debouncedValue, setDebouncedValue] = useDebounceValue('', 500);
+    
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -50,8 +53,9 @@ export function EmoButton({ onSubmit, isChatDelayed, isDelayBlocked, isDisabled,
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="sticker" className="space-y-3 px-5">
-                        <StickerSearch />
-                        <LoadStickers 
+                        <StickerSearch setDebouncedValue={setDebouncedValue} />
+                        <LoadStickers
+                            searchedQuery={debouncedValue}
                             onSubmit={onSubmit} 
                             isDisabled={isDisabled}
                             isChatDelayed={isChatDelayed}

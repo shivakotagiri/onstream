@@ -51,7 +51,7 @@ export function InfoEditDialog({ hostIdentity, form}: InfoEditDialogProps) {
             toast.error("Something went wrong");
         } else {
             toast.success("Thumbnail removed");
-            closeRef.current?.click();
+            closeRef.current?.click();  
             router.refresh();
         }
     }

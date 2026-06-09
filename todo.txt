@@ -7,6 +7,7 @@ Current TODOs to work with:-
     - ratelimiting, bot identification etc..
     - persist the chat messages (atleast for authenticated users)
     - i got this error in terminal, once check it out later
+    - while deleting the profile pic try to delete it in uploadthing too
         [browser] could not playback audio {
                 error: '[object DOMException]',
                 participant: 'd144643b-4dc7-42a1-8410-6695a587a450',

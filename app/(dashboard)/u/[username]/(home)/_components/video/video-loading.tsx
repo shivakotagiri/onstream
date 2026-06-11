@@ -2,7 +2,7 @@ import { LoaderCircle } from "lucide-react";
 
 export function VideoLoading() {
     return (
-        <div className="absolute inset-0 flex flex-col justify-center items-center gap-3 bg-black/95">
+        <div className="absolute inset-0 flex flex-col justify-center items-center gap-3 bg-secondary/30">
             <div className="size-14 rounded-full bg-muted/10 flex items-center justify-center">
                 <LoaderCircle className="size-6 text-white/80 animate-spin" />
             </div>

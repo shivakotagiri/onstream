@@ -16,7 +16,7 @@ export function Navbar({ session }: { session: Session | null }) {
                 <Logo />
             </div>
 
-            <div className="flex-1 flex h-8 justify-center items-center">
+            <div className="flex-1 flex h-10 justify-center items-center">
                 <div className="w-full h-full max-w-2xl lg:max-w-3xl xl:max-w-4xl">
                     <Search value={search} setValue={setSearch} placeholder="Search..." />
                 </div>

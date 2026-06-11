@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { LucideIcon } from "lucide-react"
 
 export function UserAvatar({
   src,
@@ -7,14 +8,16 @@ export function UserAvatar({
   isLive,
   className,
   avatarFallbackClassname,
-  badgeClassname
+  badgeClassname,
+  AvatarFallbackIcon,
 }: {
   src: string
   name: string
   isLive?: boolean
   className?: string
   avatarFallbackClassname?: string
-  badgeClassname?: string
+  badgeClassname?: string,
+  AvatarFallbackIcon?: LucideIcon
 }) {
   return (
     <div className="inline-block">
@@ -27,7 +30,10 @@ export function UserAvatar({
       >
         {!!src && <AvatarImage src={src} alt={name} className="object-cover rounded-full" /> }
         <AvatarFallback className={cn("bg-secondary text-secondary-foreground font-medium", avatarFallbackClassname)}>
-          {name?.charAt(0).toUpperCase()}
+          {AvatarFallbackIcon ? 
+            <AvatarFallbackIcon className="size-4" />:
+            name?.charAt(0).toUpperCase()
+          }
         </AvatarFallback>
         {isLive && (
           <span className={cn(

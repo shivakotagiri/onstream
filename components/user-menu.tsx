@@ -18,7 +18,10 @@ import {
   LogOutIcon,
   Settings,
   SunMoon,
+  User,
+  User2,
   User2Icon,
+  Users,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -80,6 +83,7 @@ export function UserMenu() {
           <UserAvatar 
             name={user?.name || "guest"}
             src={user?.image || ""}
+            AvatarFallbackIcon={User}
           />
         </Button>
       </DropdownMenuTrigger>

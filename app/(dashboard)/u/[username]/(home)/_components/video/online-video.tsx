@@ -37,7 +37,7 @@ export function OnlineVideo({ participant }: StreamingProps) {
             {videoTrack && (
                 <VideoTrack
                     trackRef={videoTrack}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full aspect-video object-center object-contain"
                 />
             )}
             {audioTrack && (

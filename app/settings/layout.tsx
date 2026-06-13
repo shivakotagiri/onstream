@@ -3,23 +3,25 @@ import { redirect } from "next/navigation"
 import { ReactNode } from "react"
 import { getSession } from "@/lib/get-session"
 import { Navbar } from "@/components/navbar"
+import { getUsernames } from "@/actions/user"
 
 function SettingsLayoutFallback({ children }: { children: Readonly<ReactNode> }) {
   return (
     <main className="w-screen min-h-screen overflow-hidden" suppressHydrationWarning>
-      <Navbar session={null} />
+      <Navbar session={null} data={[]} />
       <div className="flex w-full h-full">{children}</div>
     </main>
   )
 }
 
 async function SettingsLayoutContent({ children }: { children: Readonly<ReactNode> }) {
+  const data = await getUsernames();
   const session = await getSession()
   if (!session || !session.user) redirect("/auth/login")
 
   return (
     <main className="w-screen min-h-screen overflow-hidden" suppressHydrationWarning>
-      <Navbar session={session} />
+      <Navbar session={session} data={data} />
       <div className="flex w-full h-full">{children}</div>
     </main>
   )

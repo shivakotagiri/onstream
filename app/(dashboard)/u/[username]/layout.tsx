@@ -3,12 +3,12 @@ import { NavbarDashboard } from "./_components/dashboard-navbar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "./_components/dashboard-sidebar"
 import { redirect } from "next/navigation"
-import { getCurrentUser } from "@/actions/user"
+import { getCurrentUser, getUsernames } from "@/actions/user"
 
 function DashboardLayoutFallback({ children }: { children: React.ReactNode }) {
   return (
     <main className="max-w-screen h-full w-full" suppressHydrationWarning>
-      <NavbarDashboard />
+      <NavbarDashboard session={null} data={[]} />
       <SidebarProvider className="max-w-screen w-full">
         <div className="flex w-full h-full">
           <DashboardSidebar currentUser={null} />
@@ -27,7 +27,9 @@ async function DashboardLayoutContent({
   params: Promise<{ username: string }>
 }) {
   const [currentUser, param] = await Promise.all([getCurrentUser(), params])
-  const username = param.username
+  const username = param.username;
+
+  const data = await getUsernames();
 
   if (!currentUser?.username || username !== currentUser.username) {
     redirect("/")
@@ -35,7 +37,7 @@ async function DashboardLayoutContent({
 
   return (
     <main className="max-w-screen h-full w-full" suppressHydrationWarning>
-      <NavbarDashboard />
+      <NavbarDashboard session={null} data={data} />
       <SidebarProvider className="max-w-screen w-full">
         <div className="flex w-full h-full">
           <DashboardSidebar currentUser={currentUser} />

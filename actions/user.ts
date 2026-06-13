@@ -334,6 +334,15 @@ export const updateSessionVersion = async (id: string) => {
     return !!res;
 }
 
+export const getUsernames = async () => {
+    const usernames = await db.query.user.findMany({
+        columns: {
+            username: true
+        }
+    });
+    return usernames;
+}
+
 
 
 

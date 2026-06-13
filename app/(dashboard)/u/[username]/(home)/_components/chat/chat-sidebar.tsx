@@ -59,7 +59,7 @@ export function ChatSidebar({
     }, [messages]);
 
     return (
-        <div className="w-full flex flex-col lg:border-l h-full overflow-hidden">
+        <div className="w-full flex flex-col h-full overflow-hidden shadow-2xl z-10 dark:bg-[#1A1B1E]">
             <ChatHeader />
             <div className="flex flex-col flex-1 w-full min-h-0">
                 {variant === ChatVariant.CHAT && (

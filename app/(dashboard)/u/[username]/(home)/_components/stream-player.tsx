@@ -140,7 +140,7 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
 
                 <div
                     className={cn(
-                        "relative shrink-0 overflow-hidden",
+                        "relative shrink-0",
                         "h-[50vh] w-full lg:h-full",
                         collapsed && "hidden"
                     )}
@@ -148,7 +148,7 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
                 >
                     <div 
                         onMouseDown={onResizeStart}
-                        className="hidden lg:block absolute left-0 top-0 w-1.5 h-full z-10 cursor-col-resize bg-transparent hover:bg-primary/20 active:bg-primary/40 transition-colors duration-150"
+                        className="hidden lg:block absolute left-0 top-0 w-1 h-full z-10 cursor-col-resize bg-transparent hover:bg-primary/20 active:bg-primary/40 transition-colors duration-150"
                     />
                     <ChatSidebar
                         viewerName={name}

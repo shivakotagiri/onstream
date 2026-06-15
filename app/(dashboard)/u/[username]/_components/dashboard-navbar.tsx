@@ -6,21 +6,23 @@ import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { SquareArrowRight } from "lucide-react";
-import { useState } from "react";
 import { type Session } from "@/lib/auth-client"
+import { User } from "@/db/schema";
 
 
 interface NavbarProps {
-    session: Session | null,
-    data: {
-        username: string | null
+    streamData: {
+        id: string;
+        name: string;
+        userId: string;
+        thumbnailUrl: string | null;
+        isLive: boolean;
+        user: User
     }[]
 }
 
-export function NavbarDashboard({ session, data }: NavbarProps) {
+export function NavbarDashboard({ streamData }: NavbarProps) {
     const router = useRouter();
-    const [value, setValue] = useState<string>("");
-    const usernames = data.filter((user) => user.username !== session?.user.username).map((user) => user.username || "") || [];
     return (
         <nav className="h-14 w-screen shadow-xl shadow-secondary/10 fixed left-1/2 -translate-x-1/2 bg-background flex items-center gap-3 lg:gap-6 px-4 lg:px-6 z-10 border border-neutral-200 dark:border-neutral-800">
             <div className="shrink-0 flex items-center">
@@ -29,7 +31,7 @@ export function NavbarDashboard({ session, data }: NavbarProps) {
 
             <div className="flex-1 flex h-8 justify-center items-center">
                 <div className="w-full h-full max-w-2xl lg:max-w-3xl xl:max-w-4xl">
-                    <Search suggestions={usernames} />
+                    <Search data={streamData} />
                 </div>
             </div>
 

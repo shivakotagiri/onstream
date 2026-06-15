@@ -14,9 +14,10 @@ import { cn } from "@/lib/utils";
 interface VideoProps {
     hostName: string,
     hostIdentity: string,
+    isHost: boolean,
 }
 
-export function Video({ hostName, hostIdentity }: VideoProps) {
+export function Video({ hostName, hostIdentity, isHost }: VideoProps) {
     const connectionState = useConnectionState();
     const participant = useRemoteParticipant(hostIdentity);
     const tracks = useTracks([
@@ -31,7 +32,7 @@ export function Video({ hostName, hostIdentity }: VideoProps) {
     } else if(!participant || tracks.length === 0) {
         content = <VideoLoading />
     } else {
-        content = <OnlineVideo participant={participant} />
+        content = <OnlineVideo participant={participant} isHost={isHost} />
     }
 
     const { collapsed } = useChatSidebarStore();

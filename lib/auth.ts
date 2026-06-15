@@ -137,9 +137,7 @@ export const auth = betterAuth({
         },
     },
 
-    plugins: [nextCookies(), username(), phoneNumber(), twoFactor({
-        allowPasswordless: true,
-    })],
+    plugins: [username(), phoneNumber(), twoFactor({ allowPasswordless: true }), nextCookies()],
 
     database: drizzleAdapter(db, {
         provider: "pg",

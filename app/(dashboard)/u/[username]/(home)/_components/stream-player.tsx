@@ -111,6 +111,7 @@ export function StreamPlayer({ user, stream, isFollowing, followersCount, follow
                     <Video
                         hostName={user.username || ""}
                         hostIdentity={user.id}
+                        isHost={isHost}
                     />
                     <Header
                         viewerIdentity={identity}

@@ -4,24 +4,17 @@ import { ReactNode } from "react"
 import { getSession } from "@/lib/get-session"
 import { Navbar } from "@/components/navbar"
 import { getUsernames } from "@/actions/user"
-
-function SettingsLayoutFallback({ children }: { children: Readonly<ReactNode> }) {
-  return (
-    <main className="w-screen min-h-screen overflow-hidden" suppressHydrationWarning>
-      <Navbar session={null} data={[]} />
-      <div className="flex w-full h-full">{children}</div>
-    </main>
-  )
-}
+import { getStreams } from "@/actions/stream"
+import Loading from "../(browse)/loading"
 
 async function SettingsLayoutContent({ children }: { children: Readonly<ReactNode> }) {
-  const data = await getUsernames();
+  const streamData = await getStreams();
   const session = await getSession()
   if (!session || !session.user) redirect("/auth/login")
 
   return (
     <main className="w-screen min-h-screen overflow-hidden" suppressHydrationWarning>
-      <Navbar session={session} data={data} />
+      <Navbar streamData={streamData} session={session} />
       <div className="flex w-full h-full">{children}</div>
     </main>
   )
@@ -29,7 +22,7 @@ async function SettingsLayoutContent({ children }: { children: Readonly<ReactNod
 
 export default function SettingsLayout({ children }: { children: Readonly<ReactNode> }) {
   return (
-    <Suspense fallback={<SettingsLayoutFallback>{children}</SettingsLayoutFallback>}>
+    <Suspense fallback={<Loading />}>
       <SettingsLayoutContent>{children}</SettingsLayoutContent>
     </Suspense>
   )
